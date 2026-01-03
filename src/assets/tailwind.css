@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+@theme {
+	/* Fonts */
+	--font-jetbrains: 'JetBrains Mono', monospace;
+	--font-ubuntu: 'Ubuntu', sans-serif;
+	--font-space-grotesk: 'Space Grotesk', sans-serif;
+}
+
+@layer base {
+	body {
+		@apply font-ubuntu bg-[var(--main-bg-color)] text-gray-200;
+	}
+
+	::-webkit-scrollbar {
+		width: 10px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background-color: #16102e;
+		border-radius: 6px;
+	}
+
+	::-webkit-scrollbar-track {
+		background-color: transparent;
+	}
+}
+
+@layer utilities {
+}
+
+@layer components {
+	.register-form-btn {
+		@apply h-[50px] w-[200px] cursor-pointer rounded-md border bg-gradient-to-br from-[#00800063] to-[#3f0080a3] text-white transition-shadow hover:shadow-[0_0_10px_#ffffff24];
+	}
+
+	.footer-links {
+		@apply cursor-pointer border-l-2 border-l-[var(--main-green)] pl-2 transition-colors hover:text-[var(--main-green)];
+	}
+
+	.form-btn {
+		@apply cursor-pointer rounded-md border border-white/50 bg-white/5 py-2 text-center font-sans transition-shadow hover:shadow-[0_0_10px_#ffffff1f];
+	}
+
+	.module-btn {
+		@apply flex w-[150px] items-center justify-center gap-x-2 rounded-md border-2 border-[var(--main-green)] bg-[#00a63e0f] py-2 text-sm text-white transition-shadow duration-300 hover:shadow-[0_0_12px_#ffffff0f];
+	}
+
+	.support-fields {
+		@apply rounded-md bg-black/50 p-2 transition-shadow focus:border-none focus:shadow-[0_0_12px_#ffffff0f] focus:outline-none;
+	}
+}
