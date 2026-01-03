@@ -23,4 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
+# Confidential data
 .env
+src/content/contentfulClient.js
