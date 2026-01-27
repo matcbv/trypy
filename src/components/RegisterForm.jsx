@@ -106,13 +106,13 @@ export function RegisterForm() {
 		const res = await signInWithGoogle();
 		if (res.success) {
 			try {
-				const { uid, userData, progressData } = res.data;
+				const { uid, providerData, progressData } = res.data;
 
 				authDispatch({
 					type: authActionTypes.SET_DATA,
-					payload: { uid, data: userData },
+					payload: { uid, data: providerData },
 				});
-				await setDoc(doc(db, 'users', uid), userData);
+				await setDoc(doc(db, 'users', uid), providerData);
 
 				progressDispatch({
 					type: progressActionTypes.SET_PROGRESS,

@@ -81,11 +81,11 @@ export function SessionForm() {
 	const handleGoogle = async () => {
 		const res = await signInWithGoogle();
 		if (res.success) {
-			const { uid, userData, progressData } = res;
+			const { uid, providerData, progressData } = res.data;
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { uid, data: userData },
+				payload: { uid, data: providerData },
 			});
 			progressDispatch({
 				type: progressActionTypes.SET_PROGRESS,

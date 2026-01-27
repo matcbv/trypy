@@ -22,9 +22,14 @@ export const signInWithGoogle = async () => {
 		const { uid } = res.data;
 
 		const userDoc = await getDoc(doc(db, 'users', uid));
-		const userData = userDoc.exists()
-			? userDoc.data()
-			: { ...res.data, id: idGenerator().generateID() };
+
+		let providerData;
+		if (userDoc.exists()) {
+			providerData = userDoc.data();
+		} else {
+			const { name, email, picture } = res.data;
+			providerData = { name, email, picture, id: idGenerator().generateID() };
+		}
 
 		const progressDoc = await getDoc(doc(db, 'userProgress', uid));
 		const progressData = progressDoc.exists()
@@ -35,7 +40,7 @@ export const signInWithGoogle = async () => {
 			success: true,
 			data: {
 				uid,
-				userData,
+				providerData,
 				progressData,
 			},
 		};
