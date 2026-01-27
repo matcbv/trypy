@@ -7,6 +7,7 @@ export default function reducer(state, { type, payload }) {
 			return {
 				...state,
 				...payload,
+				data: { ...state.data, ...payload.data },
 			};
 		case actionTypes.LOGOUT:
 			return authData;

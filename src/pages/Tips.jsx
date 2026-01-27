@@ -18,7 +18,7 @@ export function Tips() {
 			);
 			setTips(tips);
 		})();
-	}, [authData]);
+	}, [authData.data.savedTips]);
 
 	return (
 		<div>

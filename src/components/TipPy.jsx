@@ -13,27 +13,30 @@ export function TipPy({ tipFields }) {
 	useEffect(() => {
 		const savedTips = authData.data.savedTips;
 		savedTips && setFavorited(savedTips.includes(tipFields.slug));
-	}, [authData, tipFields.slug]);
+	}, [authData.data.savedTips, tipFields.slug]);
 
-	const toggleImage = async (e, isHovering) => {
+	const toggleImage = (e, isHovering) => {
 		if (!favorited && e.target) {
 			e.target.src = `/assets/images/icons/${isHovering ? 'favorited' : 'favorite'}.png`;
 		}
 	};
 
 	const toggleFavorite = async () => {
+		if (!authData.data) return;
+
 		try {
-			let savedTips = authData.data.savedTips;
+			let savedTips = authData.data.savedTips ?? [];
 			if (savedTips.includes(tipFields.slug)) {
 				savedTips = savedTips.filter((tip) => tip !== tipFields.slug);
 			} else {
 				savedTips = [...savedTips, tipFields.slug];
 			}
 			await updateDoc(doc(db, 'users', authData.uid), { savedTips });
-			await authDispatch({
+			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { savedTips },
+				payload: { data: { savedTips } },
 			});
+			setFavorited((prev) => !prev);
 		} catch (error) {
 			logError(error);
 		}
