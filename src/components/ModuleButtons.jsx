@@ -21,12 +21,9 @@ export function ModuleButtons({
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const isModuleDone = topics.every(({ slug }) =>
-			progressData.doneTopics.includes(slug),
-		);
 		const lastSubtopic = topics.at(-1)?.subtopics.at(-1)?.fields.slug;
 
-		if (isModuleDone && progressData.currentSubtopic === lastSubtopic) {
+		if (progressData.currentSubtopic === lastSubtopic) {
 			setIsLastSubtopic(true);
 		}
 	}, [topics, progressData.doneTopics, progressData.currentSubtopic]);
@@ -119,6 +116,10 @@ export function ModuleButtons({
 	};
 
 	const finishModule = async () => {
+		navigate('/learning-path');
+
+		if (progressData.doneModules.includes(params.moduleId)) return;
+
 		const data = {
 			doneSubtopics: [...progressData.doneSubtopics, currentSubtopic.slug],
 			doneTopics: [...progressData.doneTopics, currentTopic.slug],
@@ -130,7 +131,6 @@ export function ModuleButtons({
 			payload: data,
 		});
 		await updateDoc(doc(db, 'userProgress', authData.uid), data);
-		navigate('/learning-path');
 	};
 
 	return (
