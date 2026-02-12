@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { ToastNotification } from '../components/Notifications';
-import { errorMessages } from './errorMessages';
+import { errorMessages } from '../constants/errorMessages';
 
 export const logError = (error, text) => {
 	if (import.meta.env.DEV) {
