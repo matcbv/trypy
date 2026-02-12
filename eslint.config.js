@@ -3,8 +3,9 @@ import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import { defineConfig } from 'eslint/config';
 
-export default [
+export default defineConfig([
 	{ ignores: ['dist'] },
 	{
 		files: ['**/*.{js,jsx}'],
@@ -39,7 +40,7 @@ export default [
 			camelcase: ['error'],
 			// Regra para não uso de mensagem de alerta em geral.
 			'no-alert': ['warn'],
-			...eslintConfigPrettier.rules,
 		},
 	},
-];
+	eslintConfigPrettier,
+]);
