@@ -25,6 +25,7 @@ function App() {
 				icon={false}
 				autoClose={3000}
 				pauseOnHover={false}
+				pauseOnFocusLoss={false}
 				toastClassName={(context) =>
 					(context?.type === 'success'
 						? '!shadow-[0_0_15px_#00803e50]'
