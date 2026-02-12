@@ -16,6 +16,9 @@ import { Support } from './pages/Support';
 import { ResetPassword } from './pages/ResetPassword';
 import { UserOverview } from './pages/UserOverview';
 
+// Providers
+import { NavigationProvider } from './contexts/NavigationProvider';
+
 export function AppRoutes() {
 	return (
 		<BrowserRouter>
@@ -31,8 +34,10 @@ export function AppRoutes() {
 						<Route path="resolutions" element={<Resolutions />} />
 						<Route path="tips" element={<Tips />} />
 					</Route>
-					<Route path="/learning-path" element={<LearningPath />} />
-					<Route path="/learning-path/:moduleId" element={<Module />} />
+					<Route element={<NavigationProvider />}>
+						<Route path="/learning-path" element={<LearningPath />} />
+						<Route path="/learning-path/:moduleId" element={<Module />} />
+					</Route>
 					<Route path="/support" element={<Support />} />
 					<Route path="/reset-password" element={<ResetPassword />} />
 				</Route>
