@@ -9,16 +9,17 @@ import {
 	reauthenticateWithPopup,
 } from 'firebase/auth';
 import { auth, db, googleProvider } from '../database/firebase';
-import { fetchInitialProgress } from '../content/fetchInitialProgress';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 import { idGenerator } from '../utils/idGenerator';
+import { createInitialProgress } from '../utils/createInitialProgress';
 
 export const signUpWithCredentials = async (userData) => {
 	try {
+		const { password, ...persistedData } = userData;
 		const credential = await createUserWithEmailAndPassword(
 			auth,
-			userData.email,
-			userData.password,
+			persistedData.email,
+			password,
 		);
 		const idToken = await credential.user.getIdToken();
 		const res = await axios.post(
@@ -30,18 +31,16 @@ export const signUpWithCredentials = async (userData) => {
 				},
 			},
 		);
-
 		const { uid } = res.data;
 		const id = idGenerator().generateID();
 
-		await setDoc(doc(db, 'users', uid), { ...userData, id }, { merge: true });
+		await setDoc(doc(db, 'users', uid), { ...persistedData, id });
+
+		const progressData = createInitialProgress(uid);
 
 		return {
 			success: true,
-			data: {
-				uid,
-				initialProgress: await fetchInitialProgress(),
-			},
+			data: { uid, persistedData, progressData },
 		};
 	} catch (error) {
 		return { success: false, error };
@@ -81,7 +80,7 @@ export const signInWithCredentials = async (email, password) => {
 	}
 };
 
-export const deleteAccount = async (password) => {
+export const deleteAccount = async (password, uid) => {
 	try {
 		const { providerId } = auth.currentUser.providerData[0];
 		switch (providerId) {
@@ -101,7 +100,11 @@ export const deleteAccount = async (password) => {
 				break;
 			}
 		}
-		await deleteUser(auth.currentUser);
+		await Promise.all([
+			deleteDoc(doc(db, 'users', uid)),
+			deleteDoc(doc(db, 'userProgress', uid)),
+			deleteUser(auth.currentUser),
+		]);
 		return { success: true };
 	} catch (error) {
 		return { success: false, error };

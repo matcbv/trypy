@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, db, googleProvider } from '../database/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { fetchInitialProgress } from '../content/fetchInitialProgress';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { idGenerator } from '../utils/idGenerator';
+import { createInitialProgress } from '../utils/createInitialProgress';
 
 export const signInWithGoogle = async () => {
 	try {
@@ -19,30 +19,21 @@ export const signInWithGoogle = async () => {
 			},
 		);
 
-		const { uid } = res.data;
+		const { name, email, picture, uid } = res.data;
 
 		const userDoc = await getDoc(doc(db, 'users', uid));
 
-		let providerData;
-		if (userDoc.exists()) {
-			providerData = userDoc.data();
-		} else {
-			const { name, email, picture } = res.data;
-			providerData = { name, email, picture, id: idGenerator().generateID() };
-		}
+		const providerData = userDoc.exists()
+			? userDoc.data()
+			: { name, email, picture, id: idGenerator().generateID() };
 
-		const progressDoc = await getDoc(doc(db, 'userProgress', uid));
-		const progressData = progressDoc.exists()
-			? progressDoc.data()
-			: await fetchInitialProgress();
+		await setDoc(doc(db, 'users', uid), providerData);
+
+		const progressData = createInitialProgress(uid);
 
 		return {
 			success: true,
-			data: {
-				uid,
-				providerData,
-				progressData,
-			},
+			data: { uid, providerData, progressData },
 		};
 	} catch (error) {
 		return { success: false, error };
