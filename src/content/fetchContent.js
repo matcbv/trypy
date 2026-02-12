@@ -1,11 +1,18 @@
 import { client } from './contentfulClient';
+import { logError } from '../utils/logger';
 
-export async function fetchContent(contentType, include, slug) {
-	const res = await client.getEntries({
+export async function fetchContent({ contentType, include, orderOrSlug }) {
+	const query = {
 		content_type: contentType, // eslint-disable-line camelcase
 		include: include,
-		'fields.slug': slug,
+		[typeof orderOrSlug === 'number' ? 'fields.order' : 'fields.slug']:
+			orderOrSlug,
 		order: 'fields.order',
-	});
-	return res.items;
+	};
+	try {
+		const res = await client.getEntries(query);
+		return res.items;
+	} catch (error) {
+		logError(error, 'Não foi possível carregar o conteúdo. Tente novamente.');
+	}
 }
