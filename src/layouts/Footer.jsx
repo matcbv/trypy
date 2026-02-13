@@ -1,20 +1,13 @@
 import { Link } from 'react-router-dom';
-import { labelMap } from '../constants/labelMap';
+import { footerMap, iconsMap } from '../constants/labelMap';
 
 export function Footer() {
-	const iconsMap = {
-		github: 'GitHub',
-		instagram: 'Instagram',
-		x: 'X',
-		youtube: 'YouTube',
-	};
-
 	return (
 		<footer className="relative z-20 bg-[var(--main-black)]">
 			<div className="flex flex-col items-center gap-y-10 px-6 pt-14 pb-6 backdrop-blur-xl">
 				<div>
 					<ul className="flex gap-x-10">
-						{Object.entries(labelMap).map(([key, value]) => (
+						{Object.entries(footerMap).map(([key, value]) => (
 							<Link to={`/${key}`} className="footer-links" key={key}>
 								{value}
 							</Link>
