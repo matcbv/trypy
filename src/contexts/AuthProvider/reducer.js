@@ -1,5 +1,5 @@
 import actionTypes from './actionTypes';
-import authData from './data';
+import initialState from './initialState';
 
 export default function reducer(state, { type, payload }) {
 	switch (type) {
@@ -10,6 +10,6 @@ export default function reducer(state, { type, payload }) {
 				data: { ...state.data, ...payload.data },
 			};
 		case actionTypes.LOGOUT:
-			return authData;
+			return initialState;
 	}
 }

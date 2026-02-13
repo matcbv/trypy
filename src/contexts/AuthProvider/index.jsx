@@ -1,14 +1,14 @@
 import { auth, db } from '../../database/firebase.js';
 import { useEffect, useReducer } from 'react';
-import data from './data';
+import initialState from './initialState';
 import reducer from './reducer';
-import AuthContext from './context';
+import { AuthContext } from './context';
 import { onAuthStateChanged } from 'firebase/auth';
-import actionTypes from './actionTypes.js';
+import actionTypes from './actionTypes';
 import { doc, getDoc } from 'firebase/firestore';
 
 export default function AuthProvider({ children }) {
-	const [authData, authDispatch] = useReducer(reducer, data);
+	const [authState, authDispatch] = useReducer(reducer, initialState);
 
 	useEffect(() => {
 		onAuthStateChanged(auth, async (user) => {
@@ -28,8 +28,6 @@ export default function AuthProvider({ children }) {
 	}, []);
 
 	return (
-		<AuthContext.Provider value={[authData, authDispatch]}>
-			{children}
-		</AuthContext.Provider>
+		<AuthContext value={{ authState, authDispatch }}>{children}</AuthContext>
 	);
 }
