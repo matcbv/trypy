@@ -34,107 +34,116 @@ export function ModuleButtons({
 		}
 	}, [topics, progressState.currentSubtopic, navigationDispatch]);
 
-	const handleClick = async (next) => {
+	const handleNext = async () => {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
+		const data = {};
+
 		try {
-			if (next) {
-				const data = {};
-				// Obtendo os próximos conteúdos:
-				const { nextTopic, nextSubtopic, isLastSubtopic } =
-					await getNextContent(moduleData, topicData, subtopicData);
+			const { nextTopic, nextSubtopic, isLastSubtopic } = await getNextContent(
+				moduleData,
+				topicData,
+				subtopicData,
+			);
 
-				if (isLastSubtopic) {
-					navigationDispatch({
-						type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
-						payload: true,
-					});
-				}
-
-				navigationDispatch({
-					type: navegationActionTypes.SET_CURRENT_PROGRESS,
-					payload: {
-						currentTopic: nextTopic.slug || '',
-						currentSubtopic: nextSubtopic.slug || '',
-					},
-				});
-
-				if (
-					!progressState.doneSubtopics.includes(navigationState.currentSubtopic)
-				)
-					data.doneSubtopics = [
-						...progressState.doneSubtopics,
-						navigationState.currentSubtopic,
-					];
-
-				if (!progressState.doneSubtopics.includes(nextSubtopic.slug))
-					data.inProgressSubtopic = nextSubtopic.slug;
-
-				const isTopicDone = subtopics.every((subtopic) =>
-					data.doneSubtopics?.includes(subtopic.slug),
-				);
-
-				if (
-					isTopicDone &&
-					!progressState.doneTopics.includes(navigationState.currentTopic)
-				) {
-					data.doneTopics = [
-						...new Set([
-							...progressState.doneTopics,
-							navigationState.currentTopic,
-						]),
-					];
-					data.inProgressTopic = nextTopic.slug;
-				}
-
-				progressDispatch({
-					type: progressActionTypes.SET_PROGRESS,
-					payload: data,
-				});
-				await updateDoc(doc(db, 'userProgress', authState.uid), data);
-			} else {
+			// Validando se o novo subtópico é o último do módulo.
+			if (isLastSubtopic) {
 				navigationDispatch({
 					type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
-					payload: false,
-				});
-
-				// Obtendo o subtópico anterior:
-				const previousSubtopic = subtopics.find(
-					(subtopic) => subtopic.order === subtopicData.order - 1,
-				);
-
-				if (previousSubtopic) {
-					navigationDispatch({
-						type: navegationActionTypes.SET_CURRENT_PROGRESS,
-						payload: { currentSubtopic: previousSubtopic.slug },
-					});
-					return;
-				}
-
-				// Caso o subtópico anterior não exista, iremos obter o último subtópico do tópico anterior:
-				const previousTopic = topics.find(
-					(topic) => topic.order === topicData.order - 1,
-				);
-				if (!previousTopic) return;
-
-				const previousSubtopics = previousTopic.subtopics.map(
-					(subtic) => subtic.fields,
-				);
-				const newSubtopic = previousSubtopics.find(
-					(subtopic) => subtopic.order === previousSubtopics.length,
-				);
-
-				navigationDispatch({
-					type: navegationActionTypes.SET_CURRENT_PROGRESS,
-					payload: {
-						currentTopic: previousTopic.slug,
-						currentSubtopic: newSubtopic.slug,
-					},
+					payload: true,
 				});
 			}
+
+			navigationDispatch({
+				type: navegationActionTypes.SET_CURRENT_PROGRESS,
+				payload: {
+					currentTopic: nextTopic.slug || '',
+					currentSubtopic: nextSubtopic.slug || '',
+				},
+			});
+
+			// Adicionando o subtópico concluído caso esse não esteja presenta na lista de progresso do usuário.
+			if (
+				!progressState.doneSubtopics.includes(navigationState.currentSubtopic)
+			) {
+				data.doneSubtopics = [
+					...progressState.doneSubtopics,
+					navigationState.currentSubtopic,
+				];
+			}
+
+			// Caso o próximo subtópico a ser realizado não esteja na lista de concluídos, iremos adicioná-lo como o subtópico em progresso do usuário.
+			if (!progressState.doneSubtopics.includes(nextSubtopic.slug))
+				data.inProgressSubtopic = nextSubtopic.slug;
+
+			// Validando se o tópico foi concluído. Caso positivo, iremos adicioná-lo à lista de progresso do usuário.
+			const isTopicDone = subtopics.every((subtopic) =>
+				data.doneSubtopics?.includes(subtopic.slug),
+			);
+
+			if (
+				isTopicDone &&
+				!progressState.doneTopics.includes(navigationState.currentTopic)
+			) {
+				data.doneTopics = [
+					...new Set([
+						...progressState.doneTopics,
+						navigationState.currentTopic,
+					]),
+				];
+				data.inProgressTopic = nextTopic.slug;
+			}
+
+			progressDispatch({
+				type: progressActionTypes.SET_PROGRESS,
+				payload: data,
+			});
+			await updateDoc(doc(db, 'userProgress', authState.uid), data);
 		} catch (error) {
 			logError(error);
 		}
+	};
+
+	const handlePrevious = async () => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+
+		navigationDispatch({
+			type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
+			payload: false,
+		});
+
+		const previousSubtopic = subtopics.find(
+			(subtopic) => subtopic.order === subtopicData.order - 1,
+		);
+
+		if (previousSubtopic) {
+			navigationDispatch({
+				type: navegationActionTypes.SET_CURRENT_PROGRESS,
+				payload: { currentSubtopic: previousSubtopic.slug },
+			});
+			return;
+		}
+
+		// Caso o subtópico anterior não exista, iremos obter o último subtópico do tópico anterior:
+		const previousTopic = topics.find(
+			(topic) => topic.order === topicData.order - 1,
+		);
+		if (!previousTopic) return;
+
+		const previousSubtopics = previousTopic.subtopics.map(
+			(subtic) => subtic.fields,
+		);
+		const newSubtopic = previousSubtopics.find(
+			(subtopic) => subtopic.order === previousSubtopics.length,
+		);
+
+		navigationDispatch({
+			type: navegationActionTypes.SET_CURRENT_PROGRESS,
+			payload: {
+				currentTopic: previousTopic.slug,
+				currentSubtopic: newSubtopic.slug,
+			},
+		});
 	};
 
 	const finishModule = async () => {
@@ -182,7 +191,7 @@ export function ModuleButtons({
 				type="button"
 				className={`module-btn group ${navigationState.currentSubtopic.order === 0 ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 				disabled={navigationState.currentSubtopic.order === 0}
-				onClick={() => handleClick(false)}
+				onClick={handlePrevious}
 			>
 				<img
 					src={`/assets/images/icons/left_arrow.png`}
@@ -208,7 +217,7 @@ export function ModuleButtons({
 				<button
 					type="button"
 					className={`module-btn group ${navigationState.currentSubtopic.order === 'max' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-					onClick={() => handleClick(true)}
+					onClick={handleNext}
 				>
 					Avançar
 					<img

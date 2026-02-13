@@ -16,6 +16,7 @@ export function NavigationProvider() {
 		getInitialModuleState,
 	);
 
+	// Lazy initializer para a obtenção dos valores iniciais do nosso estado.
 	function getInitialModuleState() {
 		try {
 			const storage = localStorage.getItem(storageKeys.NAVIGATION_STATE);
@@ -29,6 +30,7 @@ export function NavigationProvider() {
 	useEffect(() => {
 		if (navigationState) return;
 
+		// Atualizando nosso local storage caso inexistente.
 		(async () => {
 			try {
 				const progressData = await hydrateNavegationState(authState.uid);
@@ -42,6 +44,7 @@ export function NavigationProvider() {
 		})();
 	}, [navigationState, authState.uid]);
 
+	// Setando os dados alterados em nosso local storage.
 	useEffect(() => {
 		localStorage.setItem(
 			storageKeys.MODULE_PROGRESS,

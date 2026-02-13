@@ -3,6 +3,7 @@ import { db } from '../database/firebase';
 import { logError } from './logger';
 import navegationInitialState from '../contexts/NavigationProvider/initialState';
 
+// Função responsável por atualizar o localStorage contendo os dados de navegação do usuário.
 export async function hydrateNavegationState(uid) {
 	try {
 		if (!uid) return navegationInitialState;
