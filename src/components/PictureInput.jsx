@@ -1,15 +1,16 @@
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useContext, useEffect, useState } from 'react';
 import { db, storage } from '../database/firebase';
-import AuthContext from '../contexts/AuthProvider/context';
+import { AuthContext } from '../contexts/AuthProvider/context';
 import { toast } from 'react-toastify';
 import { ToastNotification } from './Notifications';
 import { logError } from '../utils/logger';
 import { doc, updateDoc } from 'firebase/firestore';
+import authActionTypes from '../contexts/AuthProvider/actionTypes';
 
 export function PictureInput() {
-	const [authData, authDispatch] = useContext(AuthContext);
-	const { picture } = authData.data;
+	const { authState, authDispatch } = useContext(AuthContext);
+	const { picture } = authState.data;
 	const [picturePreview, setPicturePreview] = useState(picture);
 
 	useEffect(() => {
@@ -29,12 +30,15 @@ export function PictureInput() {
 			const file = e.target.files[0];
 			if (!file) return;
 
-			const { uid } = authData;
+			const { uid } = authState;
 			const storageRef = ref(storage, `pictures/${uid}`);
 			await uploadBytes(storageRef, file);
 			const publicUrl = await getDownloadURL(storageRef);
 
-			authDispatch(authDispatch, { picture: publicUrl }, uid);
+			authDispatch({
+				type: authActionTypes.SET_DATA,
+				payload: { data: { picture: publicUrl } },
+			});
 			await updateDoc(doc(db, 'users', uid), { picture: publicUrl });
 
 			toast(ToastNotification, {

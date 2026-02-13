@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import AuthContext from '../contexts/AuthProvider/context';
+import { AuthContext } from '../contexts/AuthProvider/context';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastNotification } from './Notifications';
@@ -7,19 +7,20 @@ import { dateFormatter } from '../utils/dataFormatter';
 import { PasswordInput } from './PasswordInput';
 import { signUpWithCredentials } from '../database/auth';
 import { validationRegex } from '../utils/validationRegex';
-import ProgressContext from '../contexts/ProgressProvider/context';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { logError } from '../utils/logger';
 import { signInWithGoogle } from '../database/oAuth';
-import { labelMap } from '../constants/labelMap';
+import { formMap } from '../constants/labelMap';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
-import { doc, setDoc } from 'firebase/firestore';
-import { db } from '../database/firebase';
+import navegationActionTypes from '../contexts/NavigationProvider/actionTypes';
+import { NavigationContext } from '../contexts/NavigationProvider/context';
 
 export function RegisterForm() {
 	const navigate = useNavigate();
-	const [, authDispatch] = useContext(AuthContext);
-	const [, progressDispatch] = useContext(ProgressContext);
+	const { authDispatch } = useContext(AuthContext);
+	const { progressDispatch } = useContext(ProgressContext);
+	const { navigationDispatch } = useContext(NavigationContext);
 
 	const [userData, setUserData] = useState({
 		email: '',
@@ -75,19 +76,22 @@ export function RegisterForm() {
 		}
 
 		try {
-			const { uid, initialProgress } = res;
+			const { uid, persistedData, progressData } = res.data;
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { uid, data: userData },
+				payload: { uid, data: persistedData },
 			});
-			await setDoc(doc(db, 'users', uid), userData);
 
 			progressDispatch({
 				type: progressActionTypes.SET_PROGRESS,
-				payload: { data: initialProgress },
+				payload: progressData,
 			});
-			await setDoc(doc(db, 'userProgress', uid), initialProgress);
+
+			navigationDispatch({
+				type: navegationActionTypes.SET_CURRENT_PROGRESS,
+				payload: progressData,
+			});
 
 			navigate('/dashboard/overview');
 			toast(ToastNotification, {
@@ -112,13 +116,16 @@ export function RegisterForm() {
 					type: authActionTypes.SET_DATA,
 					payload: { uid, data: providerData },
 				});
-				await setDoc(doc(db, 'users', uid), providerData);
 
-				progressDispatch({
+				authDispatch({
 					type: progressActionTypes.SET_PROGRESS,
-					payload: { data: progressData },
+					payload: progressData,
 				});
-				await setDoc(doc(db, 'userProgress', uid), progressData);
+
+				navigationDispatch({
+					type: navegationActionTypes.SET_CURRENT_PROGRESS,
+					payload: progressData,
+				});
 
 				navigate('/dashboard/overview');
 				toast(ToastNotification, {
@@ -142,8 +149,8 @@ export function RegisterForm() {
 				return (
 					<PasswordInput
 						handleChange={handleChange}
-						placeholders={placeholders}
-						userData={userData}
+						placeholder={placeholders.password}
+						value={userData.password}
 					/>
 				);
 			case 'birthDate':
@@ -173,14 +180,13 @@ export function RegisterForm() {
 
 	return (
 		<form
-			className="flex h-full flex-col justify-between"
+			className="flex h-full flex-col justify-center"
 			onSubmit={handleSubmit}
 		>
-			<h1 className="text-3xl font-bold tracking-wider">Criar conta</h1>
 			<div className="flex justify-between">
 				<div className="flex h-full flex-col justify-center">
 					<div className="flex flex-col gap-y-3">
-						{Object.entries(labelMap).map(([key, value]) => (
+						{Object.entries(formMap).map(([key, value]) => (
 							<div className="flex flex-col" key={key}>
 								<label
 									htmlFor={key}
@@ -193,8 +199,8 @@ export function RegisterForm() {
 						))}
 					</div>
 				</div>
-				<div className="flex h-full flex-col justify-center gap-y-10">
-					<p className="font-gray-200 font-space-grotesk w-[304px] text-4xl leading-normal tracking-wide text-shadow-[5px_5px_10px_rgba(0,_0,_0,_0.5)]">
+				<div className="flex h-full flex-col justify-center gap-y-6">
+					<p className="font-space-grotesk w-[303px] text-4xl leading-normal tracking-wide text-shadow-[5px_5px_10px_rgba(0,_0,_0,_0.5)]">
 						O{' '}
 						<span className="underline decoration-[var(--main-green)] decoration-2 underline-offset-[10px]">
 							primeiro passo

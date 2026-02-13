@@ -1,31 +1,33 @@
 import { useContext } from 'react';
-import ProgressContext from '../contexts/ProgressProvider/context';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { fetchContent } from '../content/fetchContent';
-import progressActionType from '../contexts/ProgressProvider/actionTypes';
+import { NavigationContext } from '../contexts/NavigationProvider/context';
+import navegationActionTypes from '../contexts/NavigationProvider/actionTypes';
 
 export function SubtopicDropdown({ index, fields, topicsContainer }) {
-	const [progressData, progressDispatch] = useContext(ProgressContext);
+	const { progressState } = useContext(ProgressContext);
+	const { navigationState, navigationDispatch } = useContext(NavigationContext);
 
 	const changeSubtopic = async (slug) => {
-		const res = await fetchContent('topic', 1);
+		const res = await fetchContent({ contentType: 'topic', include: 1 });
 		const topic = res.find((topic) => {
 			const subtopics = topic.fields.subtopics;
-			return subtopics.find((subtopic) => subtopic.fields.slug === slug);
+			return subtopics.find(({ fields }) => fields.slug === slug);
 		});
 
 		if (
-			!progressData.doneTopics.includes(topic.fields.slug) &&
-			progressData.currentTopic !== topic.fields.slug
-		)
+			!progressState.doneTopics.includes(topic.fields.slug) &&
+			navigationState.currentTopic !== topic.fields.slug
+		) {
 			return;
+		}
 
-		const data = {
-			currentTopic: topic.fields.slug,
-			currentSubtopic: slug,
-		};
-		await progressDispatch({
-			type: progressActionType.SET_PROGRESS,
-			payload: data,
+		navigationDispatch({
+			type: navegationActionTypes.SET_CURRENT_PROGRESS,
+			payload: {
+				currentTopic: topic.fields.slug,
+				currentSubtopic: slug,
+			},
 		});
 	};
 
@@ -36,7 +38,7 @@ export function SubtopicDropdown({ index, fields, topicsContainer }) {
 		>
 			{fields.subtopics?.map(({ fields }) => (
 				<div key={fields.title} className="flex items-center gap-x-2 pb-4">
-					{progressData.doneSubtopics.includes(fields.slug) ? (
+					{progressState.doneSubtopics.includes(fields.slug) ? (
 						<img
 							className="w-5"
 							src="/assets/images/icons/success.png"

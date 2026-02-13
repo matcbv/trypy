@@ -1,30 +1,53 @@
 import { useContext, useEffect, useState } from 'react';
-import ProgressContext from '../contexts/ProgressProvider/context';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
 import UserContext from '../contexts/AuthProvider/context';
 import { fetchContent } from '../content/fetchContent';
 import { ProgressBar } from '../components/ProgressBar';
+import { logError } from '../utils/logger';
 
 export function UserOverview() {
-	const [authData] = useContext(UserContext);
-	const [progressData] = useContext(ProgressContext);
-	const [titles, setTitles] = useState({});
+	const { authState } = useContext(UserContext);
+	const { progressState } = useContext(ProgressContext);
+	const [titles, setTitles] = useState({
+		module: '',
+		topic: '',
+		subtopic: '',
+	});
 	const [isCopied, setIsCopied] = useState(false);
 
 	useEffect(() => {
-		[
-			{ type: 'module', slug: progressData.currentModule },
-			{ type: 'topic', slug: progressData.currentTopic },
-			{ type: 'subtopic', slug: progressData.currentSubtopic },
-		].forEach(async (obj) => {
-			if (!obj.slug) return;
-
-			const res = await fetchContent(obj.type, 0, obj.slug);
-			setTitles((prev) => ({ ...prev, [obj.type]: res[0].fields.title }));
-		});
+		(async () => {
+			try {
+				const [module, topic, subtopic] = await Promise.all([
+					fetchContent({
+						contentType: 'module',
+						include: 0,
+						orderOrSlug: progressState.inProgressModule,
+					}),
+					fetchContent({
+						contentType: 'topic',
+						include: 0,
+						orderOrSlug: progressState.inProgressTopic,
+					}),
+					fetchContent({
+						contentType: 'subtopic',
+						include: 0,
+						orderOrSlug: progressState.inProgressSubtopic,
+					}),
+				]);
+				setTitles({
+					module: module[0]?.fields.title || 'Nenhum módulo concluído',
+					topic: topic[0]?.fields.title || 'Nenhum tópico concluído',
+					subtopic: subtopic[0]?.fields.title || 'Nenhum subtópico concluído',
+				});
+			} catch (error) {
+				logError(error);
+			}
+		})();
 	}, [
-		progressData.currentModule,
-		progressData.currentTopic,
-		progressData.currentSubtopic,
+		progressState.inProgressModule,
+		progressState.inProgressTopic,
+		progressState.inProgressSubtopic,
 	]);
 
 	const copyText = async (text) => {
@@ -38,7 +61,9 @@ export function UserOverview() {
 	return (
 		<div className="flex flex-col gap-y-12">
 			<div>
-				<h1 className="mb-8 text-3xl font-bold">Olá, {authData.data?.name}!</h1>
+				<h1 className="mb-8 text-3xl font-bold">
+					Olá, {authState.data?.name}!
+				</h1>
 				<h2 className="mb-2 text-lg">Dados da conta:</h2>
 				<div className="flex w-1/2 flex-col gap-y-2 rounded-md bg-black/40 p-4 shadow-[0_0_10px_#0000009c]">
 					<p className="flex gap-x-2">
@@ -49,7 +74,7 @@ export function UserOverview() {
 							onMouseLeave={() => setTimeout(() => setIsCopied(false), 100)}
 						>
 							<span className="mr-0.5 text-[var(--main-purple)]">#</span>
-							{authData.data?.id}
+							{authState.data?.id}
 							<img
 								src={`/assets/images/icons/${isCopied ? 'success' : 'copy'}.png`}
 								alt="Copiar"
@@ -67,7 +92,7 @@ export function UserOverview() {
 			</div>
 			<div>
 				<h2 className="mb-4 text-2xl tracking-wide">Progresso da trilha</h2>
-				<div className="flex items-center gap-x-10 rounded-md bg-black/40 p-8 shadow-[0_0_15px_#0000009c] ring ring-[var(--main-green)]/60">
+				<div className="flex items-center gap-x-10 rounded-md bg-black/40 p-8 shadow-[0_0_15px_#0000009c]">
 					<ProgressBar />
 					<div className="flex flex-col gap-y-5">
 						<p className="flex flex-col gap-y-1">
@@ -93,7 +118,7 @@ export function UserOverview() {
 			</div>
 			<div>
 				<h2 className="mb-4 text-2xl">Conquistas</h2>
-				<div className="flex items-center gap-x-1 rounded-md bg-black/40 p-8 shadow-[0_0_15px_#0000009c] ring ring-[var(--main-purple)]/60">
+				<div className="flex items-center gap-x-1 rounded-md bg-black/40 p-8 shadow-[0_0_15px_#0000009c]">
 					<img src="/assets/images/icons/loading.png" alt="Carregando" />
 					<p className="text-xl">Em produção...</p>
 				</div>

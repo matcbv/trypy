@@ -1,63 +1,88 @@
-import { useContext, useEffect, useState } from 'react';
-import AuthContext from '../contexts/AuthProvider/context';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../contexts/AuthProvider/context';
 import { getNextContent } from '../content/getNextContent';
 import { logError } from '../utils/logger';
-import ProgressContext from '../contexts/ProgressProvider/context';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
 import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { useNavigate, useParams } from 'react-router-dom';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../database/firebase';
+import { NavigationContext } from '../contexts/NavigationProvider/context';
+import navegationActionTypes from '../contexts/NavigationProvider/actionTypes';
 
 export function ModuleButtons({
 	topics,
 	subtopics,
-	currentTopic,
-	currentSubtopic,
+	moduleData,
+	topicData,
+	subtopicData,
 }) {
-	const [authData] = useContext(AuthContext);
-	const [progressData, progressDispatch] = useContext(ProgressContext);
-	const [isLastSubtopic, setIsLastSubtopic] = useState(false);
+	const { authState } = useContext(AuthContext);
+	const { progressState, progressDispatch } = useContext(ProgressContext);
+	const { navigationState, navigationDispatch } = useContext(NavigationContext);
 	const params = useParams();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const lastSubtopic = topics.at(-1)?.subtopics.at(-1)?.fields.slug;
 
-		if (progressData.currentSubtopic === lastSubtopic) {
-			setIsLastSubtopic(true);
+		if (progressState.currentSubtopic === lastSubtopic) {
+			navigationDispatch({
+				type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
+				payload: true,
+			});
 		}
-	}, [topics, progressData.doneTopics, progressData.currentSubtopic]);
+	}, [topics, progressState.currentSubtopic, navigationDispatch]);
 
 	const handleClick = async (next) => {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
 		try {
 			if (next) {
+				const data = {};
 				// Obtendo os próximos conteúdos:
-				const [nextTopic, nextSubtopic, isLast] = getNextContent({
-					topics,
-					subtopics,
-					currentTopic,
-					currentSubtopic,
+				const { nextTopic, nextSubtopic, isLastSubtopic } =
+					await getNextContent(moduleData, topicData, subtopicData);
+
+				if (isLastSubtopic) {
+					navigationDispatch({
+						type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
+						payload: true,
+					});
+				}
+
+				navigationDispatch({
+					type: navegationActionTypes.SET_CURRENT_PROGRESS,
+					payload: {
+						currentTopic: nextTopic.slug || '',
+						currentSubtopic: nextSubtopic.slug || '',
+					},
 				});
 
-				if (isLast) setIsLastSubtopic(true);
+				if (
+					!progressState.doneSubtopics.includes(navigationState.currentSubtopic)
+				)
+					data.doneSubtopics = [
+						...progressState.doneSubtopics,
+						navigationState.currentSubtopic,
+					];
 
-				const data = {
-					currentTopic: nextTopic.slug,
-					currentSubtopic: nextSubtopic.slug,
-					doneSubtopics: [
-						...new Set([...progressData.doneSubtopics, currentSubtopic.slug]),
-					],
-				};
+				if (!progressState.doneSubtopics.includes(nextSubtopic.slug))
+					data.inProgressSubtopic = nextSubtopic.slug;
 
 				const isTopicDone = subtopics.every((subtopic) =>
-					data.doneSubtopics.includes(subtopic.slug),
+					data.doneSubtopics?.includes(subtopic.slug),
 				);
 
-				if (isTopicDone && !progressData.doneTopics.includes(nextTopic.slug)) {
+				if (
+					isTopicDone &&
+					!progressState.doneTopics.includes(navigationState.currentTopic)
+				) {
 					data.doneTopics = [
-						...new Set([...progressData.doneTopics, currentTopic.slug]),
+						...new Set([
+							...progressState.doneTopics,
+							navigationState.currentTopic,
+						]),
 					];
 					data.inProgressTopic = nextTopic.slug;
 				}
@@ -66,29 +91,29 @@ export function ModuleButtons({
 					type: progressActionTypes.SET_PROGRESS,
 					payload: data,
 				});
-				await updateDoc(doc(db, 'userProgress', authData.uid), data);
+				await updateDoc(doc(db, 'userProgress', authState.uid), data);
 			} else {
-				setIsLastSubtopic(false);
+				navigationDispatch({
+					type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
+					payload: false,
+				});
 
 				// Obtendo o subtópico anterior:
 				const previousSubtopic = subtopics.find(
-					(subtopic) => subtopic.order === currentSubtopic.order - 1,
+					(subtopic) => subtopic.order === subtopicData.order - 1,
 				);
 
 				if (previousSubtopic) {
-					progressDispatch({
-						type: progressActionTypes.SET_PROGRESS,
+					navigationDispatch({
+						type: navegationActionTypes.SET_CURRENT_PROGRESS,
 						payload: { currentSubtopic: previousSubtopic.slug },
-					});
-					await updateDoc(doc(db, 'userProgress', authData.uid), {
-						currentSubtopic: previousSubtopic.slug,
 					});
 					return;
 				}
 
 				// Caso o subtópico anterior não exista, iremos obter o último subtópico do tópico anterior:
 				const previousTopic = topics.find(
-					(topic) => topic.order === currentTopic.order - 1,
+					(topic) => topic.order === topicData.order - 1,
 				);
 				if (!previousTopic) return;
 
@@ -99,16 +124,13 @@ export function ModuleButtons({
 					(subtopic) => subtopic.order === previousSubtopics.length,
 				);
 
-				const data = {
-					currentTopic: previousTopic.slug,
-					currentSubtopic: newSubtopic.slug,
-				};
-
-				progressDispatch({
-					type: progressActionTypes.SET_PROGRESS,
-					payload: data,
+				navigationDispatch({
+					type: navegationActionTypes.SET_CURRENT_PROGRESS,
+					payload: {
+						currentTopic: previousTopic.slug,
+						currentSubtopic: newSubtopic.slug,
+					},
 				});
-				await updateDoc(doc(db, 'userProgress', authData.uid), data);
 			}
 		} catch (error) {
 			logError(error);
@@ -118,27 +140,48 @@ export function ModuleButtons({
 	const finishModule = async () => {
 		navigate('/learning-path');
 
-		if (progressData.doneModules.includes(params.moduleId)) return;
+		if (progressState.doneModules.includes(params.moduleId)) return;
+
+		const { nextModule, nextSubtopic, nextTopic } = await getNextContent(
+			moduleData,
+			topicData,
+			subtopicData,
+		);
 
 		const data = {
-			doneSubtopics: [...progressData.doneSubtopics, currentSubtopic.slug],
-			doneTopics: [...progressData.doneTopics, currentTopic.slug],
-			doneModules: [...progressData.doneModules, params.moduleId],
-			inProgressTopic: '',
+			doneSubtopics: [
+				...progressState.doneSubtopics,
+				navigationState.currentSubtopic,
+			],
+			doneTopics: [...progressState.doneTopics, navigationState.currentTopic],
+			doneModules: [...progressState.doneModules, params.moduleId],
+			inProgressModule: nextModule.slug,
+			inProgressTopic: nextTopic.slug,
+			inProgressSubtopic: nextSubtopic.slug,
 		};
+
 		progressDispatch({
 			type: progressActionTypes.SET_PROGRESS,
 			payload: data,
 		});
-		await updateDoc(doc(db, 'userProgress', authData.uid), data);
+		navigationDispatch({
+			type: navegationActionTypes.SET_CURRENT_PROGRESS,
+			payload: {
+				currentModule: nextModule.slug,
+				currentTopic: nextTopic.slug,
+				currentSubtopic: nextSubtopic.slug,
+				isLastSubtopic: false,
+			},
+		});
+		await updateDoc(doc(db, 'userProgress', authState.uid), data);
 	};
 
 	return (
 		<div className="flex justify-end gap-x-10">
 			<button
 				type="button"
-				className={`module-btn group ${currentSubtopic.order === 0 ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-				disabled={currentSubtopic.order === 0}
+				className={`module-btn group ${navigationState.currentSubtopic.order === 0 ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+				disabled={navigationState.currentSubtopic.order === 0}
 				onClick={() => handleClick(false)}
 			>
 				<img
@@ -148,10 +191,10 @@ export function ModuleButtons({
 				/>
 				Voltar
 			</button>
-			{isLastSubtopic ? (
+			{navigationState.isLastSubtopic ? (
 				<button
 					type="button"
-					className={`module-btn group ${currentSubtopic.order === 'max' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+					className={`module-btn group ${navigationState.currentSubtopic.order === 'max' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 					onClick={finishModule}
 				>
 					Concluir
@@ -164,7 +207,7 @@ export function ModuleButtons({
 			) : (
 				<button
 					type="button"
-					className={`module-btn group ${currentSubtopic.order === 'max' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+					className={`module-btn group ${navigationState.currentSubtopic.order === 'max' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 					onClick={() => handleClick(true)}
 				>
 					Avançar

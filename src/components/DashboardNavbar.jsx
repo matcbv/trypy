@@ -4,16 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastNotification } from '../components/Notifications';
 import { logError } from '../utils/logger';
+import { storageKeys } from '../constants/storageKeys';
 
 export function DashboardNavbar() {
 	const navigate = useNavigate();
 
 	const objectsMap = [
-		{
-			slug: 'overview',
-			title: 'Visão geral',
-			icon: 'user_overview',
-		},
+		{ slug: 'overview', title: 'Visão geral', icon: 'user_overview' },
 		{ slug: 'profile', title: 'Editar conta', icon: 'edit_account' },
 		{ slug: 'certifications', title: 'Certificações', icon: 'certificate' },
 		{ slug: 'resolutions', title: 'Resoluções', icon: 'resolution' },
@@ -23,6 +20,7 @@ export function DashboardNavbar() {
 	const logout = async () => {
 		try {
 			await signOut(auth);
+			localStorage.removeItem(storageKeys.NAVIGATION_STATE);
 			navigate('/', { replace: true });
 			toast(ToastNotification, {
 				type: 'success',

@@ -2,18 +2,18 @@ import { useContext, useEffect, useState } from 'react';
 import { contentfulFormatter } from '../content/contentfulFormatter';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../database/firebase';
-import AuthContext from '../contexts/AuthProvider/context';
+import { AuthContext } from '../contexts/AuthProvider/context';
 import { logError } from '../utils/logger';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 
 export function TipPy({ tipFields }) {
-	const [authData, authDispatch] = useContext(AuthContext);
+	const { authState, authDispatch } = useContext(AuthContext);
 	const [favorited, setFavorited] = useState(false);
 
 	useEffect(() => {
-		const savedTips = authData.data.savedTips;
+		const savedTips = authState.data.savedTips;
 		savedTips && setFavorited(savedTips.includes(tipFields.slug));
-	}, [authData.data.savedTips, tipFields.slug]);
+	}, [authState.data.savedTips, tipFields.slug]);
 
 	const toggleImage = (e, isHovering) => {
 		if (!favorited && e.target) {
@@ -22,16 +22,16 @@ export function TipPy({ tipFields }) {
 	};
 
 	const toggleFavorite = async () => {
-		if (!authData.data) return;
+		if (!authState.data) return;
 
 		try {
-			let savedTips = authData.data.savedTips ?? [];
+			let savedTips = authState.data.savedTips ?? [];
 			if (savedTips.includes(tipFields.slug)) {
 				savedTips = savedTips.filter((tip) => tip !== tipFields.slug);
 			} else {
 				savedTips = [...savedTips, tipFields.slug];
 			}
-			await updateDoc(doc(db, 'users', authData.uid), { savedTips });
+			await updateDoc(doc(db, 'users', authState.uid), { savedTips });
 			authDispatch({
 				type: authActionTypes.SET_DATA,
 				payload: { data: { savedTips } },

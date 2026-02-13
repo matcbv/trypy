@@ -1,9 +1,9 @@
 import { useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import AuthContext from '../contexts/AuthProvider/context';
+import { AuthContext } from '../contexts/AuthProvider/context';
 
 export function HeaderList() {
-	const [authData] = useContext(AuthContext);
+	const { authState } = useContext(AuthContext);
 	const underlineRef = useRef(null);
 
 	const showUnderline = (e) => {
@@ -27,7 +27,7 @@ export function HeaderList() {
 				onMouseEnter={showUnderline}
 				onMouseLeave={hideUnderline}
 			>
-				{Object.keys(authData.data || {}).length > 0 ? (
+				{Object.keys(authState.data || {}).length > 0 ? (
 					<Link to="/dashboard/overview">Minha conta</Link>
 				) : (
 					<Link to="/session">Iniciar sessão</Link>

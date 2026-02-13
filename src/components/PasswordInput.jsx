@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-export function PasswordInput({ handleChange, userData, placeholders }) {
+export function PasswordInput({ handleChange, value, placeholder }) {
 	const [isVisible, setIsVisible] = useState(false);
 	const [hideText, setHideText] = useState(true);
 	const wrapperRef = useRef(null);
@@ -21,8 +21,8 @@ export function PasswordInput({ handleChange, userData, placeholders }) {
 					onChange={handleChange}
 					onFocus={() => setHideText(false)}
 					onBlur={toogleText}
-					value={userData.password}
-					placeholder={placeholders.password}
+					value={value}
+					placeholder={placeholder}
 					className="w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 placeholder-red-400 outline-none focus:border-[var(--main-green)]"
 				/>
 				<img

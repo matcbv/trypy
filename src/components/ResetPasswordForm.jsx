@@ -1,13 +1,60 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { ToastNotification } from './Notifications';
+import { logError } from '../utils/logger';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../database/firebase';
+
 export function ResetPassowrdForm() {
+	const [email, setEmail] = useState('');
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		if (email.length <= 0) {
+			toast(ToastNotification, {
+				type: 'error',
+				data: {
+					type: 'error',
+					text: 'Preencha o campo de e-mail!',
+				},
+			});
+			return;
+		}
+
+		try {
+			const actionCodeSettings = {
+				url: 'http://localhost:5173/',
+				handleCodeInApp: true,
+			};
+			await sendPasswordResetEmail(auth, email, actionCodeSettings);
+		} catch (error) {
+			logError(error);
+		}
+	};
+
 	return (
-		<form className="w-[500px]">
-			<div className="flex flex-col">
-				<p className="">
-					Para prosseguir com redefinição de sua senha, informe o e-mail
-					cadastrado em sua conta.
-				</p>
-				<input type="text" placeholder="E-mail cadastrado" />
-				<button type="button">Continuar</button>
+		<form className="mb-8 w-[350px]" onSubmit={handleSubmit}>
+			<div className="flex flex-col gap-y-8 text-sm">
+				<div className="relative flex w-full items-end border-b-2 border-b-[var(--main-green)]">
+					<label htmlFor="" className="font-jetbrains w-20">
+						E-mail
+					</label>
+					<input
+						type="text"
+						className="w-full focus:outline-none"
+						onChange={(e) => setEmail(e.target.value)}
+					/>
+				</div>
+				<div className="flex gap-x-8">
+					<button type="submit" className="form-btn w-[150px]">
+						Continuar
+					</button>
+					<Link to={'/session'} className="form-btn block w-[120px]">
+						Voltar
+					</Link>
+				</div>
 			</div>
 		</form>
 	);

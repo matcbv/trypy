@@ -7,7 +7,10 @@ export function LearningPath() {
 
 	useEffect(() => {
 		(async () => {
-			const content = await fetchContent('moduleCard', 0);
+			const content = await fetchContent({
+				contentType: 'moduleCard',
+				include: 0,
+			});
 			setCardContent(() => content.map((card) => card.fields));
 		})();
 	}, []);

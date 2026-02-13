@@ -2,19 +2,19 @@ import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 import { signInWithGoogle } from '../database/oAuth';
 import { ToastNotification } from './Notifications';
-import { Link, useNavigate } from 'react-router-dom';
-import AuthContext from '../contexts/AuthProvider/context';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthProvider/context';
 import { validationRegex } from '../utils/validationRegex';
 import { signInWithCredentials } from '../database/auth';
-import ProgressContext from '../contexts/ProgressProvider/context';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { logError } from '../utils/logger';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 
 export function SessionForm() {
 	const navigate = useNavigate();
-	const [, authDispatch] = useContext(AuthContext);
-	const [, progressDispatch] = useContext(ProgressContext);
+	const { authDispatch } = useContext(AuthContext);
+	const { progressDispatch } = useContext(ProgressContext);
 	const [userCredentials, setUserCredentials] = useState({
 		email: '',
 		password: '',
@@ -108,8 +108,8 @@ export function SessionForm() {
 	const handleGitHub = async () => {};
 
 	return (
-		<form className="mb-10 flex flex-col gap-y-10" onSubmit={handleSubmit}>
-			<div className="flex w-[350px] flex-col gap-y-7 text-sm">
+		<form className="mb-5 flex flex-col gap-y-10" onSubmit={handleSubmit}>
+			<div className="flex w-[350px] flex-col gap-y-6 text-sm">
 				{Object.entries(userCredentials).map(([key, value]) => (
 					<div
 						className="relative flex w-full items-end border-b-2 border-b-[var(--main-green)]"
@@ -137,9 +137,9 @@ export function SessionForm() {
 				))}
 			</div>
 			<div>
-				<div className="mb-5 flex items-center gap-x-5">
+				<div className="flex items-center gap-x-5">
 					<input
-						className="form-btn w-[200px]"
+						className="form-btn w-[180px]"
 						type="submit"
 						value="Acessar conta"
 					/>
@@ -156,12 +156,6 @@ export function SessionForm() {
 						onClick={handleGitHub}
 					/>
 				</div>
-				<Link
-					to={'/reset-password'}
-					className="w-[200px] cursor-pointer text-start transition-colors hover:text-[var(--main-green)]"
-				>
-					Redefinir senha
-				</Link>
 			</div>
 		</form>
 	);

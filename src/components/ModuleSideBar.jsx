@@ -1,13 +1,15 @@
-import { useContext, useRef } from 'react';
-import ProgressContext from '../contexts/ProgressProvider/context';
+import { useContext, useEffect, useRef } from 'react';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { SubtopicDropdown } from './SubtopicDropdown';
 
 export function ModuleSideBar({ topics }) {
-	const [progressData] = useContext(ProgressContext);
+	const { progressState } = useContext(ProgressContext);
 	const topicsContainer = useRef([]);
 	const currentContainer = useRef(null);
 	const arrows = useRef([]);
 	const currentArrow = useRef(null);
+
+	useEffect(() => {}, []);
 
 	const handleClick = (index) => {
 		const container = topicsContainer.current[index];
@@ -34,11 +36,11 @@ export function ModuleSideBar({ topics }) {
 	};
 
 	const iconData = (topic) => {
-		if (progressData.doneTopics.includes(topic.slug)) {
+		if (progressState.doneTopics.includes(topic.slug)) {
 			return { src: '/assets/images/icons/success.png', alt: 'Concluído' };
 		}
 
-		if (progressData.inProgressTopic === topic.slug)
+		if (progressState.inProgressTopic === topic.slug)
 			return { src: '/assets/images/icons/progress.png', alt: 'Em progresso' };
 
 		return { src: '/assets/images/icons/locked.png', alt: 'Bloqueado' };
@@ -58,8 +60,8 @@ export function ModuleSideBar({ topics }) {
 								{topic.title}
 							</p>
 						</div>
-						{(progressData.doneTopics.includes(topic.slug) ||
-							progressData.inProgressTopic === topic.slug) && (
+						{(progressState.doneTopics.includes(topic.slug) ||
+							progressState.inProgressTopic === topic.slug) && (
 							<img
 								src="/assets/images/icons/arrow.png"
 								className="cursor-pointer transition-transform duration-300"

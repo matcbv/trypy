@@ -1,17 +1,20 @@
 import { useContext, useEffect, useState } from 'react';
 import { fetchContent } from '../content/fetchContent';
-import ProgressContext from '../contexts/ProgressProvider/context';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
 
 export function ProgressBar() {
 	const [progressPercentual, setProgressPercentual] = useState(0);
-	const [progressState] = useContext(ProgressContext);
+	const { progressState } = useContext(ProgressContext);
 	const perimeter = 2 * Math.PI * 80;
 
 	useEffect(() => {
 		(async () => {
-			const topics = await fetchContent('topic', 0);
+			const subtopic = await fetchContent({
+				contentType: 'subtopic',
+				include: 0,
+			});
 			const percentual =
-				(progressState.doneTopics.length * 100) / topics.length;
+				(progressState.doneSubtopics.length * 100) / subtopic.length;
 			setProgressPercentual(percentual.toFixed(0));
 		})();
 	});

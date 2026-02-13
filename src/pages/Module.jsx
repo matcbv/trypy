@@ -3,59 +3,123 @@ import { ModuleSideBar } from '../components/ModuleSideBar';
 import { useContext, useEffect, useState } from 'react';
 import { fetchContent } from '../content/fetchContent';
 import { contentfulFormatter } from '../content/contentfulFormatter';
-import ProgressContext from '../contexts/ProgressProvider/context';
 import { ModuleButtons } from '../components/ModuleButtons';
+import { NavigationContext } from '../contexts/NavigationProvider/context';
+import navegationActionTypes from '../contexts/NavigationProvider/actionTypes';
+import { hydrateNavegationState } from '../utils/hydrateNavegationState';
+import { AuthContext } from '../contexts/AuthProvider/context';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
 
 export function Module() {
-	const [progressData] = useContext(ProgressContext);
+	const { authState } = useContext(AuthContext);
+	const { progressState } = useContext(ProgressContext);
+	const { navigationState, navigationDispatch } = useContext(NavigationContext);
+	const [moduleData, setModuleData] = useState(null);
 	const [topics, setTopics] = useState([]);
-	const [currentTopic, setCurrentTopic] = useState({});
+	const [topicData, setTopicData] = useState({});
 	const [subtopics, setSubtopics] = useState([]);
-	const [currentSubtopic, setCurrentSubtopic] = useState({});
-	const [isLastSubtopic, setIsLastSubtopic] = useState(false);
+	const [subtopicData, setSubtopicData] = useState({});
 	const params = useParams();
 
 	useEffect(() => {
-		if (!progressData?.currentTopic || !progressData?.currentSubtopic) return;
+		(async () => {
+			const content = await fetchContent({
+				contentType: 'module',
+				include: 4,
+				orderOrSlug: params.moduleId,
+			});
+			setModuleData(content[0].fields);
+		})();
+	}, [params.moduleId]);
+
+	useEffect(() => {
+		if (!navigationState) {
+			(async () => {
+				const progressData = await hydrateNavegationState(authState.uid);
+				navigationDispatch({
+					type: navegationActionTypes.SET_CURRENT_PROGRESS,
+					payload: progressData,
+				});
+			})();
+		}
+	}, [navigationState, navigationDispatch, authState.uid]);
+
+	useEffect(() => {
+		if (!moduleData) return;
+		if (!progressState.doneModules.includes(params.moduleId)) return;
+		if (navigationState.currentModule === params.moduleId) return;
+
+		const lastModuleTopic = moduleData.topics.find(
+			({ fields }) => fields.order === moduleData.topics.length,
+		);
+		const lastModuleSubtopic = lastModuleTopic.fields.subtopics.find(
+			({ fields }) => fields.order === lastModuleTopic.fields.subtopics.length,
+		);
+		navigationDispatch({
+			type: navegationActionTypes.SET_CURRENT_PROGRESS,
+			payload: {
+				currentModule: params.moduleId,
+				currentTopic: lastModuleTopic.fields.slug,
+				currentSubtopic: lastModuleSubtopic.fields.slug,
+			},
+		});
+	}, [
+		params.moduleId,
+		progressState.doneModules,
+		navigationState.currentModule,
+		moduleData,
+		navigationDispatch,
+	]);
+
+	useEffect(() => {
+		if (!moduleData) return;
+		if (!navigationState.currentTopic) return;
+		if (!navigationState.currentSubtopic) return;
 
 		(async () => {
-			const content = await fetchContent('module', 4, params.moduleId);
-			const topics = content[0].fields.topics;
-			const topic = topics.find(
-				({ fields }) => fields.slug === progressData.currentTopic,
+			const topic = moduleData.topics.find(
+				({ fields }) => fields.slug === navigationState.currentTopic,
 			);
 			const subtopic = topic.fields.subtopics.find(
-				({ fields }) => fields.slug === progressData.currentSubtopic,
+				({ fields }) => fields.slug === navigationState.currentSubtopic,
 			);
-			const nextTopic = topics.find(
-				({ fields }) => fields.order === topic.fields.order + 1,
+			setTopics(moduleData.topics.map(({ fields }) => fields));
+			setTopicData(topic.fields);
+			setSubtopics(topic.fields.subtopics.map((subtopic) => subtopic.fields));
+			setSubtopicData(subtopic.fields);
+
+			const nextTopic = moduleData.topics.find(
+				({ fields }) => fields?.order === topic.fields.order + 1,
 			);
 
-			setTopics(topics.map((topic) => topic.fields));
-			setCurrentTopic(topic.fields);
-			setSubtopics(topic.fields.subtopics.map((subtopic) => subtopic.fields));
-			setCurrentSubtopic(subtopic.fields);
-			setIsLastSubtopic(
-				nextTopic ? false : subtopic.fields.order === subtopics.length,
-			);
+			navigationDispatch({
+				type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
+				payload: nextTopic
+					? false
+					: subtopic.fields.order === topic.fields.subtopics.length,
+			});
 		})();
-	}, [params.moduleId, subtopics.length, progressData]);
+	}, [
+		moduleData,
+		params.moduleId,
+		navigationState.currentTopic,
+		navigationState.currentSubtopic,
+		navigationDispatch,
+	]);
 
 	return (
 		<div className="relative flex justify-center gap-x-10 py-[120px]">
 			<ModuleSideBar topics={topics} />
 			<div className="z-20 w-[1200px] rounded-lg bg-[#0d0a14] p-10 shadow-[0_0_20px_#ffffff0f]">
-				<h1 className="mb-5 text-3xl text-green-600">
-					{currentSubtopic.title}
-				</h1>
+				<h1 className="mb-5 text-3xl text-green-600">{subtopicData.title}</h1>
 				<div className="mb-10 flex flex-col gap-y-5">
-					{contentfulFormatter(currentSubtopic.content)}
-					{currentSubtopic.videoLink && (
+					{contentfulFormatter(subtopicData.content)}
+					{subtopicData.videoLink && (
 						<div className="flex justify-center">
 							<iframe
 								className="h-[360px] w-[640px] rounded-md shadow-[0_0_30px_#ffffff0f]"
-								src={currentSubtopic.videoLink}
-								title={currentSubtopic.title}
+								src={subtopicData.videoLink}
+								title={subtopicData.title}
 								frameBorder="0"
 								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 								referrerPolicy="strict-origin-when-cross-origin"
@@ -66,10 +130,10 @@ export function Module() {
 				</div>
 				<ModuleButtons
 					topics={topics}
-					currentTopic={currentTopic}
 					subtopics={subtopics}
-					currentSubtopic={currentSubtopic}
-					isLastSubtopicState={[isLastSubtopic, setIsLastSubtopic]}
+					moduleData={moduleData}
+					topicData={topicData}
+					subtopicData={subtopicData}
 				/>
 			</div>
 			<button

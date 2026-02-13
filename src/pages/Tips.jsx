@@ -1,24 +1,28 @@
 import { useContext, useEffect, useState } from 'react';
-import AuthContext from '../contexts/AuthProvider/context';
+import { AuthContext } from '../contexts/AuthProvider/context';
 import { TipPy } from '../components/TipPy';
 import { fetchContent } from '../content/fetchContent';
 
 export function Tips() {
-	const [authData] = useContext(AuthContext);
+	const { authState } = useContext(AuthContext);
 	const [tips, setTips] = useState([]);
 
 	useEffect(() => {
-		if (!authData.data.savedTips) return;
+		if (!authState.data.savedTips) return;
 		(async () => {
 			const tips = await Promise.all(
-				authData.data.savedTips.map(async (slug) => {
-					const res = await fetchContent('tipPy', 0, slug);
+				authState.data.savedTips.map(async (slug) => {
+					const res = await fetchContent({
+						contentType: 'tipPy',
+						include: 0,
+						orderOrSlug: slug,
+					});
 					return res[0].fields;
 				}),
 			);
 			setTips(tips);
 		})();
-	}, [authData.data.savedTips]);
+	}, [authState.data.savedTips]);
 
 	return (
 		<div>

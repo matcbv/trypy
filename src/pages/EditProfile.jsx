@@ -1,45 +1,38 @@
 import { useContext, useState } from 'react';
-import AuthContext from '../contexts/AuthProvider/context';
+import { AuthContext } from '../contexts/AuthProvider/context';
 import { ProfileForm } from '../components/ProfileForm';
 import { deleteAccount } from '../database/auth';
-import { logError } from '../utils/logger';
 import { toast } from 'react-toastify';
 import { ToastNotification } from '../components/Notifications';
 import { Link, useNavigate } from 'react-router-dom';
-import actionTypes from '../contexts/AuthProvider/actionTypes';
-import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../database/firebase';
+import authActionTypes from '../contexts/AuthProvider/actionTypes';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
+import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
+import { storageKeys } from '../constants/storageKeys';
 
 export function EditProfile() {
 	const navigate = useNavigate();
-	const [authData, authDispatch] = useContext(AuthContext);
+	const { authState, authDispatch } = useContext(AuthContext);
+	const { progressDispatch } = useContext(ProgressContext);
 	const [userPassword, setUserPassword] = useState('');
 	const [isVisible, setIsVisible] = useState(false);
 
 	const deleteAccountWrapper = async () => {
 		if (userPassword.length <= 0) return;
 
-		const res = await deleteAccount(userPassword);
+		const res = await deleteAccount(userPassword, authState.uid);
 		if (res.success) {
-			try {
-				await Promise.all([
-					deleteDoc(doc(db, 'users', authData.uid)),
-					deleteDoc(doc(db, 'userProgress', authData.uid)),
-				]);
-				authDispatch({
-					type: actionTypes.LOGOUT,
-				});
-				navigate('/');
-				toast(ToastNotification, {
+			authDispatch({ type: authActionTypes.LOGOUT });
+			progressDispatch({ type: progressActionTypes.RESET_PROGRESS });
+			localStorage.removeItem(storageKeys.NAVIGATION_STATE);
+			navigate('/');
+			toast(ToastNotification, {
+				type: 'success',
+				data: {
 					type: 'success',
-					data: {
-						type: 'success',
-						text: 'Conta deletada com sucesso!',
-					},
-				});
-			} catch (error) {
-				logError(error);
-			}
+					text: 'Conta deletada com sucesso!',
+				},
+			});
 		} else {
 			setUserPassword('');
 			toast(ToastNotification, {

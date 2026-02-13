@@ -1,31 +1,13 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import ProgressContext from '../contexts/ProgressProvider/context';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
 
 export function ModuleCard({ card }) {
-	const [progressData] = useContext(ProgressContext);
-	const isModuleBlocked =
-		!progressData.doneModules.includes(card.moduleId) &&
-		progressData.currentModule !== card.moduleId;
+	const { progressState } = useContext(ProgressContext);
 
-	const moduleLink = () => {
-		return (
-			<Link
-				to={`/learning-path/${card.moduleId}`}
-				className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${isModuleBlocked ? 'cursor-not-allowed' : 'hover:bg-[var(--slideButtonColor)] hover:shadow-[0_0_10px_var(--slideButtonColor)]'}`}
-				onClick={(e) => isModuleBlocked && e.preventDefault()}
-			>
-				<p
-					className={`absolute left-10 flex items-center gap-x-3 text-white transition-all duration-300 ${!isModuleBlocked && 'group-hover:left-[292px]'}`}
-				>
-					{isModuleBlocked && (
-						<img src="/assets/images/icons/locked.png" alt="Bloqueado" />
-					)}
-					Acessar módulo
-				</p>
-			</Link>
-		);
-	};
+	const isModuleBlocked =
+		!progressState.doneModules.includes(card.moduleId) &&
+		progressState.inProgressModule !== card.moduleId;
 
 	return (
 		<div
@@ -35,7 +17,7 @@ export function ModuleCard({ card }) {
 			<div className="flex h-full w-full flex-col bg-[#0f0d16dc]">
 				<h2 className="flex gap-x-3 rounded-t-md border-b border-[var(--cardColor)] p-5">
 					{card.title}
-					{progressData.doneModules.includes(card.moduleId) && (
+					{progressState.doneModules.includes(card.moduleId) && (
 						<img src="/assets/images/icons/done.png" alt="Concluído" />
 					)}
 				</h2>
@@ -53,7 +35,20 @@ export function ModuleCard({ card }) {
 							</ul>
 						</div>
 					</div>
-					{moduleLink()}
+					<Link
+						to={`/learning-path/${card.moduleId}`}
+						className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${isModuleBlocked ? 'cursor-not-allowed' : 'hover:bg-[var(--slideButtonColor)] hover:shadow-[0_0_10px_var(--slideButtonColor)]'}`}
+						onClick={(e) => isModuleBlocked && e.preventDefault()}
+					>
+						<p
+							className={`absolute left-10 flex items-center gap-x-3 text-white transition-all duration-300 ${!isModuleBlocked && 'group-hover:left-[292px]'}`}
+						>
+							{isModuleBlocked && (
+								<img src="/assets/images/icons/locked.png" alt="Bloqueado" />
+							)}
+							Acessar módulo
+						</p>
+					</Link>
 				</div>
 			</div>
 		</div>
