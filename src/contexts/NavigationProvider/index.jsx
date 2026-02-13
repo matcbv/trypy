@@ -47,7 +47,7 @@ export function NavigationProvider() {
 	// Setando os dados alterados em nosso local storage.
 	useEffect(() => {
 		localStorage.setItem(
-			storageKeys.MODULE_PROGRESS,
+			storageKeys.NAVIGATION_STATE,
 			JSON.stringify(navigationState),
 		);
 	}, [navigationState]);

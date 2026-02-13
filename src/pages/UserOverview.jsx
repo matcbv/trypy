@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
-import UserContext from '../contexts/AuthProvider/context';
+import { AuthContext } from '../contexts/AuthProvider/context';
 import { fetchContent } from '../content/fetchContent';
 import { ProgressBar } from '../components/ProgressBar';
 import { logError } from '../utils/logger';
 
 export function UserOverview() {
-	const { authState } = useContext(UserContext);
+	const { authState } = useContext(AuthContext);
 	const { progressState } = useContext(ProgressContext);
 	const [titles, setTitles] = useState({
 		module: '',
