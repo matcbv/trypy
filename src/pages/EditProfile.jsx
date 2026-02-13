@@ -19,9 +19,8 @@ export function EditProfile() {
 
 	const deleteAccountWrapper = async () => {
 		if (userPassword.length <= 0) return;
-
-		const res = await deleteAccount(userPassword, authState.uid);
-		if (res.success) {
+		try {
+			await deleteAccount(userPassword, authState.uid);
 			authDispatch({ type: authActionTypes.LOGOUT });
 			progressDispatch({ type: progressActionTypes.RESET_PROGRESS });
 			localStorage.removeItem(storageKeys.NAVIGATION_STATE);
@@ -33,15 +32,15 @@ export function EditProfile() {
 					text: 'Conta deletada com sucesso!',
 				},
 			});
-		} else {
+		} catch (error) {
 			setUserPassword('');
 			toast(ToastNotification, {
 				type: 'error',
 				data: {
 					type: 'error',
 					text:
-						res.error.code === 'auth/invalid-credential'
-							? 'Senha incorreta!'
+						error.code === 'auth/invalid-credential'
+							? 'Senha incorreta. Tente novamente.'
 							: 'Algo deu errado. Tente novamente.',
 				},
 			});

@@ -30,11 +30,15 @@ export function NavigationProvider() {
 		if (navigationState) return;
 
 		(async () => {
-			const progressData = await hydrateNavegationState(authState.uid);
-			navigationDispatch({
-				type: actionTypes.SET_CURRENT_PROGRESS,
-				payload: progressData,
-			});
+			try {
+				const progressData = await hydrateNavegationState(authState.uid);
+				navigationDispatch({
+					type: actionTypes.SET_CURRENT_PROGRESS,
+					payload: progressData,
+				});
+			} catch (error) {
+				logError(error);
+			}
 		})();
 	}, [navigationState, authState.uid]);
 

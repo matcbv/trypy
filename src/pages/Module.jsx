@@ -9,6 +9,7 @@ import navegationActionTypes from '../contexts/NavigationProvider/actionTypes';
 import { hydrateNavegationState } from '../utils/hydrateNavegationState';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
+import { logError } from '../utils/logger';
 
 export function Module() {
 	const { authState } = useContext(AuthContext);
@@ -35,11 +36,15 @@ export function Module() {
 	useEffect(() => {
 		if (!navigationState) {
 			(async () => {
-				const progressData = await hydrateNavegationState(authState.uid);
-				navigationDispatch({
-					type: navegationActionTypes.SET_CURRENT_PROGRESS,
-					payload: progressData,
-				});
+				try {
+					const progressData = await hydrateNavegationState(authState.uid);
+					navigationDispatch({
+						type: navegationActionTypes.SET_CURRENT_PROGRESS,
+						payload: progressData,
+					});
+				} catch (error) {
+					logError(error);
+				}
 			})();
 		}
 	}, [navigationState, navigationDispatch, authState.uid]);

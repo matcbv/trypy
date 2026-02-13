@@ -40,11 +40,12 @@ export function SessionForm() {
 		e.preventDefault();
 		const isDataValid = checkData();
 		if (isDataValid) {
-			const res = await signInWithCredentials(
-				userCredentials.email,
-				userCredentials.password,
-			);
-			if (res.success) {
+			try {
+				const res = await signInWithCredentials(
+					userCredentials.email,
+					userCredentials.password,
+				);
+
 				const { uid, userData, progressData } = res;
 
 				authDispatch({
@@ -64,8 +65,8 @@ export function SessionForm() {
 						text: 'Login efetuado com sucesso!',
 					},
 				});
-			} else {
-				logError(res.error);
+			} catch (error) {
+				logError(error);
 			}
 		} else {
 			toast(ToastNotification, {
@@ -79,8 +80,8 @@ export function SessionForm() {
 	};
 
 	const handleGoogle = async () => {
-		const res = await signInWithGoogle();
-		if (res.success) {
+		try {
+			const res = await signInWithGoogle();
 			const { uid, providerData, progressData } = res.data;
 
 			authDispatch({
@@ -100,8 +101,8 @@ export function SessionForm() {
 					text: 'Login efetuado com sucesso!',
 				},
 			});
-		} else {
-			logError(res.error);
+		} catch (error) {
+			logError(error);
 		}
 	};
 

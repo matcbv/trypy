@@ -21,6 +21,7 @@ export function DashboardNavbar() {
 		try {
 			await signOut(auth);
 			localStorage.removeItem(storageKeys.NAVIGATION_STATE);
+
 			navigate('/', { replace: true });
 			toast(ToastNotification, {
 				type: 'success',

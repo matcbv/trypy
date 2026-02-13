@@ -69,14 +69,10 @@ export function RegisterForm() {
 		const isDataValid = checkData();
 		if (!isDataValid) return;
 
-		const res = await signUpWithCredentials(userData);
-		if (!res.success) {
-			logError(res.error);
-			return;
-		}
-
 		try {
-			const { uid, persistedData, progressData } = res.data;
+			const res = await signUpWithCredentials(userData);
+
+			const { uid, persistedData, progressData } = res;
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
@@ -107,39 +103,35 @@ export function RegisterForm() {
 	};
 
 	const handleGoogle = async () => {
-		const res = await signInWithGoogle();
-		if (res.success) {
-			try {
-				const { uid, providerData, progressData } = res.data;
+		try {
+			const res = await signInWithGoogle();
+			const { uid, providerData, progressData } = res;
 
-				authDispatch({
-					type: authActionTypes.SET_DATA,
-					payload: { uid, data: providerData },
-				});
+			authDispatch({
+				type: authActionTypes.SET_DATA,
+				payload: { uid, data: providerData },
+			});
 
-				authDispatch({
-					type: progressActionTypes.SET_PROGRESS,
-					payload: progressData,
-				});
+			authDispatch({
+				type: progressActionTypes.SET_PROGRESS,
+				payload: progressData,
+			});
 
-				navigationDispatch({
-					type: navegationActionTypes.SET_CURRENT_PROGRESS,
-					payload: progressData,
-				});
+			navigationDispatch({
+				type: navegationActionTypes.SET_CURRENT_PROGRESS,
+				payload: progressData,
+			});
 
-				navigate('/dashboard/overview');
-				toast(ToastNotification, {
+			navigate('/dashboard/overview');
+			toast(ToastNotification, {
+				type: 'success',
+				data: {
 					type: 'success',
-					data: {
-						type: 'success',
-						text: 'Login efetuado com sucesso!',
-					},
-				});
-			} catch (error) {
-				logError(error);
-			}
-		} else {
-			logError(res.error);
+					text: 'Login efetuado com sucesso!',
+				},
+			});
+		} catch (error) {
+			logError(error);
 		}
 	};
 
