@@ -6,7 +6,7 @@ import { storageKeys } from '../../constants/storageKeys';
 import { AuthContext } from '../AuthProvider/context';
 import actionTypes from './actionTypes';
 import { logError } from '../../utils/logger';
-import { hydrateNavegationState } from '../../utils/hydrateNavegationState';
+import { hydrateNavigationState } from '../../utils/hydrateNavigationState';
 
 export function NavigationProvider() {
 	const { authState } = useContext(AuthContext);
@@ -33,7 +33,7 @@ export function NavigationProvider() {
 		// Atualizando nosso local storage caso inexistente.
 		(async () => {
 			try {
-				const progressData = await hydrateNavegationState(authState.uid);
+				const progressData = await hydrateNavigationState(authState.uid);
 				navigationDispatch({
 					type: actionTypes.SET_CURRENT_PROGRESS,
 					payload: progressData,

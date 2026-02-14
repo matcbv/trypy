@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { fetchContent } from '../content/fetchContent';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
-import navegationActionTypes from '../contexts/NavigationProvider/actionTypes';
+import navigationActionTypes from '../contexts/NavigationProvider/actionTypes';
 
 export function SubtopicDropdown({ index, fields, topicsContainer }) {
 	const { progressState } = useContext(ProgressContext);
@@ -23,7 +23,7 @@ export function SubtopicDropdown({ index, fields, topicsContainer }) {
 		}
 
 		navigationDispatch({
-			type: navegationActionTypes.SET_CURRENT_PROGRESS,
+			type: navigationActionTypes.SET_CURRENT_PROGRESS,
 			payload: {
 				currentTopic: topic.fields.slug,
 				currentSubtopic: slug,

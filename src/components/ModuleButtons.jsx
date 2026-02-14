@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../database/firebase';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
-import navegationActionTypes from '../contexts/NavigationProvider/actionTypes';
+import navigationActionTypes from '../contexts/NavigationProvider/actionTypes';
 
 export function ModuleButtons({
 	topics,
@@ -28,7 +28,7 @@ export function ModuleButtons({
 
 		if (progressState.currentSubtopic === lastSubtopic) {
 			navigationDispatch({
-				type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
+				type: navigationActionTypes.SET_IS_LAST_SUBTOPIC,
 				payload: true,
 			});
 		}
@@ -49,13 +49,13 @@ export function ModuleButtons({
 			// Validando se o novo subtópico é o último do módulo.
 			if (isLastSubtopic) {
 				navigationDispatch({
-					type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
+					type: navigationActionTypes.SET_IS_LAST_SUBTOPIC,
 					payload: true,
 				});
 			}
 
 			navigationDispatch({
-				type: navegationActionTypes.SET_CURRENT_PROGRESS,
+				type: navigationActionTypes.SET_CURRENT_PROGRESS,
 				payload: {
 					currentTopic: nextTopic.slug || '',
 					currentSubtopic: nextSubtopic.slug || '',
@@ -108,7 +108,7 @@ export function ModuleButtons({
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
 		navigationDispatch({
-			type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
+			type: navigationActionTypes.SET_IS_LAST_SUBTOPIC,
 			payload: false,
 		});
 
@@ -118,7 +118,7 @@ export function ModuleButtons({
 
 		if (previousSubtopic) {
 			navigationDispatch({
-				type: navegationActionTypes.SET_CURRENT_PROGRESS,
+				type: navigationActionTypes.SET_CURRENT_PROGRESS,
 				payload: { currentSubtopic: previousSubtopic.slug },
 			});
 			return;
@@ -138,7 +138,7 @@ export function ModuleButtons({
 		);
 
 		navigationDispatch({
-			type: navegationActionTypes.SET_CURRENT_PROGRESS,
+			type: navigationActionTypes.SET_CURRENT_PROGRESS,
 			payload: {
 				currentTopic: previousTopic.slug,
 				currentSubtopic: newSubtopic.slug,
@@ -174,7 +174,7 @@ export function ModuleButtons({
 			payload: data,
 		});
 		navigationDispatch({
-			type: navegationActionTypes.SET_CURRENT_PROGRESS,
+			type: navigationActionTypes.SET_CURRENT_PROGRESS,
 			payload: {
 				currentModule: nextModule.slug,
 				currentTopic: nextTopic.slug,

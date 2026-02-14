@@ -5,8 +5,8 @@ import { fetchContent } from '../content/fetchContent';
 import { contentfulFormatter } from '../content/contentfulFormatter';
 import { ModuleButtons } from '../components/ModuleButtons';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
-import navegationActionTypes from '../contexts/NavigationProvider/actionTypes';
-import { hydrateNavegationState } from '../utils/hydrateNavegationState';
+import navigationActionTypes from '../contexts/NavigationProvider/actionTypes';
+import { hydrateNavigationState } from '../utils/hydrateNavigationState';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { logError } from '../utils/logger';
@@ -37,9 +37,9 @@ export function Module() {
 		if (!navigationState) {
 			(async () => {
 				try {
-					const progressData = await hydrateNavegationState(authState.uid);
+					const progressData = await hydrateNavigationState(authState.uid);
 					navigationDispatch({
-						type: navegationActionTypes.SET_CURRENT_PROGRESS,
+						type: navigationActionTypes.SET_CURRENT_PROGRESS,
 						payload: progressData,
 					});
 				} catch (error) {
@@ -61,7 +61,7 @@ export function Module() {
 			({ fields }) => fields.order === lastModuleTopic.fields.subtopics.length,
 		);
 		navigationDispatch({
-			type: navegationActionTypes.SET_CURRENT_PROGRESS,
+			type: navigationActionTypes.SET_CURRENT_PROGRESS,
 			payload: {
 				currentModule: params.moduleId,
 				currentTopic: lastModuleTopic.fields.slug,
@@ -98,7 +98,7 @@ export function Module() {
 			);
 
 			navigationDispatch({
-				type: navegationActionTypes.SET_IS_LAST_SUBTOPIC,
+				type: navigationActionTypes.SET_IS_LAST_SUBTOPIC,
 				payload: nextTopic
 					? false
 					: subtopic.fields.order === topic.fields.subtopics.length,
