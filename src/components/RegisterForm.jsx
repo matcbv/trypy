@@ -13,14 +13,11 @@ import { signInWithGoogle } from '../database/oAuth';
 import { formMap } from '../constants/labelMap';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
-import navegationActionTypes from '../contexts/NavigationProvider/actionTypes';
-import { NavigationContext } from '../contexts/NavigationProvider/context';
 
 export function RegisterForm() {
 	const navigate = useNavigate();
 	const { authDispatch } = useContext(AuthContext);
 	const { progressDispatch } = useContext(ProgressContext);
-	const { navigationDispatch } = useContext(NavigationContext);
 
 	const [userData, setUserData] = useState({
 		email: '',
@@ -84,11 +81,6 @@ export function RegisterForm() {
 				payload: progressData,
 			});
 
-			navigationDispatch({
-				type: navegationActionTypes.SET_CURRENT_PROGRESS,
-				payload: progressData,
-			});
-
 			navigate('/dashboard/overview');
 			toast(ToastNotification, {
 				type: 'success',
@@ -114,11 +106,6 @@ export function RegisterForm() {
 
 			authDispatch({
 				type: progressActionTypes.SET_PROGRESS,
-				payload: progressData,
-			});
-
-			navigationDispatch({
-				type: navegationActionTypes.SET_CURRENT_PROGRESS,
 				payload: progressData,
 			});
 
