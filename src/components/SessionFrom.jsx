@@ -82,7 +82,7 @@ export function SessionForm() {
 	const handleGoogle = async () => {
 		try {
 			const res = await signInWithGoogle();
-			const { uid, providerData, progressData } = res.data;
+			const { uid, providerData, progressData } = res;
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,

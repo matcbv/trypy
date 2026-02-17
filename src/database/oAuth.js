@@ -18,19 +18,31 @@ export const signInWithGoogle = async () => {
 		},
 	);
 
-	const { name, email, picture, uid } = res.data;
+	const { uid } = res.data;
 
 	const userDoc = await getDoc(doc(db, 'users', uid));
 
-	const providerData = userDoc.exists()
-		? userDoc.data()
-		: { name, email, picture, id: idGenerator().generateID() };
+	if (userDoc.exists()) {
+		const progressDoc = await getDoc(doc(db, 'userProgress', uid));
+		return {
+			uid,
+			providerData: userDoc.data(),
+			progressData: progressDoc.data(),
+		};
+	}
 
-	await setDoc(doc(db, 'users', uid), providerData);
+	const progressData = await createInitialProgress(uid);
 
-	const progressData = createInitialProgress(uid);
+	const { name, email, picture } = res.data;
 
-	return { uid, providerData, progressData };
+	await setDoc(doc(db, 'users', uid), {
+		name,
+		email,
+		picture,
+		id: idGenerator().generateID(),
+	});
+
+	return { uid, providerData: { name, email, picture, uid }, progressData };
 };
 
 export const signupWithGitHub = async () => {};
