@@ -4,8 +4,6 @@ import navigationInitialState from '../contexts/NavigationProvider/initialState'
 
 // Função responsável por atualizar o localStorage contendo os dados de navegação do usuário.
 export async function hydrateNavigationState(uid) {
-	if (!uid) return navigationInitialState;
-
 	const progress = await getDoc(doc(db, 'userProgress', uid));
 	if (progress.exists()) {
 		const progressData = progress.data();

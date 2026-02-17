@@ -28,7 +28,7 @@ export function NavigationProvider() {
 	}
 
 	useEffect(() => {
-		if (navigationState) return;
+		if (navigationState || !authState.uid) return;
 
 		// Atualizando nosso local storage caso inexistente.
 		(async () => {
