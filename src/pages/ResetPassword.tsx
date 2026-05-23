@@ -1,4 +1,4 @@
-import { ResetPassowrdForm } from '../components/ResetPasswordForm';
+import { ResetPasswordForm } from '../components/ResetPasswordForm';
 
 export function ResetPassword() {
 	return (
@@ -13,7 +13,7 @@ export function ResetPassword() {
 						Para prosseguir com redefinição da senha, informe o e-mail
 						cadastrado em sua conta.
 					</p>
-					<ResetPassowrdForm />
+					<ResetPasswordForm />
 					<div className="flex flex-col gap-y-3">
 						<h2>Não se lembra do e-mail?</h2>
 						<button

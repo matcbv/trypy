@@ -2,7 +2,7 @@ export function Resolutions() {
 	return (
 		<div>
 			<h1 className="mb-10 text-3xl font-bold tracking-wide">
-				Exercícos resolvidos
+				Exercícios resolvidos
 			</h1>
 			<div className="flex flex-col items-center justify-center gap-y-5 opacity-60">
 				<div className="rounded-full bg-[radial-gradient(circle,_#594486e3,_transparent_70%)]">

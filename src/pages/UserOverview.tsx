@@ -1,13 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { AuthContext } from '../contexts/AuthProvider/context';
-import { fetchContent } from '../content/fetchContent';
+import { fetchContent } from '../content/services/fetchContent';
 import { ProgressBar } from '../components/ProgressBar';
 import { logError } from '../utils/logger';
+import { useSafeContext } from '../hooks/useSafeContext';
 
 export function UserOverview() {
-	const { authState } = useContext(AuthContext);
-	const { progressState } = useContext(ProgressContext);
+	const { authState } = useSafeContext(AuthContext);
+	const { progressState } = useSafeContext(ProgressContext);
 	const [titles, setTitles] = useState({
 		module: '',
 		topic: '',
@@ -16,7 +17,7 @@ export function UserOverview() {
 	const [isCopied, setIsCopied] = useState(false);
 
 	useEffect(() => {
-		(async () => {
+		void (async () => {
 			try {
 				const [module, topic, subtopic] = await Promise.all([
 					fetchContent({
@@ -41,7 +42,10 @@ export function UserOverview() {
 					subtopic: subtopic[0]?.fields.title || 'Nenhum subtópico concluído',
 				});
 			} catch (error) {
-				logError(error);
+				logError(
+					error,
+					'Não foi possível calcular seu progresso. Tente novamente ou fale conosco.',
+				);
 			}
 		})();
 	}, [
@@ -50,7 +54,7 @@ export function UserOverview() {
 		progressState.inProgressSubtopic,
 	]);
 
-	const copyText = async (text) => {
+	const copyText = async (text: string) => {
 		await navigator.clipboard.writeText(text.replace('#', ''));
 		setIsCopied((prev) => !prev);
 		setTimeout(() => {
@@ -70,7 +74,7 @@ export function UserOverview() {
 						ID de usuário:
 						<span
 							className="group relative flex cursor-pointer items-center transition-colors hover:text-[var(--main-purple)]"
-							onClick={(e) => copyText(e.currentTarget.textContent)}
+							onClick={(e) => void copyText(e.currentTarget.textContent)}
 							onMouseLeave={() => setTimeout(() => setIsCopied(false), 100)}
 						>
 							<span className="mr-0.5 text-[var(--main-purple)]">#</span>

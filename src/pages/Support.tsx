@@ -14,7 +14,7 @@ export function Support() {
 		},
 	};
 
-	const copyText = async (text) => {
+	const copyText = async (text: string) => {
 		await navigator.clipboard.writeText(text);
 		setIsCopied((prev) => !prev);
 		setTimeout(() => {
@@ -120,7 +120,7 @@ export function Support() {
 											}
 											alt="Copiar"
 											className="w-5 origin-left scale-0 cursor-pointer transition-transform group-hover:scale-100"
-											onClick={() => copyText(value)}
+											onClick={() => void copyText(value)}
 										/>
 									</p>
 								</div>

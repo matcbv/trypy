@@ -1,7 +1,7 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { ProfileForm } from '../components/ProfileForm';
-import { deleteAccount } from '../database/auth';
+import { deleteAccount } from '../database/auth/auth';
 import { toast } from 'react-toastify';
 import { ToastNotification } from '../components/Notifications';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,23 +9,28 @@ import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { storageKeys } from '../constants/storageKeys';
+import { useSafeContext } from '../hooks/useSafeContext';
+import type { ToastData } from '../types/toast';
+import { FirebaseError } from 'firebase/app';
 
 export function EditProfile() {
 	const navigate = useNavigate();
-	const { authState, authDispatch } = useContext(AuthContext);
-	const { progressDispatch } = useContext(ProgressContext);
+	const { authState, authDispatch } = useSafeContext(AuthContext);
+	const { progressDispatch } = useSafeContext(ProgressContext);
 	const [userPassword, setUserPassword] = useState('');
 	const [isVisible, setIsVisible] = useState(false);
 
 	const deleteAccountWrapper = async () => {
 		if (userPassword.length <= 0) return;
 		try {
-			await deleteAccount(userPassword, authState.uid);
+			await deleteAccount(userPassword, authState.uid!);
+
 			authDispatch({ type: authActionTypes.LOGOUT });
 			progressDispatch({ type: progressActionTypes.RESET_PROGRESS });
 			localStorage.removeItem(storageKeys.NAVIGATION_STATE);
-			navigate('/');
-			toast(ToastNotification, {
+
+			void navigate('/');
+			toast<ToastData>(ToastNotification, {
 				type: 'success',
 				data: {
 					type: 'success',
@@ -34,14 +39,18 @@ export function EditProfile() {
 			});
 		} catch (error) {
 			setUserPassword('');
-			toast(ToastNotification, {
+
+			const errorMessage =
+				error instanceof FirebaseError &&
+				error.code === 'auth/invalid-credential'
+					? 'Senha incorreta. Tente novamente.'
+					: 'Algo deu errado. Tente novamente.';
+
+			toast<ToastData>(ToastNotification, {
 				type: 'error',
 				data: {
 					type: 'error',
-					text:
-						error.code === 'auth/invalid-credential'
-							? 'Senha incorreta. Tente novamente.'
-							: 'Algo deu errado. Tente novamente.',
+					text: errorMessage,
 				},
 			});
 		}
@@ -72,7 +81,7 @@ export function EditProfile() {
 							<input
 								value={userPassword}
 								placeholder="Senha atual"
-								onChange={(e) => setUserPassword(e.currentTarget.value)}
+								onChange={(e) => setUserPassword(e.target.value)}
 								className="w-[300px] rounded-md border-2 border-[var(--main-purple)]/60 bg-white/5 py-2 pr-9 pl-3 text-sm transition-shadow outline-none focus:border-[var(--main-purple)] focus:shadow-[0_0_5px_#ffffff1f]"
 								type={isVisible ? 'text' : 'password'}
 							/>
@@ -86,7 +95,7 @@ export function EditProfile() {
 						<button
 							type="button"
 							className={`form-btn w-[120px] text-sm ${userPassword.length > 0 ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-							onClick={deleteAccountWrapper}
+							onClick={() => void deleteAccountWrapper()}
 						>
 							Continuar
 						</button>
