@@ -1,0 +1,44 @@
+{
+	// Visit https://aka.ms/tsconfig to read more about this file
+	"compilerOptions": {
+		// Layout dos arquivos
+		"rootDir": "./src",
+		"outDir": "./dist",
+
+		// Configurações do ambiente
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"target": "esnext",
+		"types": ["vite/client"],
+
+		"sourceMap": false,
+		"declaration": false,
+		"declarationMap": false,
+
+		"noUncheckedIndexedAccess": true,
+		"strictNullChecks": true,
+		"exactOptionalPropertyTypes": true,
+
+		// Style Options
+		// "noImplicitReturns": true,
+		// "noImplicitOverride": true,
+		// "noUnusedLocals": true,
+		// "noUnusedParameters": true,
+		// "noFallthroughCasesInSwitch": true,
+		// "noPropertyAccessFromIndexSignature": true,
+
+		// Opções recomendadas
+		"strict": true,
+		"jsx": "react-jsx",
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"noUncheckedSideEffectImports": true,
+		"moduleDetection": "force",
+		"skipLibCheck": true,
+
+		// Opções de migração para o TypeScript
+		"allowJs": false,
+		"checkJs": false
+	},
+	"include": ["src/**/*", "vite-env.d.ts"]
+}
