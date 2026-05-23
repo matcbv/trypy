@@ -1,14 +1,24 @@
-import { useContext, useEffect } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
-import { getNextContent } from '../content/getNextContent';
+import { getNextContent } from '../content/navigation/getNextContent';
 import { logError } from '../utils/logger';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { useNavigate, useParams } from 'react-router-dom';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../database/firebase';
+import { updateDoc } from 'firebase/firestore';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 import navigationActionTypes from '../contexts/NavigationProvider/actionTypes';
+import { useSafeContext } from '../hooks/useSafeContext';
+import type { ModuleData, SubtopicData, TopicData } from '../types/content';
+import type { ProgressState } from '../types/states';
+import { userProgressRef } from '../database/refs/userRefs';
+
+interface ModuleButtonsProps {
+	topics: TopicData[];
+	subtopics: SubtopicData[];
+	moduleData: ModuleData;
+	topicData: TopicData;
+	subtopicData: SubtopicData;
+}
 
 export function ModuleButtons({
 	topics,
@@ -16,28 +26,18 @@ export function ModuleButtons({
 	moduleData,
 	topicData,
 	subtopicData,
-}) {
-	const { authState } = useContext(AuthContext);
-	const { progressState, progressDispatch } = useContext(ProgressContext);
-	const { navigationState, navigationDispatch } = useContext(NavigationContext);
-	const params = useParams();
+}: ModuleButtonsProps) {
+	const { authState } = useSafeContext(AuthContext);
+	const { progressState, progressDispatch } = useSafeContext(ProgressContext);
+	const { navigationState, navigationDispatch } =
+		useSafeContext(NavigationContext);
+	const params = useParams<{ moduleId: string }>();
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		const lastSubtopic = topics.at(-1)?.subtopics.at(-1)?.fields.slug;
-
-		if (progressState.currentSubtopic === lastSubtopic) {
-			navigationDispatch({
-				type: navigationActionTypes.SET_IS_LAST_SUBTOPIC,
-				payload: true,
-			});
-		}
-	}, [topics, progressState.currentSubtopic, navigationDispatch]);
 
 	const handleNext = async () => {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
-		const data = {};
+		const data: Partial<ProgressState> = {};
 
 		try {
 			const { nextTopic, nextSubtopic, isLastSubtopic } = await getNextContent(
@@ -46,13 +46,11 @@ export function ModuleButtons({
 				subtopicData,
 			);
 
-			// Validando se o novo subtópico é o último do módulo.
-			if (isLastSubtopic) {
-				navigationDispatch({
-					type: navigationActionTypes.SET_IS_LAST_SUBTOPIC,
-					payload: true,
-				});
-			}
+			// * Validando se o novo subtópico é o último do módulo.
+			navigationDispatch({
+				type: navigationActionTypes.SET_CURRENT_PROGRESS,
+				payload: { isLastSubtopic: isLastSubtopic },
+			});
 
 			navigationDispatch({
 				type: navigationActionTypes.SET_CURRENT_PROGRESS,
@@ -62,7 +60,7 @@ export function ModuleButtons({
 				},
 			});
 
-			// Adicionando o subtópico concluído caso esse não esteja presenta na lista de progresso do usuário.
+			// * Adicionando o subtópico concluído caso esse não esteja presenta na lista de progresso do usuário.
 			if (
 				!progressState.doneSubtopics.includes(navigationState.currentSubtopic)
 			) {
@@ -72,11 +70,11 @@ export function ModuleButtons({
 				];
 			}
 
-			// Caso o próximo subtópico a ser realizado não esteja na lista de concluídos, iremos adicioná-lo como o subtópico em progresso do usuário.
+			// * Caso o próximo subtópico a ser realizado não esteja na lista de concluídos, iremos adicioná-lo como o subtópico em progresso do usuário.
 			if (!progressState.doneSubtopics.includes(nextSubtopic.slug))
 				data.inProgressSubtopic = nextSubtopic.slug;
 
-			// Validando se o tópico foi concluído. Caso positivo, iremos adicioná-lo à lista de progresso do usuário.
+			// * Validando se o tópico foi concluído. Caso positivo, iremos adicioná-lo à lista de progresso do usuário.
 			const isTopicDone = subtopics.every((subtopic) =>
 				data.doneSubtopics?.includes(subtopic.slug),
 			);
@@ -98,18 +96,18 @@ export function ModuleButtons({
 				type: progressActionTypes.SET_PROGRESS,
 				payload: data,
 			});
-			await updateDoc(doc(db, 'userProgress', authState.uid), data);
+			await updateDoc(userProgressRef(authState.uid!), data);
 		} catch (error) {
 			logError(error);
 		}
 	};
 
-	const handlePrevious = async () => {
+	const handlePrevious = () => {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
 		navigationDispatch({
-			type: navigationActionTypes.SET_IS_LAST_SUBTOPIC,
-			payload: false,
+			type: navigationActionTypes.SET_CURRENT_PROGRESS,
+			payload: { isLastSubtopic: false },
 		});
 
 		const previousSubtopic = subtopics.find(
@@ -124,15 +122,13 @@ export function ModuleButtons({
 			return;
 		}
 
-		// Caso o subtópico anterior não exista, iremos obter o último subtópico do tópico anterior:
+		// * Caso o subtópico anterior não exista, iremos obter o último subtópico do tópico anterior:
 		const previousTopic = topics.find(
 			(topic) => topic.order === topicData.order - 1,
 		);
-		if (!previousTopic) return;
 
-		const previousSubtopics = previousTopic.subtopics.map(
-			(subtic) => subtic.fields,
-		);
+		const previousSubtopics = previousTopic!.subtopics.map((subtic) => subtic);
+
 		const newSubtopic = previousSubtopics.find(
 			(subtopic) => subtopic.order === previousSubtopics.length,
 		);
@@ -140,16 +136,17 @@ export function ModuleButtons({
 		navigationDispatch({
 			type: navigationActionTypes.SET_CURRENT_PROGRESS,
 			payload: {
-				currentTopic: previousTopic.slug,
-				currentSubtopic: newSubtopic.slug,
+				currentTopic: previousTopic!.slug,
+				currentSubtopic: newSubtopic!.slug,
 			},
 		});
 	};
 
 	const finishModule = async () => {
-		navigate('/learning-path');
+		void navigate('/learning-path');
 
-		if (progressState.doneModules.includes(params.moduleId)) return;
+		if (!params.moduleId || progressState.doneModules.includes(params.moduleId))
+			return;
 
 		const { nextModule, nextSubtopic, nextTopic } = await getNextContent(
 			moduleData,
@@ -182,15 +179,15 @@ export function ModuleButtons({
 				isLastSubtopic: false,
 			},
 		});
-		await updateDoc(doc(db, 'userProgress', authState.uid), data);
+		await updateDoc(userProgressRef(authState.uid!), data);
 	};
 
 	return (
 		<div className="flex justify-end gap-x-10">
 			<button
 				type="button"
-				className={`module-btn group ${navigationState.currentSubtopic.order === 0 ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-				disabled={navigationState.currentSubtopic.order === 0}
+				className={`module-btn group ${subtopicData?.slug === topics[0]?.subtopics[0]?.slug ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+				disabled={subtopicData?.slug === topics[0]?.subtopics[0]?.slug}
 				onClick={handlePrevious}
 			>
 				<img
@@ -203,8 +200,8 @@ export function ModuleButtons({
 			{navigationState.isLastSubtopic ? (
 				<button
 					type="button"
-					className={`module-btn group ${navigationState.currentSubtopic.order === 'max' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-					onClick={finishModule}
+					className={`module-btn group cursor-pointer`}
+					onClick={() => void finishModule()}
 				>
 					Concluir
 					<img
@@ -216,8 +213,8 @@ export function ModuleButtons({
 			) : (
 				<button
 					type="button"
-					className={`module-btn group ${navigationState.currentSubtopic.order === 'max' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-					onClick={handleNext}
+					className={`module-btn group cursor-pointer`}
+					onClick={() => void handleNext()}
 				>
 					Avançar
 					<img

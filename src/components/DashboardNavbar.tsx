@@ -1,10 +1,11 @@
 import { signOut } from 'firebase/auth';
-import { auth } from '../database/firebase';
+import { auth } from '../database/configs/firebase';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastNotification } from '../components/Notifications';
 import { logError } from '../utils/logger';
 import { storageKeys } from '../constants/storageKeys';
+import type { ToastData } from '../types/toast';
 
 export function DashboardNavbar() {
 	const navigate = useNavigate();
@@ -22,8 +23,9 @@ export function DashboardNavbar() {
 			await signOut(auth);
 			localStorage.removeItem(storageKeys.NAVIGATION_STATE);
 
-			navigate('/', { replace: true });
-			toast(ToastNotification, {
+			void navigate('/', { replace: true });
+
+			toast<ToastData>(ToastNotification, {
 				type: 'success',
 				data: {
 					type: 'success',
@@ -58,7 +60,7 @@ export function DashboardNavbar() {
 					<button
 						type="button"
 						className="flex w-full cursor-pointer justify-center bg-white/5 py-5 hover:bg-[radial-gradient(ellipse,_transparent,_#ff00000f)]"
-						onClick={logout}
+						onClick={() => void logout()}
 					>
 						<div className="flex w-[137px] gap-x-3">
 							<img src="/assets/images/icons/logout.png" alt="Deslogar" />

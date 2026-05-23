@@ -1,19 +1,20 @@
-import { useState } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastNotification } from './Notifications';
 import { logError } from '../utils/logger';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../database/firebase';
+import { auth } from '../database/configs/firebase';
+import type { ToastData } from '../types/toast';
 
-export function ResetPassowrdForm() {
+export function ResetPasswordForm() {
 	const [email, setEmail] = useState('');
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		if (email.length <= 0) {
-			toast(ToastNotification, {
+			toast<ToastData>(ToastNotification, {
 				type: 'error',
 				data: {
 					type: 'error',
@@ -35,7 +36,7 @@ export function ResetPassowrdForm() {
 	};
 
 	return (
-		<form className="mb-8 w-[350px]" onSubmit={handleSubmit}>
+		<form className="mb-8 w-[350px]" onSubmit={(e) => void handleSubmit(e)}>
 			<div className="flex flex-col gap-y-8 text-sm">
 				<div className="relative flex w-full items-end border-b-2 border-b-[var(--main-green)]">
 					<label htmlFor="" className="font-jetbrains w-20">

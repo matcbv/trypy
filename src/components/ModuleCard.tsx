@@ -1,9 +1,10 @@
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
+import { useSafeContext } from '../hooks/useSafeContext';
+import type { ModuleCardData } from '../types/content';
 
-export function ModuleCard({ card }) {
-	const { progressState } = useContext(ProgressContext);
+export function ModuleCard({ card }: { card: ModuleCardData }) {
+	const { progressState } = useSafeContext(ProgressContext);
 
 	const isModuleBlocked =
 		!progressState.doneModules.includes(card.moduleId) &&

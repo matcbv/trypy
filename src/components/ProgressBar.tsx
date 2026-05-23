@@ -1,23 +1,32 @@
-import { useContext, useEffect, useState } from 'react';
-import { fetchContent } from '../content/fetchContent';
+import { useEffect, useState } from 'react';
+import { fetchContent } from '../content/services/fetchContent';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
+import { useSafeContext } from '../hooks/useSafeContext';
+import { logError } from '../utils/logger';
 
 export function ProgressBar() {
 	const [progressPercentual, setProgressPercentual] = useState(0);
-	const { progressState } = useContext(ProgressContext);
+	const { progressState } = useSafeContext(ProgressContext);
 	const perimeter = 2 * Math.PI * 80;
 
 	useEffect(() => {
-		(async () => {
-			const subtopic = await fetchContent({
-				contentType: 'subtopic',
-				include: 0,
-			});
-			const percentual =
-				(progressState.doneSubtopics.length * 100) / subtopic.length;
-			setProgressPercentual(percentual.toFixed(0));
+		void (async () => {
+			try {
+				const subtopic = await fetchContent({
+					contentType: 'subtopic',
+					include: 0,
+				});
+				const percentual =
+					(progressState.doneSubtopics.length * 100) / subtopic.length;
+				setProgressPercentual(Number(percentual.toFixed(0)));
+			} catch (error) {
+				logError(
+					error,
+					'Não foi possível calcular seu progresso. Tente novamente ou fale conosco.',
+				);
+			}
 		})();
-	});
+	}, [progressState.doneSubtopics.length]);
 
 	return (
 		<svg className="h-[200px] w-[200px] rounded-full shadow-[0_0_15px_#ffffff1f]">

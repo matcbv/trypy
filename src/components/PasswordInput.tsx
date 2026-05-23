@@ -1,11 +1,21 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type ChangeEvent, type FocusEvent } from 'react';
 
-export function PasswordInput({ handleChange, value, placeholder }) {
+interface PasswordInputProps {
+	handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+	placeholder: string;
+	value: string;
+}
+
+export function PasswordInput({
+	handleChange,
+	value,
+	placeholder,
+}: PasswordInputProps) {
 	const [isVisible, setIsVisible] = useState(false);
 	const [hideText, setHideText] = useState(true);
-	const wrapperRef = useRef(null);
+	const wrapperRef = useRef<HTMLDivElement>(null);
 
-	const toogleText = (e) => {
+	const toggleText = (e: FocusEvent<HTMLInputElement | HTMLImageElement>) => {
 		if (wrapperRef.current?.contains(e.relatedTarget)) {
 			return;
 		}
@@ -20,7 +30,7 @@ export function PasswordInput({ handleChange, value, placeholder }) {
 					id="password"
 					onChange={handleChange}
 					onFocus={() => setHideText(false)}
-					onBlur={toogleText}
+					onBlur={toggleText}
 					value={value}
 					placeholder={placeholder}
 					className="w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 placeholder-red-400 outline-none focus:border-[var(--main-green)]"
@@ -28,7 +38,7 @@ export function PasswordInput({ handleChange, value, placeholder }) {
 				<img
 					className="absolute right-3 cursor-pointer"
 					onClick={() => setIsVisible((prev) => !prev)}
-					onBlur={toogleText}
+					onBlur={toggleText}
 					onFocus={() => setHideText(false)}
 					src={`/assets/images/icons/${isVisible ? 'hide' : 'visible'}.png`}
 					alt={isVisible ? 'Esconder senha' : 'Exibir senha'}

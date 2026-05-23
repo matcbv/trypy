@@ -1,13 +1,14 @@
-import { useContext, useRef } from 'react';
+import { useRef, type MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthProvider/context';
+import { useSafeContext } from '../hooks/useSafeContext';
 
 export function HeaderList() {
-	const { authState } = useContext(AuthContext);
-	const underlineRef = useRef(null);
+	const { authState } = useSafeContext(AuthContext);
+	const underlineRef = useRef<HTMLSpanElement>(null);
 
-	const showUnderline = (e) => {
-		const underline = e.target.querySelector('span');
+	const showUnderline = (e: MouseEvent<HTMLLIElement>) => {
+		const underline = e.currentTarget.querySelector('span');
 		if (underline) {
 			underline.style.width = '100%';
 			underlineRef.current = underline;

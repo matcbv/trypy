@@ -1,33 +1,28 @@
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { useContext, useEffect, useState } from 'react';
-import { db, storage } from '../database/firebase';
+import { useEffect, useState, type ChangeEvent } from 'react';
+import { storage } from '../database/configs/firebase';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { toast } from 'react-toastify';
 import { ToastNotification } from './Notifications';
 import { logError } from '../utils/logger';
-import { doc, updateDoc } from 'firebase/firestore';
+import { updateDoc } from 'firebase/firestore';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
+import type { ToastData } from '../types/toast';
+import { useSafeContext } from '../hooks/useSafeContext';
+import { userDataRef } from '../database/refs/userRefs';
 
 export function PictureInput() {
-	const { authState, authDispatch } = useContext(AuthContext);
-	const { picture } = authState.data;
+	const { authState, authDispatch } = useSafeContext(AuthContext);
+	const picture = authState.data?.picture;
 	const [picturePreview, setPicturePreview] = useState(picture);
 
 	useEffect(() => {
-		(async () => {
-			if (picture instanceof File) {
-				const objectUrl = URL.createObjectURL(picture);
-				setPicturePreview(objectUrl);
-				return () => URL.revokeObjectURL(objectUrl);
-			} else {
-				picture && setPicturePreview(picture);
-			}
-		})();
+		if (picture) setPicturePreview(picture);
 	}, [picture]);
 
-	const handleFile = async (e) => {
+	const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
 		try {
-			const file = e.target.files[0];
+			const file = e.target.files?.[0];
 			if (!file) return;
 
 			const { uid } = authState;
@@ -37,11 +32,11 @@ export function PictureInput() {
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { data: { picture: publicUrl } },
+				payload: { ...authState, data: { picture: publicUrl } },
 			});
-			await updateDoc(doc(db, 'users', uid), { picture: publicUrl });
+			await updateDoc(userDataRef(uid!), { picture: publicUrl });
 
-			toast(ToastNotification, {
+			toast<ToastData>(ToastNotification, {
 				type: 'success',
 				data: {
 					type: 'success',
@@ -71,7 +66,7 @@ export function PictureInput() {
 						type="file"
 						id="picture"
 						accept="image/png, image/jpg, image/jpeg"
-						onChange={handleFile}
+						onChange={(e) => void handleFile(e)}
 						className="hidden"
 					/>
 				</div>

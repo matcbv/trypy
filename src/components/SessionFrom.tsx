@@ -1,34 +1,41 @@
-import { useContext, useState } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { toast } from 'react-toastify';
-import { signInWithGoogle } from '../database/oAuth';
+import { signInWithGoogle } from '../database/auth/oAuth';
 import { ToastNotification } from './Notifications';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthProvider/context';
-import { validationRegex } from '../utils/validationRegex';
-import { signInWithCredentials } from '../database/auth';
+import { validationRegex } from '../constants/validationRegex';
+import { signInWithCredentials } from '../database/auth/auth';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { logError } from '../utils/logger';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
+import { useSafeContext } from '../hooks/useSafeContext';
+import type { ToastData } from '../types/toast';
 
 export function SessionForm() {
 	const navigate = useNavigate();
-	const { authDispatch } = useContext(AuthContext);
-	const { progressDispatch } = useContext(ProgressContext);
+	const { authState, authDispatch } = useSafeContext(AuthContext);
+	const { progressDispatch } = useSafeContext(ProgressContext);
 	const [userCredentials, setUserCredentials] = useState({
 		email: '',
 		password: '',
 	});
 	const [isVisible, setIsVisible] = useState(false);
 
-	const handleChange = (e) => {
-		setUserCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setUserCredentials((prev) => ({
+			...prev,
+			[e.target.id]: e.target.value,
+		}));
 	};
 
 	const checkData = () => {
 		let isDataValid = true;
 
-		Object.keys(userCredentials).forEach((key) => {
+		(
+			Object.keys(userCredentials) as Array<keyof typeof userCredentials>
+		).forEach((key) => {
 			if (!userCredentials[key].match(validationRegex[key].regex)) {
 				isDataValid = false;
 			}
@@ -36,9 +43,11 @@ export function SessionForm() {
 		return isDataValid;
 	};
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
 		const isDataValid = checkData();
+
 		if (isDataValid) {
 			try {
 				const res = await signInWithCredentials(
@@ -50,15 +59,15 @@ export function SessionForm() {
 
 				authDispatch({
 					type: authActionTypes.SET_DATA,
-					payload: { uid, data: userData },
+					payload: { ...authState, uid, data: userData },
 				});
 				progressDispatch({
 					type: progressActionTypes.SET_PROGRESS,
-					payload: { data: progressData },
+					payload: progressData,
 				});
 
-				navigate('/dashboard/overview');
-				toast(ToastNotification, {
+				void navigate('/dashboard/overview');
+				toast<ToastData>(ToastNotification, {
 					type: 'success',
 					data: {
 						type: 'success',
@@ -69,7 +78,7 @@ export function SessionForm() {
 				logError(error);
 			}
 		} else {
-			toast(ToastNotification, {
+			toast<ToastData>(ToastNotification, {
 				type: 'error',
 				data: {
 					type: 'error',
@@ -86,15 +95,15 @@ export function SessionForm() {
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { uid, data: providerData },
+				payload: { ...authState, uid, data: providerData },
 			});
 			progressDispatch({
 				type: progressActionTypes.SET_PROGRESS,
-				payload: { data: progressData },
+				payload: progressData,
 			});
 
-			navigate('/dashboard/overview');
-			toast(ToastNotification, {
+			void navigate('/dashboard/overview');
+			toast<ToastData>(ToastNotification, {
 				type: 'success',
 				data: {
 					type: 'success',
@@ -109,7 +118,10 @@ export function SessionForm() {
 	const handleGitHub = async () => {};
 
 	return (
-		<form className="mb-5 flex flex-col gap-y-10" onSubmit={handleSubmit}>
+		<form
+			className="mb-5 flex flex-col gap-y-10"
+			onSubmit={(e) => void handleSubmit(e)}
+		>
 			<div className="flex w-[350px] flex-col gap-y-6 text-sm">
 				{Object.entries(userCredentials).map(([key, value]) => (
 					<div
@@ -148,13 +160,13 @@ export function SessionForm() {
 						className="cursor-pointer transition-transform hover:scale-105"
 						src="/assets/images/icons/google.png"
 						alt="Conta Google"
-						onClick={handleGoogle}
+						onClick={() => void handleGoogle()}
 					/>
 					<img
 						className="cursor-pointer transition-transform hover:scale-105"
 						src="/assets/images/icons/github.png"
 						alt="Conta GitHub"
-						onClick={handleGitHub}
+						onClick={() => void handleGitHub()}
 					/>
 				</div>
 			</div>

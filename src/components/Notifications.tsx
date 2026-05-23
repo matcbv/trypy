@@ -1,4 +1,10 @@
-export function ToastNotification({ closeToast, data }) {
+import type { ToastContentProps } from 'react-toastify';
+import type { ToastData } from '../types/toast';
+
+export function ToastNotification({
+	closeToast,
+	data,
+}: ToastContentProps<ToastData>) {
 	return (
 		<div className="flex items-center gap-x-3">
 			<img

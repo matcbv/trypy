@@ -1,28 +1,33 @@
-import { useContext, useEffect, useState } from 'react';
-import { contentfulFormatter } from '../content/contentfulFormatter';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../database/firebase';
+import { useEffect, useState, type MouseEvent } from 'react';
+import { contentfulFormatter } from '../content/formatters/contentfulFormatter';
+import { updateDoc } from 'firebase/firestore';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { logError } from '../utils/logger';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
+import { useSafeContext } from '../hooks/useSafeContext';
+import { userDataRef } from '../database/refs/userRefs';
+import type { TipData } from '../types/content';
 
-export function TipPy({ tipFields }) {
-	const { authState, authDispatch } = useContext(AuthContext);
+export function TipPy({ tipFields }: { tipFields: TipData }) {
+	const { authState, authDispatch } = useSafeContext(AuthContext);
 	const [favorited, setFavorited] = useState(false);
 
 	useEffect(() => {
-		const savedTips = authState.data.savedTips;
-		savedTips && setFavorited(savedTips.includes(tipFields.slug));
-	}, [authState.data.savedTips, tipFields.slug]);
+		const savedTips = authState.data?.savedTips;
+		if (savedTips) setFavorited(savedTips.includes(tipFields.slug));
+	}, [authState.data?.savedTips, tipFields.slug]);
 
-	const toggleImage = (e, isHovering) => {
-		if (!favorited && e.target) {
-			e.target.src = `/assets/images/icons/${isHovering ? 'favorited' : 'favorite'}.png`;
+	const toggleImage = (
+		e: MouseEvent<HTMLImageElement>,
+		isHovering: boolean,
+	) => {
+		if (!favorited) {
+			e.currentTarget.src = `/assets/images/icons/${isHovering ? 'favorited' : 'favorite'}.png`;
 		}
 	};
 
 	const toggleFavorite = async () => {
-		if (!authState.data) return;
+		if (!authState.data || !authState.uid) return;
 
 		try {
 			let savedTips = authState.data.savedTips ?? [];
@@ -31,10 +36,10 @@ export function TipPy({ tipFields }) {
 			} else {
 				savedTips = [...savedTips, tipFields.slug];
 			}
-			await updateDoc(doc(db, 'users', authState.uid), { savedTips });
+			await updateDoc(userDataRef(authState.uid), { savedTips });
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { data: { savedTips } },
+				payload: { ...authState, data: { savedTips } },
 			});
 			setFavorited((prev) => !prev);
 		} catch (error) {
@@ -57,7 +62,7 @@ export function TipPy({ tipFields }) {
 						alt="Favoritar"
 						className="cursor-pointer"
 						draggable={false}
-						onClick={toggleFavorite}
+						onClick={() => void toggleFavorite()}
 						onMouseEnter={(e) => toggleImage(e, true)}
 						onMouseLeave={(e) => toggleImage(e, false)}
 					/>

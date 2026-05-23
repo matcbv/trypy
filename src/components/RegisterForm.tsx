@@ -1,23 +1,26 @@
-import { useContext, useState } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastNotification } from './Notifications';
-import { dateFormatter } from '../utils/dataFormatter';
+import { dateFormatter } from '../utils/dateFormatter';
 import { PasswordInput } from './PasswordInput';
-import { signUpWithCredentials } from '../database/auth';
-import { validationRegex } from '../utils/validationRegex';
+import { signUpWithCredentials } from '../database/auth/auth';
+import { validationRegex } from '../constants/validationRegex';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { logError } from '../utils/logger';
-import { signInWithGoogle } from '../database/oAuth';
+import { signInWithGoogle } from '../database/auth/oAuth';
 import { formMap } from '../constants/labelMap';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
+import { useSafeContext } from '../hooks/useSafeContext';
+import type { ToastData } from '../types/toast';
+import { idGenerator } from '../utils/idGenerator';
 
 export function RegisterForm() {
 	const navigate = useNavigate();
-	const { authDispatch } = useContext(AuthContext);
-	const { progressDispatch } = useContext(ProgressContext);
+	const { authState, authDispatch } = useSafeContext(AuthContext);
+	const { progressDispatch } = useSafeContext(ProgressContext);
 
 	const [userData, setUserData] = useState({
 		email: '',
@@ -35,7 +38,7 @@ export function RegisterForm() {
 		birthDate: '',
 	});
 
-	const handleChange = (e) => {
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setPlaceholders((prev) => ({ ...prev, [e.target.id]: '' }));
 		const finalValue =
 			e.target.id === 'birthDate'
@@ -47,7 +50,7 @@ export function RegisterForm() {
 	const checkData = () => {
 		let isDataValid = true;
 
-		Object.keys(userData).forEach((key) => {
+		(Object.keys(userData) as Array<keyof typeof userData>).forEach((key) => {
 			if (!userData[key].match(validationRegex[key].regex)) {
 				setUserData((prev) => ({ ...prev, [key]: '' }));
 				setPlaceholders((prev) => ({
@@ -61,19 +64,25 @@ export function RegisterForm() {
 		return isDataValid;
 	};
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const isDataValid = checkData();
-		if (!isDataValid) return;
 
+		const isDataValid = checkData();
+
+		if (!isDataValid) return;
 		try {
-			const res = await signUpWithCredentials(userData);
+			const res = await signUpWithCredentials({
+				...userData,
+				id: idGenerator().generateID(),
+				picture: null,
+				savedTips: [],
+			});
 
 			const { uid, persistedData, progressData } = res;
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { uid, data: persistedData },
+				payload: { ...authState, uid, data: persistedData },
 			});
 
 			progressDispatch({
@@ -81,8 +90,8 @@ export function RegisterForm() {
 				payload: progressData,
 			});
 
-			navigate('/dashboard/overview');
-			toast(ToastNotification, {
+			void navigate('/dashboard/overview');
+			toast<ToastData>(ToastNotification, {
 				type: 'success',
 				data: {
 					type: 'success',
@@ -101,15 +110,15 @@ export function RegisterForm() {
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { uid, data: providerData },
+				payload: { ...authState, uid, data: providerData },
 			});
 
-			authDispatch({
+			progressDispatch({
 				type: progressActionTypes.SET_PROGRESS,
 				payload: progressData,
 			});
 
-			navigate('/dashboard/overview');
+			void navigate('/dashboard/overview');
 			toast(ToastNotification, {
 				type: 'success',
 				data: {
@@ -122,7 +131,7 @@ export function RegisterForm() {
 		}
 	};
 
-	const inputType = (key) => {
+	const inputType = (key: keyof typeof formMap) => {
 		switch (key) {
 			case 'password':
 				return (
@@ -160,22 +169,24 @@ export function RegisterForm() {
 	return (
 		<form
 			className="flex h-full flex-col justify-center"
-			onSubmit={handleSubmit}
+			onSubmit={(e) => void handleSubmit(e)}
 		>
 			<div className="flex justify-between">
 				<div className="flex h-full flex-col justify-center">
 					<div className="flex flex-col gap-y-3">
-						{Object.entries(formMap).map(([key, value]) => (
-							<div className="flex flex-col" key={key}>
-								<label
-									htmlFor={key}
-									className="font-jetbrains ml-3 text-sm font-bold"
-								>
-									{value}
-								</label>
-								{inputType(key)}
-							</div>
-						))}
+						{(Object.entries(formMap) as [keyof typeof formMap, string][]).map(
+							([key, value]) => (
+								<div className="flex flex-col" key={key}>
+									<label
+										htmlFor={key}
+										className="font-jetbrains ml-3 text-sm font-bold"
+									>
+										{value}
+									</label>
+									{inputType(key)}
+								</div>
+							),
+						)}
 					</div>
 				</div>
 				<div className="flex h-full flex-col justify-center gap-y-6">
@@ -192,7 +203,7 @@ export function RegisterForm() {
 					<div className="flex flex-col gap-y-4">
 						<span
 							className="register-form-btn flex items-center justify-center gap-x-2 border-[var(--main-purple)]"
-							onClick={() => handleGoogle()}
+							onClick={() => void handleGoogle()}
 						>
 							<p className="text-lg">Google</p>
 							<img

@@ -1,19 +1,22 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { SubtopicDropdown } from './SubtopicDropdown';
+import { useSafeContext } from '../hooks/useSafeContext';
+import type { TopicData } from '../types/content';
 
-export function ModuleSideBar({ topics }) {
-	const { progressState } = useContext(ProgressContext);
-	const topicsContainer = useRef([]);
-	const currentContainer = useRef(null);
-	const arrows = useRef([]);
-	const currentArrow = useRef(null);
+export function ModuleSideBar({ topics }: { topics: TopicData[] }) {
+	const { progressState } = useSafeContext(ProgressContext);
+	const dropdownsContainer = useRef<(HTMLDivElement | null)[]>([]);
+	const currentContainer = useRef<HTMLDivElement>(null);
+	const arrows = useRef<(HTMLImageElement | null)[]>([]);
+	const currentArrow = useRef<HTMLImageElement>(null);
 
-	useEffect(() => {}, []);
-
-	const handleClick = (index) => {
-		const container = topicsContainer.current[index];
-		const arrow = arrows.current[index];
+	const handleClick = (slug: string) => {
+		const dropdown = dropdownsContainer.current.find(
+			(dropdown) => dropdown?.id === slug,
+		);
+		const arrow = arrows.current.find((arrow) => arrow?.id === slug);
+		if (!dropdown || !arrow) return;
 
 		if (currentContainer.current)
 			currentContainer.current.style =
@@ -21,21 +24,21 @@ export function ModuleSideBar({ topics }) {
 		if (currentArrow.current)
 			currentArrow.current.style = 'transform: rotate(0deg)';
 
-		if (container === currentContainer.current) {
-			container.style = 'height: 0; padding: 0 16px; opacity: 0%';
+		if (dropdown === currentContainer.current) {
+			dropdown.style = 'height: 0; padding: 0 16px; opacity: 0%';
 			arrow.style = 'transform: rotate(0deg)';
 			currentContainer.current = null;
 			currentArrow.current = null;
 		} else {
-			const topicsHeight = container.scrollHeight;
-			container.style = `height: ${topicsHeight + 16}px; padding: 16px; opacity:100%`;
+			const topicsHeight = dropdown.scrollHeight;
+			dropdown.style = `height: ${topicsHeight + 16}px; padding: 16px; opacity:100%`;
 			arrow.style = 'transform: rotate(180deg)';
-			currentContainer.current = container;
+			currentContainer.current = dropdown;
 			currentArrow.current = arrow;
 		}
 	};
 
-	const iconData = (topic) => {
+	const iconData = (topic: TopicData) => {
 		if (progressState.doneTopics.includes(topic.slug)) {
 			return { src: '/assets/images/icons/success.png', alt: 'Concluído' };
 		}
@@ -48,7 +51,7 @@ export function ModuleSideBar({ topics }) {
 
 	return (
 		<div className="s z-20 flex h-screen w-[300px] shrink-0 flex-col gap-y-5 rounded-lg bg-[#27214950] p-4 shadow-[0_0_20px_#ffffff0f]">
-			{topics?.map((topic, index) => (
+			{topics?.map((topic) => (
 				<div
 					key={topic.title}
 					className="flex flex-col overflow-hidden rounded-lg bg-[#0d0a14]"
@@ -63,18 +66,21 @@ export function ModuleSideBar({ topics }) {
 						{(progressState.doneTopics.includes(topic.slug) ||
 							progressState.inProgressTopic === topic.slug) && (
 							<img
+								id={topic.slug}
 								src="/assets/images/icons/arrow.png"
 								className="cursor-pointer transition-transform duration-300"
-								onClick={() => handleClick(index)}
-								ref={(el) => (arrows.current[index] = el)}
+								onClick={() => handleClick(topic.slug)}
+								ref={(el) => {
+									arrows.current.push(el);
+								}}
 								alt="Seta"
 							/>
 						)}
 					</div>
 					<SubtopicDropdown
-						index={index}
-						fields={topic}
-						topicsContainer={topicsContainer}
+						lastSubtopicSlug={topics.at(-1)!.subtopics.at(-1)!.slug}
+						topic={topic}
+						dropdownsContainer={dropdownsContainer}
 					/>
 				</div>
 			))}

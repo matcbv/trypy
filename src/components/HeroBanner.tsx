@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 export function HeroBanner() {
 	useEffect(() => {
-		const heading = document.querySelector('h1');
+		const heading = document.querySelector('h1')!;
 		heading.innerText = 'try';
 		const ext = '.py'.split('');
 
