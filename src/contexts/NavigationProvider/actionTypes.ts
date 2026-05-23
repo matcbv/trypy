@@ -1,6 +1,5 @@
 const actionTypes = {
 	SET_CURRENT_PROGRESS: 'SET_CURRENT_PROGRESS',
-	SET_IS_LAST_SUBTOPIC: 'SET_IS_LAST_SUBTOPIC',
-};
+} as const;
 
 export default actionTypes;

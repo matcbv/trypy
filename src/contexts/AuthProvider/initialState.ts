@@ -1,6 +1,6 @@
 const data = {
 	uid: null,
-	data: {},
+	data: null,
 	role: 'dev',
 };
 
