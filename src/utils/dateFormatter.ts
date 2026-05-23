@@ -1,4 +1,4 @@
-export const dateFormatter = (value) => {
+export const dateFormatter = (value: string): string => {
 	let raw = value.replace(/\D/g, '');
 	raw = raw.length > 8 ? raw.slice(0, 8) : raw;
 
