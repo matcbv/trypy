@@ -9,7 +9,7 @@ export interface AuthContextType {
 	authState: AuthState;
 	authDispatch: Dispatch<{
 		type: keyof typeof authActionTypes;
-		payload?: Omit<AuthState, 'data'> & { data: Partial<UserData> };
+		payload?: Partial<Omit<AuthState, 'data'>> & { data?: Partial<UserData> };
 	}>;
 }
 

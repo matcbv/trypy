@@ -32,7 +32,7 @@ export function PictureInput() {
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { ...authState, data: { picture: publicUrl } },
+				payload: { data: { picture: publicUrl } },
 			});
 			await updateDoc(userDataRef(uid!), { picture: publicUrl });
 

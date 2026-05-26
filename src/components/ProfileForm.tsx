@@ -42,7 +42,7 @@ export function ProfileForm() {
 		try {
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { ...authState, data: currentData },
+				payload: { data: currentData },
 			});
 			await updateDoc(userDataRef(authState.uid!), { ...currentData });
 			toast<ToastData>(ToastNotification, {

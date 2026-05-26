@@ -15,7 +15,7 @@ import type { ToastData } from '../types/toast';
 
 export function SessionForm() {
 	const navigate = useNavigate();
-	const { authState, authDispatch } = useSafeContext(AuthContext);
+	const { authDispatch } = useSafeContext(AuthContext);
 	const { progressDispatch } = useSafeContext(ProgressContext);
 	const [userCredentials, setUserCredentials] = useState({
 		email: '',
@@ -59,7 +59,7 @@ export function SessionForm() {
 
 				authDispatch({
 					type: authActionTypes.SET_DATA,
-					payload: { ...authState, uid, data: userData },
+					payload: { uid, data: userData },
 				});
 				progressDispatch({
 					type: progressActionTypes.SET_PROGRESS,
@@ -95,7 +95,7 @@ export function SessionForm() {
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { ...authState, uid, data: providerData },
+				payload: { uid, data: providerData },
 			});
 			progressDispatch({
 				type: progressActionTypes.SET_PROGRESS,

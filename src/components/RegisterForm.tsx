@@ -19,7 +19,7 @@ import { idGenerator } from '../utils/idGenerator';
 
 export function RegisterForm() {
 	const navigate = useNavigate();
-	const { authState, authDispatch } = useSafeContext(AuthContext);
+	const { authDispatch } = useSafeContext(AuthContext);
 	const { progressDispatch } = useSafeContext(ProgressContext);
 
 	const [userData, setUserData] = useState({
@@ -82,7 +82,7 @@ export function RegisterForm() {
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { ...authState, uid, data: persistedData },
+				payload: { uid, data: persistedData },
 			});
 
 			progressDispatch({
@@ -110,7 +110,7 @@ export function RegisterForm() {
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { ...authState, uid, data: providerData },
+				payload: { uid, data: providerData },
 			});
 
 			progressDispatch({

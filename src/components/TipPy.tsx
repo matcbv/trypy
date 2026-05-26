@@ -39,7 +39,7 @@ export function TipPy({ tipFields }: { tipFields: TipData }) {
 			await updateDoc(userDataRef(authState.uid), { savedTips });
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { ...authState, data: { savedTips } },
+				payload: { data: { savedTips } },
 			});
 			setFavorited((prev) => !prev);
 		} catch (error) {

@@ -10,7 +10,7 @@ export default function reducer(
 		payload,
 	}: {
 		type: keyof typeof actionTypes;
-		payload?: Omit<AuthState, 'data'> & { data: Partial<UserData> };
+		payload?: Partial<Omit<AuthState, 'data'>> & { data?: Partial<UserData> };
 	},
 ) {
 	switch (type) {

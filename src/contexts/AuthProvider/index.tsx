@@ -24,7 +24,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 						authDispatch({
 							type: actionTypes.SET_DATA,
 							payload: {
-								...authState,
 								uid: user.uid,
 								data: userData.data(),
 							},
@@ -43,7 +42,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 		});
 
 		return unsubscribe;
-	}, [authState]);
+	}, []);
 
 	return (
 		<AuthContext value={{ authState, authDispatch }}>{children}</AuthContext>
