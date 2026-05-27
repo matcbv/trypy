@@ -12,7 +12,7 @@ export default defineConfig([
 	tseslint.configs.recommended,
 	tseslint.configs.recommendedTypeChecked,
 
-	{ ignores: ['dist', 'eslint.config.js'] },
+	{ ignores: ['dist'] },
 	{
 		files: ['**/*.{js,jsx,ts,tsx}'],
 		languageOptions: {
@@ -22,8 +22,11 @@ export default defineConfig([
 				ecmaVersion: 'latest',
 				ecmaFeatures: { jsx: true },
 				sourceType: 'module',
-				// Identifica o tsconfig.json mais próximo e consegue aplicar regras de type checking.
-				projectService: true,
+				/*
+					Identifica o tsconfig.json mais próximo e consegue aplicar regras de type checking.
+					projectService: true,
+				*/
+				project: ['./tsconfig.app.json', './tsconfig.node.json'],
 			},
 		},
 		plugins: {

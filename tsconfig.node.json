@@ -1,0 +1,11 @@
+// tsconfig.node.json
+{
+	"compilerOptions": {
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"target": "es2022",
+		"strict": true,
+		"skipLibCheck": true
+	},
+	"include": ["vite.config.ts", "eslint.config.ts"]
+}
