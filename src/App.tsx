@@ -3,10 +3,6 @@ import { ToastContainer } from 'react-toastify';
 // Routes
 import { AppRoutes } from './routes';
 
-// Providers
-import AuthProvider from './contexts/AuthProvider';
-import ProgressProvider from './contexts/ProgressProvider';
-
 // Styles
 import './assets/fonts.css';
 import './assets/tailwind.css';
@@ -15,11 +11,7 @@ import './assets/styles.css';
 function App() {
 	return (
 		<>
-			<AuthProvider>
-				<ProgressProvider>
-					<AppRoutes />
-				</ProgressProvider>
-			</AuthProvider>
+			<AppRoutes />
 			<ToastContainer
 				closeButton={false}
 				icon={false}
