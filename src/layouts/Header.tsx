@@ -3,18 +3,19 @@ import { Link } from 'react-router-dom';
 import { HeaderList } from '../components/HeaderList';
 
 export function Header() {
-	const headerRef = useRef(null);
+	const headerRef = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {
-		if (!headerRef) return;
+		const header = headerRef.current;
+		if (!header) return;
 
 		const changeColor = () => {
 			if (window.scrollY === 0) {
-				headerRef.current.style.backgroundColor = 'transparent';
-				headerRef.current.style.zIndex = '10';
+				header.style.backgroundColor = 'transparent';
+				header.style.zIndex = '10';
 			} else {
-				headerRef.current.style.backgroundColor = 'var(--main-black)';
-				headerRef.current.style.zIndex = '30';
+				header.style.backgroundColor = 'var(--main-black)';
+				header.style.zIndex = '30';
 			}
 		};
 		window.addEventListener('scroll', changeColor);
