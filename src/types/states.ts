@@ -3,7 +3,7 @@ import type { UserData } from './user';
 export interface AuthState {
 	uid: string | null;
 	data: Partial<UserData> | null;
-	role: string;
+	loading: boolean;
 }
 
 export interface ProgressState {
@@ -20,4 +20,5 @@ export interface NavigationState {
 	currentTopic: string;
 	currentSubtopic: string;
 	isLastSubtopic: boolean;
+	isHydrated: boolean;
 }

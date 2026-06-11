@@ -1,7 +1,7 @@
 const data = {
 	uid: null,
 	data: null,
-	role: 'dev',
+	loading: true,
 };
 
 export default data;

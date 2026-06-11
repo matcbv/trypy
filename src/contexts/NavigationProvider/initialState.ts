@@ -3,6 +3,7 @@ const initialState = {
 	currentTopic: '',
 	currentSubtopic: '',
 	isLastSubtopic: false,
+	isHydrated: false,
 };
 
 export default initialState;
