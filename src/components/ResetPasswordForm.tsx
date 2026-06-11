@@ -1,5 +1,5 @@
 import { useState, type SubmitEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastNotification } from './Notifications';
 import { logError } from '../utils/logger';
@@ -8,12 +8,13 @@ import { auth } from '../database/configs/firebase';
 import type { ToastData } from '../types/toast';
 
 export function ResetPasswordForm() {
-	const [email, setEmail] = useState('');
+	const [email, setEmail] = useState<string | null>(null);
+	const navigate = useNavigate();
 
 	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (email.length <= 0) {
+		if (!email) {
 			toast<ToastData>(ToastNotification, {
 				type: 'error',
 				data: {
@@ -52,9 +53,12 @@ export function ResetPasswordForm() {
 					<button type="submit" className="form-btn w-[150px]">
 						Continuar
 					</button>
-					<Link to={'/session'} className="form-btn block w-[120px]">
+					<button
+						onClick={() => void navigate(-1)}
+						className="form-btn block w-[120px]"
+					>
 						Voltar
-					</Link>
+					</button>
 				</div>
 			</div>
 		</form>
