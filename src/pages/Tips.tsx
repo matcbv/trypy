@@ -45,7 +45,7 @@ export function Tips() {
 			{tips.length > 0 ? (
 				<div className="flex flex-col items-center justify-center gap-y-5">
 					{tips.map((tip) => (
-						<TipPy tipFields={tip} />
+						<TipPy key={tip.slug} tipFields={tip} />
 					))}
 				</div>
 			) : (
