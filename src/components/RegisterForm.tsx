@@ -10,17 +10,18 @@ import { validationRegex } from '../constants/validationRegex';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { logError } from '../utils/logger';
 import { signInWithGoogle } from '../database/auth/oAuth';
-import { formMap } from '../constants/labelMap';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ToastData } from '../types/toast';
 import { idGenerator } from '../utils/idGenerator';
+import { LoadingPage } from '../pages/LoadingPage';
 
 export function RegisterForm() {
 	const navigate = useNavigate();
 	const { authDispatch } = useSafeContext(AuthContext);
 	const { progressDispatch } = useSafeContext(ProgressContext);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const [userData, setUserData] = useState({
 		email: '',
@@ -29,6 +30,14 @@ export function RegisterForm() {
 		lastname: '',
 		birthDate: '',
 	});
+
+	const formMap = {
+		email: 'E-mail',
+		password: 'Senha',
+		name: 'Nome',
+		lastname: 'Sobrenome',
+		birthDate: 'Data de nascimento',
+	};
 
 	const [placeholders, setPlaceholders] = useState({
 		email: '',
@@ -51,7 +60,9 @@ export function RegisterForm() {
 		let isDataValid = true;
 
 		(Object.keys(userData) as Array<keyof typeof userData>).forEach((key) => {
-			if (!userData[key].match(validationRegex[key].regex)) {
+			const formattedData =
+				key === 'password' ? userData[key] : userData[key].trim();
+			if (!formattedData.match(validationRegex[key].regex)) {
 				setUserData((prev) => ({ ...prev, [key]: '' }));
 				setPlaceholders((prev) => ({
 					...prev,
@@ -60,7 +71,6 @@ export function RegisterForm() {
 				isDataValid = false;
 			}
 		});
-
 		return isDataValid;
 	};
 
@@ -70,15 +80,25 @@ export function RegisterForm() {
 		const isDataValid = checkData();
 
 		if (!isDataValid) return;
+
+		setIsSubmitting(true);
+
+		const formattedData = Object.fromEntries(
+			Object.entries(userData).map(([key, value]) => [
+				key,
+				key === 'password' ? value : value.trim(),
+			]),
+		) as typeof userData;
+
 		try {
 			const res = await signUpWithCredentials({
-				...userData,
-				id: idGenerator().generateID(),
+				...formattedData,
+				id: 'TPY-' + idGenerator().generateID(),
 				picture: null,
 				savedTips: [],
 			});
 
-			const { uid, persistedData, progressData } = res;
+			const { uid, persistedData, initialProgressData } = res;
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
@@ -87,10 +107,10 @@ export function RegisterForm() {
 
 			progressDispatch({
 				type: progressActionTypes.SET_PROGRESS,
-				payload: progressData,
+				payload: initialProgressData,
 			});
 
-			void navigate('/dashboard/overview');
+			void navigate('/dashboard', { replace: true });
 			toast<ToastData>(ToastNotification, {
 				type: 'success',
 				data: {
@@ -100,10 +120,14 @@ export function RegisterForm() {
 			});
 		} catch (error) {
 			logError(error);
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
 	const handleGoogle = async () => {
+		setIsSubmitting(true);
+
 		try {
 			const res = await signInWithGoogle();
 			const { uid, providerData, progressData } = res;
@@ -118,7 +142,7 @@ export function RegisterForm() {
 				payload: progressData,
 			});
 
-			void navigate('/dashboard/overview');
+			void navigate('/dashboard', { replace: true });
 			toast(ToastNotification, {
 				type: 'success',
 				data: {
@@ -128,6 +152,8 @@ export function RegisterForm() {
 			});
 		} catch (error) {
 			logError(error);
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
@@ -166,7 +192,9 @@ export function RegisterForm() {
 		}
 	};
 
-	return (
+	return isSubmitting ? (
+		<LoadingPage />
+	) : (
 		<form
 			className="flex h-full flex-col justify-center"
 			onSubmit={(e) => void handleSubmit(e)}
@@ -174,23 +202,23 @@ export function RegisterForm() {
 			<div className="flex justify-between">
 				<div className="flex h-full flex-col justify-center">
 					<div className="flex flex-col gap-y-3">
-						{(Object.entries(formMap) as [keyof typeof formMap, string][]).map(
-							([key, value]) => (
-								<div className="flex flex-col" key={key}>
-									<label
-										htmlFor={key}
-										className="font-jetbrains ml-3 text-sm font-bold"
-									>
-										{value}
-									</label>
-									{inputType(key)}
-								</div>
-							),
-						)}
+						{(
+							Object.entries(formMap) as Array<[keyof typeof formMap, string]>
+						).map(([key, value]) => (
+							<div className="flex flex-col" key={key}>
+								<label
+									htmlFor={key}
+									className="font-jetbrains ml-3 text-sm font-bold"
+								>
+									{value}
+								</label>
+								{inputType(key)}
+							</div>
+						))}
 					</div>
 				</div>
 				<div className="flex h-full flex-col justify-center gap-y-6">
-					<p className="font-space-grotesk w-[303px] text-4xl leading-normal tracking-wide text-shadow-[5px_5px_10px_rgba(0,_0,_0,_0.5)]">
+					<p className="font-space-grotesk w-[303px] text-center text-4xl leading-14 tracking-wide text-shadow-[5px_5px_10px_rgba(0,_0,_0,_0.5)]">
 						O{' '}
 						<span className="underline decoration-[var(--main-green)] decoration-2 underline-offset-[10px]">
 							primeiro passo
@@ -200,7 +228,7 @@ export function RegisterForm() {
 							importante
 						</span>
 					</p>
-					<div className="flex flex-col gap-y-4">
+					<div className="flex flex-col items-center gap-y-4">
 						<span
 							className="register-form-btn flex items-center justify-center gap-x-2 border-[var(--main-purple)]"
 							onClick={() => void handleGoogle()}

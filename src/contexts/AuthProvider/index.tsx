@@ -8,13 +8,19 @@ import actionTypes from './actionTypes';
 import { getDoc } from 'firebase/firestore';
 import { userDataRef } from '../../database/refs/userRefs';
 import { logError } from '../../utils/logger';
+import { useNavigate } from 'react-router-dom';
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
 	const [authState, authDispatch] = useReducer(reducer, initialState);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			void (async () => {
+				authDispatch({
+					type: actionTypes.SET_DATA,
+					payload: { loading: true },
+				});
 				try {
 					if (user) {
 						const userData = await getDoc(userDataRef(user.uid));
@@ -33,16 +39,23 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 					}
 				} catch (error) {
 					await signOut(auth);
+					void navigate('/', { replace: true });
+
 					logError(
 						error,
 						'Ocorreu um erro ao renovar a sessão. Faça login novamente.',
 					);
+				} finally {
+					authDispatch({
+						type: actionTypes.SET_DATA,
+						payload: { loading: false },
+					});
 				}
 			})();
 		});
 
 		return unsubscribe;
-	}, []);
+	}, [navigate]);
 
 	return (
 		<AuthContext value={{ authState, authDispatch }}>{children}</AuthContext>

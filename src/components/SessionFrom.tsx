@@ -12,6 +12,7 @@ import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ToastData } from '../types/toast';
+import { LoadingPage } from '../pages/LoadingPage';
 
 export function SessionForm() {
 	const navigate = useNavigate();
@@ -22,6 +23,7 @@ export function SessionForm() {
 		password: '',
 	});
 	const [isVisible, setIsVisible] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setUserCredentials((prev) => ({
@@ -31,16 +33,14 @@ export function SessionForm() {
 	};
 
 	const checkData = () => {
-		let isDataValid = true;
-
-		(
+		return (
 			Object.keys(userCredentials) as Array<keyof typeof userCredentials>
-		).forEach((key) => {
-			if (!userCredentials[key].match(validationRegex[key].regex)) {
-				isDataValid = false;
-			}
+		).every((key) => {
+			const formattedData =
+				key === 'password' ? userCredentials[key] : userCredentials[key].trim();
+
+			return formattedData.match(validationRegex[key].regex);
 		});
-		return isDataValid;
 	};
 
 	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -48,36 +48,7 @@ export function SessionForm() {
 
 		const isDataValid = checkData();
 
-		if (isDataValid) {
-			try {
-				const res = await signInWithCredentials(
-					userCredentials.email,
-					userCredentials.password,
-				);
-
-				const { uid, userData, progressData } = res;
-
-				authDispatch({
-					type: authActionTypes.SET_DATA,
-					payload: { uid, data: userData },
-				});
-				progressDispatch({
-					type: progressActionTypes.SET_PROGRESS,
-					payload: progressData,
-				});
-
-				void navigate('/dashboard/overview');
-				toast<ToastData>(ToastNotification, {
-					type: 'success',
-					data: {
-						type: 'success',
-						text: 'Login efetuado com sucesso!',
-					},
-				});
-			} catch (error) {
-				logError(error);
-			}
-		} else {
+		if (!isDataValid) {
 			toast<ToastData>(ToastNotification, {
 				type: 'error',
 				data: {
@@ -85,10 +56,46 @@ export function SessionForm() {
 					text: 'Credenciais inválidas!',
 				},
 			});
+			return;
+		}
+
+		setIsSubmitting(true);
+
+		try {
+			const res = await signInWithCredentials(
+				userCredentials.email.trim(),
+				userCredentials.password,
+			);
+
+			const { uid, userData, progressData } = res;
+
+			authDispatch({
+				type: authActionTypes.SET_DATA,
+				payload: { uid, data: userData },
+			});
+			progressDispatch({
+				type: progressActionTypes.SET_PROGRESS,
+				payload: progressData,
+			});
+
+			void navigate('/dashboard', { replace: true });
+			toast<ToastData>(ToastNotification, {
+				type: 'success',
+				data: {
+					type: 'success',
+					text: 'Login efetuado com sucesso!',
+				},
+			});
+		} catch (error) {
+			logError(error);
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
 	const handleGoogle = async () => {
+		setIsSubmitting(true);
+
 		try {
 			const res = await signInWithGoogle();
 			const { uid, providerData, progressData } = res;
@@ -102,7 +109,7 @@ export function SessionForm() {
 				payload: progressData,
 			});
 
-			void navigate('/dashboard/overview');
+			void navigate('/dashboard', { replace: true });
 			toast<ToastData>(ToastNotification, {
 				type: 'success',
 				data: {
@@ -112,12 +119,16 @@ export function SessionForm() {
 			});
 		} catch (error) {
 			logError(error);
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
 	const handleGitHub = async () => {};
 
-	return (
+	return isSubmitting ? (
+		<LoadingPage />
+	) : (
 		<form
 			className="mb-5 flex flex-col gap-y-10"
 			onSubmit={(e) => void handleSubmit(e)}
