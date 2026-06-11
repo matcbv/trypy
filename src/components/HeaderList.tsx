@@ -28,8 +28,8 @@ export function HeaderList() {
 				onMouseEnter={showUnderline}
 				onMouseLeave={hideUnderline}
 			>
-				{Object.keys(authState.data || {}).length > 0 ? (
-					<Link to="/dashboard/overview">Minha conta</Link>
+				{authState.data ? (
+					<Link to="/dashboard">Minha conta</Link>
 				) : (
 					<Link to="/session">Iniciar sessão</Link>
 				)}
