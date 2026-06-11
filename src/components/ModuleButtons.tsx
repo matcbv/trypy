@@ -11,6 +11,9 @@ import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleData, SubtopicData, TopicData } from '../types/content';
 import type { ProgressState } from '../types/states';
 import { userProgressRef } from '../database/refs/userRefs';
+import { toast } from 'react-toastify';
+import type { ToastData } from '../types/toast';
+import { ToastNotification } from './Notifications';
 
 interface ModuleButtonsProps {
 	topics: TopicData[];
@@ -37,7 +40,7 @@ export function ModuleButtons({
 	const handleNext = async () => {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
-		const data: Partial<ProgressState> = {};
+		const data: Partial<ProgressState> = { ...progressState };
 
 		try {
 			const { nextTopic, nextSubtopic, isLastSubtopic } = await getNextContent(
@@ -46,21 +49,7 @@ export function ModuleButtons({
 				subtopicData,
 			);
 
-			// * Validando se o novo subtópico é o último do módulo.
-			navigationDispatch({
-				type: navigationActionTypes.SET_CURRENT_PROGRESS,
-				payload: { isLastSubtopic: isLastSubtopic },
-			});
-
-			navigationDispatch({
-				type: navigationActionTypes.SET_CURRENT_PROGRESS,
-				payload: {
-					currentTopic: nextTopic.slug || '',
-					currentSubtopic: nextSubtopic.slug || '',
-				},
-			});
-
-			// * Adicionando o subtópico concluído caso esse não esteja presenta na lista de progresso do usuário.
+			// * Adicionando o subtópico concluído à lista de progresso do usuário, caso não esteja presente.
 			if (
 				!progressState.doneSubtopics.includes(navigationState.currentSubtopic)
 			) {
@@ -70,26 +59,61 @@ export function ModuleButtons({
 				];
 			}
 
-			// * Caso o próximo subtópico a ser realizado não esteja na lista de concluídos, iremos adicioná-lo como o subtópico em progresso do usuário.
-			if (!progressState.doneSubtopics.includes(nextSubtopic.slug))
-				data.inProgressSubtopic = nextSubtopic.slug;
-
-			// * Validando se o tópico foi concluído. Caso positivo, iremos adicioná-lo à lista de progresso do usuário.
+			// * Validando se o tópico foi concluído.
 			const isTopicDone = subtopics.every((subtopic) =>
 				data.doneSubtopics?.includes(subtopic.slug),
 			);
 
+			// * Caso concluído, iremos adicioná-lo à ela.
 			if (
 				isTopicDone &&
 				!progressState.doneTopics.includes(navigationState.currentTopic)
 			) {
 				data.doneTopics = [
-					...new Set([
-						...progressState.doneTopics,
-						navigationState.currentTopic,
-					]),
+					...progressState.doneTopics,
+					navigationState.currentTopic,
 				];
-				data.inProgressTopic = nextTopic.slug;
+
+				const secureNextTopic =
+					topics.find((topic) => topic.order === topicData.order + 1)?.slug ||
+					navigationState.currentTopic;
+
+				data.inProgressTopic = secureNextTopic;
+			}
+
+			// * Checando se o próximo subtópico está bloqueado.
+			const isNextSubtopicBlocked =
+				!isTopicDone &&
+				nextTopic.slug !== navigationState.currentTopic &&
+				nextTopic.subtopics.some(
+					(subtopic) => nextSubtopic.slug === subtopic.slug,
+				);
+
+			if (!isNextSubtopicBlocked) {
+				// * Caso o próximo subtópico não esteja na lista de concluídos, iremos adicioná-lo como o subtópico em progresso do usuário.
+				if (!progressState.doneSubtopics.includes(nextSubtopic.slug))
+					data.inProgressSubtopic = nextSubtopic.slug;
+
+				navigationDispatch({
+					type: navigationActionTypes.SET_CURRENT_PROGRESS,
+					payload: {
+						currentTopic: nextTopic.slug,
+						currentSubtopic: nextSubtopic.slug,
+					},
+				});
+
+				navigationDispatch({
+					type: navigationActionTypes.SET_CURRENT_PROGRESS,
+					payload: { isLastSubtopic: isLastSubtopic },
+				});
+			} else {
+				toast<ToastData>(ToastNotification, {
+					type: 'info',
+					data: {
+						type: 'info',
+						text: 'Finalize todos os subtópicos do tópico atual para concluí-lo.',
+					},
+				});
 			}
 
 			progressDispatch({
@@ -103,6 +127,8 @@ export function ModuleButtons({
 	};
 
 	const handlePrevious = () => {
+		if (subtopicData.slug === topics[0]?.subtopics[0]?.slug) return;
+
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
 		navigationDispatch({
@@ -143,10 +169,22 @@ export function ModuleButtons({
 	};
 
 	const finishModule = async () => {
-		void navigate('/learning-path');
+		if (!params.moduleId) return;
 
-		if (!params.moduleId || progressState.doneModules.includes(params.moduleId))
+		const isLastTopicDone = subtopics
+			.filter((subtopic) => subtopic.order !== subtopics.length)
+			.every((subtopic) => progressState.doneSubtopics.includes(subtopic.slug));
+
+		if (!isLastTopicDone) {
+			toast<ToastData>(ToastNotification, {
+				type: 'info',
+				data: {
+					type: 'info',
+					text: 'Finalize todos os tópicos para concluir o módulo.',
+				},
+			});
 			return;
+		}
 
 		const { nextModule, nextSubtopic, nextTopic } = await getNextContent(
 			moduleData,
@@ -154,22 +192,35 @@ export function ModuleButtons({
 			subtopicData,
 		);
 
-		const data = {
-			doneSubtopics: [
-				...progressState.doneSubtopics,
-				navigationState.currentSubtopic,
-			],
-			doneTopics: [...progressState.doneTopics, navigationState.currentTopic],
-			doneModules: [...progressState.doneModules, params.moduleId],
-			inProgressModule: nextModule.slug,
-			inProgressTopic: nextTopic.slug,
-			inProgressSubtopic: nextSubtopic.slug,
-		};
+		if (!progressState.doneModules.includes(params.moduleId)) {
+			const data = {
+				doneSubtopics: [
+					...progressState.doneSubtopics,
+					navigationState.currentSubtopic,
+				],
+				doneTopics: [...progressState.doneTopics, navigationState.currentTopic],
+				doneModules: [...progressState.doneModules, params.moduleId],
+				inProgressModule: nextModule.slug,
+				inProgressTopic: nextTopic.slug,
+				inProgressSubtopic: nextSubtopic.slug,
+			};
 
-		progressDispatch({
-			type: progressActionTypes.SET_PROGRESS,
-			payload: data,
-		});
+			progressDispatch({
+				type: progressActionTypes.SET_PROGRESS,
+				payload: data,
+			});
+
+			await updateDoc(userProgressRef(authState.uid!), data);
+
+			toast<ToastData>(ToastNotification, {
+				type: 'success',
+				data: {
+					type: 'success',
+					text: 'Módulo finalizado com sucesso!',
+				},
+			});
+		}
+
 		navigationDispatch({
 			type: navigationActionTypes.SET_CURRENT_PROGRESS,
 			payload: {
@@ -179,21 +230,21 @@ export function ModuleButtons({
 				isLastSubtopic: false,
 			},
 		});
-		await updateDoc(userProgressRef(authState.uid!), data);
+
+		void navigate('/learning-path');
 	};
 
 	return (
 		<div className="flex justify-end gap-x-10">
 			<button
 				type="button"
-				className={`module-btn group ${subtopicData?.slug === topics[0]?.subtopics[0]?.slug ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-				disabled={subtopicData?.slug === topics[0]?.subtopics[0]?.slug}
+				className="module-btn group cursor-pointer"
 				onClick={handlePrevious}
 			>
 				<img
 					src={`/assets/images/icons/left_arrow.png`}
 					alt="Voltar"
-					className="transition-transform duration-300 group-hover:-translate-x-3"
+					className="rounded- transition-transform duration-300 group-hover:-translate-x-3"
 				/>
 				Voltar
 			</button>
