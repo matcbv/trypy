@@ -1,5 +1,5 @@
 export function idGenerator(): { generateID: () => string } {
-	let id = 'TPY-';
+	let id = '';
 
 	function appendValue(value: number): void {
 		const str = String.fromCharCode(value);
@@ -7,7 +7,7 @@ export function idGenerator(): { generateID: () => string } {
 	}
 
 	function generateID(): string {
-		while (id.length < 10) {
+		while (id.length < 8) {
 			const variant = Math.random();
 			if (parseFloat(variant.toFixed(1)) > 0.5) {
 				const numericPart = Math.ceil(variant * 9 + 48);
