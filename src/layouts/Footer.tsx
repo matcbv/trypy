@@ -1,5 +1,17 @@
 import { Link } from 'react-router-dom';
-import { footerMap, iconsMap } from '../constants/labelMap';
+
+const footerMap = {
+	support: 'Suporte',
+	'be-a-partner': 'Seja um parceiro',
+	'about-us': 'Sobre nós',
+};
+
+const iconsMap = {
+	github: 'GitHub',
+	instagram: 'Instagram',
+	x: 'X',
+	youtube: 'YouTube',
+};
 
 export function Footer() {
 	return (
