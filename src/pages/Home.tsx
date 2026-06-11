@@ -12,7 +12,7 @@ export function Home() {
 						<h2 className="mb-6 text-5xl text-[var(--main-purple)]">
 							Video-aulas integradas
 						</h2>
-						<p className="w-[600px] text-xl leading-relaxed">
+						<p className="w-[600px] text-xl leading-9">
 							Vídeo-aulas postadas em nosso canal no YouTube e integradas à
 							plataforma, servindo como conteúdo complementar para nosso
 							material didático.

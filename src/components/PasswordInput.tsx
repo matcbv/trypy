@@ -46,7 +46,7 @@ export function PasswordInput({
 				/>
 			</div>
 			<p
-				className={`w-[300px] overflow-hidden pl-1 text-[0.7rem] leading-normal transition-all duration-300 ${hideText ? 'mt-0 h-0 opacity-0' : 'mt-2 h-[34px] opacity-100'}`}
+				className={`w-[300px] overflow-hidden pl-1 text-[0.7rem] leading-4 transition-all duration-300 ${hideText ? 'mt-0 h-0 opacity-0' : 'mt-2 h-[34px] opacity-100'}`}
 			>
 				A senha deve possuir oito caracteres, contendo ao menos uma letra
 				maiúscula, uma minúscula e um número.

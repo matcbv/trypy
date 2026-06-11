@@ -89,7 +89,7 @@ export function Support() {
 						<h2 className="text-2xl text-[var(--main-green)]">
 							Outras formas de contato
 						</h2>
-						<p className="leading-relaxed">
+						<p className="leading-6">
 							Fique a vontade também para nos contatar diretamente via e-mail ou
 							suporte do WhatsApp. Para um atendimento mais ágil, dê preferencia
 							ao contato via formulário.

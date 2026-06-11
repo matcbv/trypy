@@ -30,7 +30,7 @@ export function TipPy({ tipFields }: { tipFields: TipData }) {
 		if (!authState.data || !authState.uid) return;
 
 		try {
-			let savedTips = authState.data.savedTips ?? [];
+			let savedTips = authState.data.savedTips || [];
 			if (savedTips.includes(tipFields.slug)) {
 				savedTips = savedTips.filter((tip) => tip !== tipFields.slug);
 			} else {
@@ -68,7 +68,7 @@ export function TipPy({ tipFields }: { tipFields: TipData }) {
 					/>
 				</div>
 			</div>
-			<div className="flex flex-col gap-y-4 p-4 text-[0.8rem] leading-normal">
+			<div className="flex flex-col gap-y-4 p-4 text-[0.8rem]">
 				{contentfulFormatter(tipFields.content)}
 			</div>
 		</div>

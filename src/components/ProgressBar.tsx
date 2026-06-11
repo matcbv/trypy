@@ -26,7 +26,7 @@ export function ProgressBar() {
 				);
 			}
 		})();
-	}, [progressState.doneSubtopics.length]);
+	}, [progressState.doneSubtopics]);
 
 	return (
 		<svg className="h-[200px] w-[200px] rounded-full shadow-[0_0_15px_#ffffff1f]">
