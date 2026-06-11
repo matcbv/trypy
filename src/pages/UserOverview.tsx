@@ -5,6 +5,7 @@ import { fetchContent } from '../content/services/fetchContent';
 import { ProgressBar } from '../components/ProgressBar';
 import { logError } from '../utils/logger';
 import { useSafeContext } from '../hooks/useSafeContext';
+import { SkeletonLoader } from '../components/SkeletonLoader';
 
 export function UserOverview() {
 	const { authState } = useSafeContext(AuthContext);
@@ -37,9 +38,9 @@ export function UserOverview() {
 					}),
 				]);
 				setTitles({
-					module: module[0]?.fields.title || 'Nenhum módulo concluído',
-					topic: topic[0]?.fields.title || 'Nenhum tópico concluído',
-					subtopic: subtopic[0]?.fields.title || 'Nenhum subtópico concluído',
+					module: module[0]!.fields.title,
+					topic: topic[0]!.fields.title,
+					subtopic: subtopic[0]!.fields.title,
 				});
 			} catch (error) {
 				logError(
@@ -55,7 +56,7 @@ export function UserOverview() {
 	]);
 
 	const copyText = async (text: string) => {
-		await navigator.clipboard.writeText(text.replace('#', ''));
+		await navigator.clipboard.writeText(text);
 		setIsCopied((prev) => !prev);
 		setTimeout(() => {
 			setIsCopied(false);
@@ -74,7 +75,9 @@ export function UserOverview() {
 						ID de usuário:
 						<span
 							className="group relative flex cursor-pointer items-center transition-colors hover:text-[var(--main-purple)]"
-							onClick={(e) => void copyText(e.currentTarget.textContent)}
+							onClick={(e) =>
+								void copyText(e.currentTarget.textContent.replace('#', ''))
+							}
 							onMouseLeave={() => setTimeout(() => setIsCopied(false), 100)}
 						>
 							<span className="mr-0.5 text-[var(--main-purple)]">#</span>
@@ -102,19 +105,19 @@ export function UserOverview() {
 						<p className="flex flex-col gap-y-1">
 							Módulo atual:{' '}
 							<span className="cursor-pointer font-bold text-[#29bd5f]">
-								{titles.module}
+								{titles.module || <SkeletonLoader height={24} width={270} />}
 							</span>
 						</p>
 						<p className="flex flex-col gap-y-1">
 							Tópico atual:{' '}
 							<span className="cursor-pointer font-bold text-[#29bd5f]">
-								{titles.topic}
+								{titles.topic || <SkeletonLoader height={24} width={270} />}
 							</span>
 						</p>
 						<p className="flex flex-col gap-y-1">
 							Subtópico atual:{' '}
 							<span className="cursor-pointer font-bold text-[#29bd5f]">
-								{titles.subtopic}
+								{titles.subtopic || <SkeletonLoader height={24} width={270} />}
 							</span>
 						</p>
 					</div>
