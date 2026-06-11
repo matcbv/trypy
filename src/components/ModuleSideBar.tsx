@@ -12,11 +12,16 @@ export function ModuleSideBar({ topics }: { topics: TopicData[] }) {
 	const currentArrow = useRef<HTMLImageElement>(null);
 
 	const handleClick = (slug: string) => {
+		if (
+			!progressState.doneTopics.includes(slug) &&
+			progressState.inProgressTopic !== slug
+		)
+			return;
+
 		const dropdown = dropdownsContainer.current.find(
 			(dropdown) => dropdown?.id === slug,
-		);
-		const arrow = arrows.current.find((arrow) => arrow?.id === slug);
-		if (!dropdown || !arrow) return;
+		)!;
+		const arrow = arrows.current.find((arrow) => arrow?.id === slug)!;
 
 		if (currentContainer.current)
 			currentContainer.current.style =
@@ -50,26 +55,24 @@ export function ModuleSideBar({ topics }: { topics: TopicData[] }) {
 	};
 
 	return (
-		<div className="s z-20 flex h-screen w-[300px] shrink-0 flex-col gap-y-5 rounded-lg bg-[#27214950] p-4 shadow-[0_0_20px_#ffffff0f]">
+		<div className="s z-20 flex h-screen w-[300px] shrink-0 flex-col gap-y-4 rounded-lg bg-[#27214950] p-4 shadow-[0_0_20px_#ffffff0f]">
 			{topics?.map((topic) => (
 				<div
 					key={topic.title}
-					className="flex flex-col overflow-hidden rounded-lg bg-[#0d0a14]"
+					className="flex cursor-pointer flex-col overflow-hidden rounded-lg bg-[#0d0a14]"
+					onClick={() => handleClick(topic.slug)}
 				>
 					<div className="flex h-[75px] w-full items-center justify-between gap-x-2 px-3">
 						<div className="flex items-center gap-x-3">
 							<img {...iconData(topic)} className="w-5" draggable={false} />
-							<p className="font-jetbrains text-sm leading-relaxed">
-								{topic.title}
-							</p>
+							<p className="font-jetbrains text-sm leading-6">{topic.title}</p>
 						</div>
 						{(progressState.doneTopics.includes(topic.slug) ||
 							progressState.inProgressTopic === topic.slug) && (
 							<img
 								id={topic.slug}
 								src="/assets/images/icons/arrow.png"
-								className="cursor-pointer transition-transform duration-300"
-								onClick={() => handleClick(topic.slug)}
+								className="transition-transform duration-300"
 								ref={(el) => {
 									arrows.current.push(el);
 								}}
