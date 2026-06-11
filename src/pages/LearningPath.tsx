@@ -5,6 +5,18 @@ import type { ModuleCardData } from '../types/content';
 import { logError } from '../utils/logger';
 
 export function LearningPath() {
+	type Themes = 'green' | 'purple';
+
+	interface CardStyleProps {
+		cardColor: string;
+		slideButtonColor: string;
+	}
+
+	const cardStyles: Record<Themes, CardStyleProps> = {
+		green: { cardColor: '--main-green', slideButtonColor: '#20663b' },
+		purple: { cardColor: '--main-purple', slideButtonColor: '#402d66' },
+	};
+
 	const [cardContent, setCardContent] = useState<ModuleCardData[]>([]);
 
 	useEffect(() => {
@@ -35,8 +47,8 @@ export function LearningPath() {
 								className="relative"
 								style={
 									{
-										'--cardColor': `var(${card.theme === 'green' ? '--main-green' : '--main-purple'})`,
-										'--slideButtonColor': `${card.theme === 'green' ? '#20663b' : '#402d66'}`,
+										'--cardColor': `var(${cardStyles[card.theme as Themes].cardColor})`,
+										'--slideButtonColor': `${cardStyles[card.theme as Themes].slideButtonColor}`,
 									} as CSSProperties
 								}
 							>
