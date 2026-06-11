@@ -7,15 +7,23 @@ import {
 	ProviderId,
 	EmailAuthProvider,
 	reauthenticateWithPopup,
-	getIdTokenResult,
 } from 'firebase/auth';
 import { auth, googleProvider } from '../configs/firebase';
 import { deleteDoc, getDoc, setDoc } from 'firebase/firestore';
-import { createInitialProgress } from '../services/createInitialProgress';
 import type { UserData } from '../../types/user';
 import { userDataRef, userProgressRef } from '../refs/userRefs';
+import { toast } from 'react-toastify';
+import type { ToastData } from '../../types/toast';
+import { ToastNotification } from '../../components/Notifications';
+import { fetchInitialProgress } from '../../content/services/fetchInitialProgress';
 
 type SignUpType = UserData & { password: string };
+type Providers = (typeof ProviderId)[keyof typeof ProviderId];
+interface DeleteOptions {
+	uid: string;
+	provider?: Providers;
+	password?: string;
+}
 
 export const signUpWithCredentials = async (userData: SignUpType) => {
 	const { password, ...persistedData } = userData;
@@ -38,9 +46,10 @@ export const signUpWithCredentials = async (userData: SignUpType) => {
 
 	await setDoc(userDataRef(uid), persistedData);
 
-	const progressData = await createInitialProgress(uid);
+	const initialProgressData = await fetchInitialProgress();
+	await setDoc(userProgressRef(uid), initialProgressData);
 
-	return { uid, persistedData, progressData };
+	return { uid, persistedData, initialProgressData };
 };
 
 export const signInWithCredentials = async (
@@ -63,25 +72,42 @@ export const signInWithCredentials = async (
 	const userDoc = await getDoc(userDataRef(uid));
 	const progressDoc = await getDoc(userProgressRef(uid));
 
-	if (!userDoc.exists() || !progressDoc.exists()) {
-		throw new Error('Erro na requisição dos dados para esse usuário.');
+	if (!userDoc.exists()) {
+		toast<ToastData>(ToastNotification, {
+			type: 'error',
+			data: {
+				type: 'error',
+				text: 'Não foi possível realizar o login. Tente novamente ou fale conosco.',
+			},
+		});
+		throw new Error('Erro na requisição dos dados do usuário.');
 	}
 
-	return { uid, userData: userDoc.data(), progressData: progressDoc.data() };
+	const initialProgressData = await fetchInitialProgress();
+
+	return {
+		uid,
+		userData: userDoc.data(),
+		progressData: progressDoc.exists()
+			? progressDoc.data()
+			: initialProgressData,
+	};
 };
 
-export const deleteAccount = async (password: string, uid: string) => {
+export const deleteAccount = async ({
+	uid,
+	provider,
+	password,
+}: DeleteOptions) => {
 	if (!auth.currentUser)
 		throw new Error('Sessão expirada. Faça login e tente novamente.');
 
 	try {
-		const { signInProvider } = await getIdTokenResult(auth.currentUser);
-
-		switch (signInProvider) {
+		switch (provider) {
 			case ProviderId.PASSWORD: {
 				const credential = EmailAuthProvider.credential(
 					auth.currentUser.email!,
-					password,
+					password!,
 				);
 				await reauthenticateWithCredential(auth.currentUser, credential);
 				break;

@@ -3,8 +3,8 @@ import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../configs/firebase';
 import { getDoc, setDoc } from 'firebase/firestore';
 import { idGenerator } from '../../utils/idGenerator';
-import { createInitialProgress } from '../services/createInitialProgress';
 import { userDataRef, userProgressRef } from '../refs/userRefs';
+import { fetchInitialProgress } from '../../content/services/fetchInitialProgress';
 
 // * Interface contendo as propriedades utilizadas da response oauth do Google.
 export interface OAuthUserPayload {
@@ -30,11 +30,10 @@ export const signInWithGoogle = async () => {
 	const { name, email, picture, uid } = res.data;
 
 	const userDoc = await getDoc(userDataRef(uid));
-	const initialProgressData = await createInitialProgress(uid);
+	const initialProgressData = await fetchInitialProgress();
 
 	if (userDoc.exists()) {
 		const progressDoc = await getDoc(userProgressRef(uid));
-
 		return {
 			uid,
 			providerData: userDoc.data(),
@@ -45,7 +44,7 @@ export const signInWithGoogle = async () => {
 	}
 
 	await setDoc(userDataRef(uid), {
-		id: idGenerator().generateID(),
+		id: 'TPY-' + idGenerator().generateID(),
 		name,
 		email,
 		picture,
@@ -53,6 +52,7 @@ export const signInWithGoogle = async () => {
 		birthDate: null,
 		savedTips: [],
 	});
+	await setDoc(userProgressRef(uid), initialProgressData);
 
 	return {
 		uid,
