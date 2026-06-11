@@ -12,6 +12,7 @@ import { TipPy } from '../../components/TipPy';
 import type { ResolvedAsset, ResolvedEntry } from '../../types/richText';
 import type { EntrySkeletonType } from 'contentful';
 import type { TipSkeleton } from '../../types/skeletons';
+import { CodeBlock } from '../../components/CodeBlock';
 
 type ResolvedEntryBlock<T extends EntrySkeletonType> = Omit<
 	EntryLinkBlock,
@@ -58,14 +59,10 @@ export function contentfulFormatter(content: Document) {
 					text.marks.some((mark) => mark.type === 'code');
 
 				if (isOnlyCode) {
-					return (
-						<pre className="font-jetbrains rounded bg-[#13121b] p-3 px-6 text-sm shadow-[0_0_15px_#0000003d]">
-							<code>{text.value}</code>
-						</pre>
-					);
+					return <CodeBlock code={text.value} />;
 				}
 
-				return <p className="leading-relaxed">{children}</p>;
+				return <p className="leading-6">{children}</p>;
 			},
 			[BLOCKS.EMBEDDED_ASSET]: (node) => {
 				const asset = node as ResolvedEntryAsset;
