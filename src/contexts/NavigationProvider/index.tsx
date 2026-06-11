@@ -23,6 +23,7 @@ export function NavigationProvider() {
 	function getInitialModuleState() {
 		try {
 			const storage = localStorage.getItem(storageKeys.NAVIGATION_STATE);
+
 			return storage ? (JSON.parse(storage) as NavigationState) : initialState;
 		} catch (error) {
 			logError(error);
@@ -33,7 +34,7 @@ export function NavigationProvider() {
 	useEffect(() => {
 		// * Atualizando nosso local storage caso inexistente.
 		void (async () => {
-			if (navigationState || !authState.uid) return;
+			if (navigationState.isHydrated || !authState.uid) return;
 
 			try {
 				const progressData = await hydrateNavigationState(authState.uid);
