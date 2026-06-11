@@ -7,44 +7,102 @@ import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { updateDoc } from 'firebase/firestore';
-import { formMap } from '../constants/labelMap';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { userDataRef } from '../database/refs/userRefs';
-import type { UserData } from '../types/user';
 import type { ToastData } from '../types/toast';
+import { validationRegex } from '../constants/validationRegex';
 
 export function ProfileForm() {
 	const { authState, authDispatch } = useSafeContext(AuthContext);
-	const [currentData, setCurrentData] = useState<Partial<UserData> | null>(
-		authState.data,
+	const [fieldErrors, setFieldErrors] = useState<Array<keyof typeof formMap>>(
+		[],
 	);
 
+	const [currentData, setCurrentData] = useState({
+		email: '',
+		name: '',
+		lastname: '',
+		birthDate: '',
+	});
+
+	const formMap = {
+		email: 'E-mail',
+		name: 'Nome',
+		lastname: 'Sobrenome',
+		birthDate: 'Data de nascimento',
+	};
+
+	const [placeholders, setPlaceholders] = useState(formMap);
+
 	useEffect(() => {
-		setCurrentData(authState.data);
+		if (!authState.data) return;
+
+		const safeData = authState.data;
+
+		setCurrentData(
+			(prev) =>
+				Object.fromEntries(
+					(Object.keys(prev) as Array<keyof typeof prev>).map((key) => [
+						key,
+						safeData[key] || '',
+					]),
+				) as typeof currentData,
+		);
 	}, [authState.data]);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const id = e.target.id as keyof typeof formMap;
+
+		setPlaceholders((prev) => {
+			return { ...prev, [id]: formMap[id] };
+		});
+		setFieldErrors((prev) => prev.filter((field) => field !== id));
+
 		const finalValue =
 			e.target.id === 'birthDate'
 				? dateFormatter(e.target.value)
 				: e.target.value;
 		setCurrentData((prev) => {
-			if (!prev) return prev;
 			return { ...prev, [e.target.id]: finalValue };
 		});
+	};
+
+	const checkData = () => {
+		let isDataValid = true;
+
+		(Object.keys(currentData) as Array<keyof typeof currentData>).forEach(
+			(key) => {
+				if (!currentData[key].trim().match(validationRegex[key].regex)) {
+					setFieldErrors((prev) => [...prev, key]);
+					setCurrentData((prev) => ({ ...prev, [key]: '' }));
+					setPlaceholders((prev) => ({
+						...prev,
+						[key]: validationRegex[key].text,
+					}));
+					isDataValid = false;
+				}
+			},
+		);
+		return isDataValid;
 	};
 
 	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (!currentData) return;
+		const isDataValid = checkData();
+
+		if (!isDataValid) return;
+
+		const formattedData = Object.fromEntries(
+			Object.entries(currentData).map(([key, value]) => [key, value.trim()]),
+		) as typeof currentData;
 
 		try {
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { data: currentData },
+				payload: { data: formattedData },
 			});
-			await updateDoc(userDataRef(authState.uid!), { ...currentData });
+			await updateDoc(userDataRef(authState.uid!), formattedData);
 			toast<ToastData>(ToastNotification, {
 				type: 'success',
 				data: {
@@ -66,19 +124,20 @@ export function ProfileForm() {
 			<div className="mb-4">
 				<h2 className="mb-4 text-lg">Dados básicos</h2>
 				<div className="flex flex-col gap-y-3">
-					{(Object.keys(formMap) as Array<keyof typeof formMap>).map(
-						(key) =>
-							key !== 'password' && (
+					{(Object.keys(currentData) as Array<keyof typeof currentData>).map(
+						(key) => {
+							return (
 								<input
 									id={key}
 									key={key}
-									value={currentData?.[key] || ''}
-									placeholder={formMap[key]}
+									value={currentData[key]}
+									placeholder={placeholders[key]}
 									onChange={handleChange}
-									className="w-[300px] rounded-md border-2 border-[var(--main-green)]/60 bg-white/5 py-2 pr-9 pl-3 text-sm transition-shadow outline-none focus:border-[var(--main-green)] focus:shadow-[0_0_5px_#ffffff1f]"
+									className={`w-[300px] rounded-md border-2 border-[var(--main-green)]/60 bg-white/5 py-2 pr-9 pl-3 text-sm transition-shadow outline-none focus:border-[var(--main-green)] focus:shadow-[0_0_5px_#ffffff1f] ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
 									type="text"
 								/>
-							),
+							);
+						},
 					)}
 				</div>
 			</div>
