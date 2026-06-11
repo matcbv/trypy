@@ -1,5 +1,5 @@
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { useEffect, useState, type ChangeEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { storage } from '../database/configs/firebase';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { toast } from 'react-toastify';
@@ -13,12 +13,8 @@ import { userDataRef } from '../database/refs/userRefs';
 
 export function PictureInput() {
 	const { authState, authDispatch } = useSafeContext(AuthContext);
-	const picture = authState.data?.picture;
-	const [picturePreview, setPicturePreview] = useState(picture);
-
-	useEffect(() => {
-		if (picture) setPicturePreview(picture);
-	}, [picture]);
+	const picturePreview =
+		authState.data?.picture || '/assets/images/profile_picture.png';
 
 	const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
 		try {
@@ -52,10 +48,13 @@ export function PictureInput() {
 		<div className="mb-10">
 			<h2 className="mb-5 text-lg">Foto de perfil</h2>
 			<label htmlFor="picture" className="group relative">
-				<img
-					src={picturePreview || '/assets/images/profile_picture.png'}
-					className={`h-[120px] w-[120px] cursor-pointer rounded-full object-cover`}
-				/>
+				<div className="overflow-hidden rounded-full">
+					<img
+						src={picturePreview}
+						className="h-[120px] w-[120px] cursor-pointer object-cover"
+					/>
+				</div>
+
 				<div className="absolute -right-3 bottom-0 scale-0 transition-transform group-hover:scale-100">
 					<img
 						src="/assets/images/icons/edit.png"

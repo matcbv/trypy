@@ -18,18 +18,15 @@ export function SubtopicDropdown({
 	lastSubtopicSlug,
 }: DropdownProps) {
 	const { progressState } = useSafeContext(ProgressContext);
-	const { navigationState, navigationDispatch } =
-		useSafeContext(NavigationContext);
+	const { navigationDispatch } = useSafeContext(NavigationContext);
 
 	const changeSubtopic = (slug: string) => {
 		try {
 			if (
-				!topic ||
-				(!progressState.doneTopics.includes(topic.slug) &&
-					navigationState.currentTopic !== topic.slug)
-			) {
+				!progressState.doneTopics.includes(topic.slug) &&
+				progressState.inProgressTopic !== topic.slug
+			)
 				return;
-			}
 
 			navigationDispatch({
 				type: navigationActionTypes.SET_CURRENT_PROGRESS,
