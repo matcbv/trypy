@@ -1,14 +1,47 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleCardData } from '../types/content';
+import type { MouseEvent } from 'react';
+import { toast } from 'react-toastify';
+import type { ToastData } from '../types/toast';
+import { ToastNotification } from './Notifications';
+import { AuthContext } from '../contexts/AuthProvider/context';
 
 export function ModuleCard({ card }: { card: ModuleCardData }) {
+	const navigate = useNavigate();
 	const { progressState } = useSafeContext(ProgressContext);
+	const { authState } = useSafeContext(AuthContext);
 
 	const isModuleBlocked =
 		!progressState.doneModules.includes(card.moduleId) &&
 		progressState.inProgressModule !== card.moduleId;
+
+	const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+		if (!authState.data) {
+			e.preventDefault();
+			toast<ToastData>(ToastNotification, {
+				type: 'info',
+				data: {
+					type: 'info',
+					text: 'Faça login ou cria uma conta para dar início à trilha de aprendizagem.',
+				},
+			});
+			void navigate('/session');
+			return;
+		}
+
+		if (isModuleBlocked) {
+			e.preventDefault();
+			toast<ToastData>(ToastNotification, {
+				type: 'info',
+				data: {
+					type: 'info',
+					text: 'Complete o módulo anterior para liberar o acesso.',
+				},
+			});
+		}
+	};
 
 	return (
 		<div
@@ -24,7 +57,7 @@ export function ModuleCard({ card }: { card: ModuleCardData }) {
 				</h2>
 				<div className="flex flex-1 flex-col justify-between">
 					<div className="p-5 text-sm">
-						<p className="mb-6 leading-relaxed">{card.description}</p>
+						<p className="mb-6 leading-6">{card.description}</p>
 						<div>
 							<p className="mb-4">Tópicos desse módulo:</p>
 							<ul className="ml-4 flex list-disc flex-col items-start gap-y-2 marker:text-[var(--cardColor)]">
@@ -39,7 +72,7 @@ export function ModuleCard({ card }: { card: ModuleCardData }) {
 					<Link
 						to={`/learning-path/${card.moduleId}`}
 						className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${isModuleBlocked ? 'cursor-not-allowed' : 'hover:bg-[var(--slideButtonColor)] hover:shadow-[0_0_10px_var(--slideButtonColor)]'}`}
-						onClick={(e) => isModuleBlocked && e.preventDefault()}
+						onClick={handleClick}
 					>
 						<p
 							className={`absolute left-10 flex items-center gap-x-3 text-white transition-all duration-300 ${!isModuleBlocked && 'group-hover:left-[292px]'}`}
