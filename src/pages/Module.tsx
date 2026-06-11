@@ -67,7 +67,7 @@ export function Module() {
 		})();
 	}, [navigationState, navigationDispatch, authState.uid]);
 
-	// * useEffect responsável pela atualização do estado de navegação ao retornar para módulos anteriores.
+	// * useEffect responsável pela atualização do estado de navegação ao navegar entre módulos.
 	useEffect(() => {
 		if (!moduleData || !params.moduleId) return;
 		// * Caso o módulo acessado (params.moduleId) não estiver incluído na lista de módulos concluídos, significa que ainda está sendo feito, portanto não iremos direcionar o usuário ao conteúdo final dele. Além disso, caso o módulo seja o último acessado, os dados corretos já estão em vigor. Nesses dois casos, iremos apenas dar return.
@@ -95,15 +95,11 @@ export function Module() {
 				currentModule: params.moduleId,
 				currentTopic: lastModuleTopic.slug,
 				currentSubtopic: lastModuleSubtopic.slug,
+				isLastSubtopic: true,
 			},
 		});
-	}, [
-		params.moduleId,
-		progressState.doneModules,
-		navigationState.currentModule,
-		moduleData,
-		navigationDispatch,
-	]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [params.moduleId, moduleData, navigationDispatch]);
 
 	// * useEffect responsável por atualizar os estados com o conteúdo do módulo obtido.
 	useEffect(() => {
