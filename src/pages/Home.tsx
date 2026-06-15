@@ -1,32 +1,109 @@
+import { useState, type ChangeEvent } from 'react';
 import { HeroBanner } from '../components/HeroBanner';
+import { Link } from 'react-router-dom';
+import { SvgPath } from '../components/SvgPath';
 
 export function Home() {
+	const [studentName, setStudentName] = useState('');
+
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setStudentName((prev) =>
+			e.target.value.length > 20 ? prev : e.target.value,
+		);
+	};
+
 	return (
 		<>
-			<div className="flex w-full justify-center border-b border-b-indigo-950">
+			<div className="flex w-full justify-center border-b-2 border-b-indigo-950">
 				<HeroBanner />
 			</div>
-			<section className="relative z-10 flex justify-center gap-x-20 py-40">
+			<section className="relative z-10 flex justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
 				<div className="flex flex-col gap-y-12">
 					<div>
-						<h2 className="mb-6 text-5xl text-[var(--main-purple)]">
+						<h2 className="text-main-purple mb-6 text-5xl">
 							Video-aulas integradas
 						</h2>
 						<p className="w-[600px] text-xl leading-9">
-							Vídeo-aulas postadas em nosso canal no YouTube e integradas à
-							plataforma, servindo como conteúdo complementar para nosso
-							material didático.
+							Vídeo-aulas publicadas em nosso canal no YouTube e integradas à
+							trilha de aprendizagem, complementando o conteúdo estudado ao
+							longo do curso. Inscreva-se em nosso canal para tirar suas dúvidas
+							e acompanhar novos conteúdos e atualizações.
 						</p>
 					</div>
-					<button className="w-[280px] cursor-pointer rounded-md border border-[var(--main-purple)] bg-gradient-to-br from-[#00ff595c] to-[#7f00ff4d] py-5 text-lg transition-shadow hover:shadow-[0_0_15px_#ffffff24]">
+					<button className="border-main-purple w-[280px] cursor-pointer rounded-md border from-[#00ff594d] to-[#7f00ff4d] py-5 text-lg font-bold transition-all hover:bg-gradient-to-br hover:shadow-[0_0_20px_#ffffff24]">
 						Conheça nosso canal
 					</button>
 				</div>
 				<img
-					className="w-[600px] rounded-md shadow-[0_0_15px_#00ff9980,_0_0_30px_#7f00ff88]"
+					className="h-[425px] w-[600px] rounded-md shadow-[0_0_15px_#00ff9960,0_0_30px_#7f00ff80]"
 					src="/assets/images/video_lesson.png"
 					alt="Vídeo aula"
+					draggable="false"
 				/>
+			</section>
+			<section className="relative z-10 flex flex-row-reverse justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
+				<div className="flex flex-col gap-y-12">
+					<div>
+						<h2 className="text-main-green mb-6 text-5xl">
+							Certificado gratuito e personalizado
+						</h2>
+						<p className="w-[600px] text-xl leading-9">
+							Ao concluir a trilha de aprendizagem, você recebe um certificado
+							digital emitido em seu nome, contendo a carga horária total, os
+							módulos concluídos e os principais conteúdos estudados durante o
+							curso. Uma forma simples de registrar e compartilhar sua evolução.
+						</p>
+					</div>
+					<input
+						value={studentName}
+						onChange={handleChange}
+						placeholder="Digite seu nome"
+						className="border-main-green h-[60px] w-[320px] rounded-md border bg-white/5 px-4 text-xl transition-shadow duration-300 placeholder:text-xl focus:shadow-[0_0_15px_#00ff9940] focus:outline-none"
+					/>
+				</div>
+				<div className="relative shrink-0 overflow-hidden rounded-md shadow-[0_0_30px_#00ff9920]">
+					<span className="absolute top-[38%] left-15 text-5xl select-none">
+						{studentName || 'Aluno'}
+					</span>
+					<img
+						src="/assets/images/certificado-trypy.png"
+						alt="Certificado TryPy"
+						className="h-[425px] w-[600px]"
+						draggable="false"
+					/>
+				</div>
+			</section>
+			<section className="relative z-10 flex justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
+				<div>
+					<h2 className="text-main-purple mb-6 text-5xl">Aprendizado Guiado</h2>
+					<p className="w-[600px] text-xl leading-9">
+						Nossa trilha de aprendizagem combina conteúdo teórico, videoaulas e
+						exercícios práticos em uma progressão estruturada, permitindo que
+						você aplique cada conceito aprendido antes de avançar para o próximo
+						nível.
+					</p>
+				</div>
+			</section>
+			<section className="relative z-10 flex flex-row-reverse justify-center gap-x-20 py-40">
+				<div className="flex flex-col gap-y-12 py-5">
+					<div>
+						<h2 className="text-main-green mb-6 text-5xl">Suporte ao aluno</h2>
+						<p className="w-[600px] text-xl leading-9">
+							Conte com nosso suporte sempre que precisar. Disponibilizamos
+							diversos canais de contato para que você possa tirar dúvidas e
+							receber ajuda durante sua jornada de aprendizado. Responderemos o
+							mais breve possível.
+						</p>
+					</div>
+
+					<Link
+						to="/support"
+						className="flex w-[280px] cursor-pointer items-center justify-center rounded-md border border-white py-5 text-lg font-bold transition-all hover:border-black hover:bg-[#5aaeb1a1] hover:shadow-[0_0_20px_#FFFFFF26]"
+					>
+						Fale conosco
+					</Link>
+				</div>
+				<SvgPath />
 			</section>
 		</>
 	);
