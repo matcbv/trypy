@@ -47,8 +47,8 @@ export function LearningPath() {
 								className="relative"
 								style={
 									{
-										'--cardColor': `var(${cardStyles[card.theme as Themes].cardColor})`,
-										'--slideButtonColor': `${cardStyles[card.theme as Themes].slideButtonColor}`,
+										'--card-color': `var(${cardStyles[card.theme as Themes].cardColor})`,
+										'--slide-button-color': `${cardStyles[card.theme as Themes].slideButtonColor}`,
 									} as CSSProperties
 								}
 							>
