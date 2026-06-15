@@ -62,7 +62,7 @@ export function Home() {
 						className="border-main-green h-[60px] w-[320px] rounded-md border bg-white/5 px-4 text-xl placeholder-green-100/50 transition-shadow duration-300 placeholder:text-xl focus:shadow-[0_0_20px_#00ff5940] focus:outline-none"
 					/>
 				</div>
-				<div className="relative shrink-0 overflow-hidden rounded-md shadow-[0_0_30px_#00ff9920]">
+				<div className="relative shrink-0 overflow-hidden rounded-md shadow-[0_0_30px_#00ff5940]">
 					<span className="absolute top-[38%] left-15 text-5xl select-none">
 						{studentName || 'Aluno'}
 					</span>
