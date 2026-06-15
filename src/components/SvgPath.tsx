@@ -82,7 +82,7 @@ export function SvgPath() {
 				cx="230"
 				cy="370"
 				r="70"
-				className="fill-white/5 stroke-[#3d7e80] stroke-2 drop-shadow-[0_0_10px_#3d7e80]"
+				className="stroke-main-combination fill-white/5 stroke-2 drop-shadow-[0_0_10px_var(--color-main-combination)]"
 			/>
 
 			<image

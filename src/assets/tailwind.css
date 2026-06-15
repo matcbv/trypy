@@ -5,6 +5,7 @@
 	--color-main-bg: #06010d;
 	--color-main-green: #00a63e;
 	--color-main-purple: #7a55c2;
+	--color-main-combination: #3d7d80;
 	--color-main-black: #000000f2;
 	--color-main-red: #f24854;
 
@@ -65,7 +66,7 @@
 
 @layer components {
 	.register-form-btn {
-		@apply h-[50px] w-[200px] cursor-pointer rounded-md border bg-gradient-to-br from-[#00800063] to-[#3f0080a3] text-white transition-shadow hover:shadow-[0_0_10px_#ffffff24];
+		@apply h-[50px] w-[200px] cursor-pointer rounded-md border bg-linear-to-br from-[#00800063] to-[#3f0080a3] text-white transition-shadow hover:shadow-[0_0_10px_#ffffff24];
 	}
 
 	.footer-links {
