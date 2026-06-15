@@ -30,8 +30,9 @@ export function Home() {
 							e acompanhar novos conteúdos e atualizações.
 						</p>
 					</div>
-					<button className="border-main-purple w-[280px] cursor-pointer rounded-md border from-[#00ff594d] to-[#7f00ff4d] py-5 text-lg font-bold transition-all hover:bg-gradient-to-br hover:shadow-[0_0_20px_#ffffff24]">
-						Conheça nosso canal
+					<button className="border-main-purple group relative h-[70px] w-[280px] cursor-pointer rounded-md border text-lg font-bold transition-shadow hover:shadow-[0_0_20px_#ffffff24]">
+						<span className="absolute top-0 left-0 h-full w-full rounded-md bg-linear-to-br from-[#00ff5998] to-[#8000ff88] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+						<p className="relative z-10">Conheça nosso canal</p>
 					</button>
 				</div>
 				<img
@@ -57,8 +58,8 @@ export function Home() {
 					<input
 						value={studentName}
 						onChange={handleChange}
-						placeholder="Digite seu nome"
-						className="border-main-green h-[60px] w-[320px] rounded-md border bg-white/5 px-4 text-xl transition-shadow duration-300 placeholder:text-xl focus:shadow-[0_0_15px_#00ff9940] focus:outline-none"
+						placeholder="Digite seu nome..."
+						className="border-main-green h-[60px] w-[320px] rounded-md border bg-white/5 px-4 text-xl placeholder-green-100/50 transition-shadow duration-300 placeholder:text-xl focus:shadow-[0_0_20px_#00ff5940] focus:outline-none"
 					/>
 				</div>
 				<div className="relative shrink-0 overflow-hidden rounded-md shadow-[0_0_30px_#00ff9920]">
@@ -98,7 +99,7 @@ export function Home() {
 
 					<Link
 						to="/support"
-						className="flex w-[280px] cursor-pointer items-center justify-center rounded-md border border-white py-5 text-lg font-bold transition-all hover:border-black hover:bg-[#5aaeb1a1] hover:shadow-[0_0_20px_#FFFFFF26]"
+						className="hover:bg-main-combination flex w-[280px] cursor-pointer items-center justify-center rounded-md border border-white py-5 text-lg font-bold transition-all duration-300 hover:border-black hover:shadow-[0_0_25px_#FFFFFF26]"
 					>
 						Fale conosco
 					</Link>
