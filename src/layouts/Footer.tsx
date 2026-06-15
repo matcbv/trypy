@@ -15,7 +15,7 @@ const iconsMap = {
 
 export function Footer() {
 	return (
-		<footer className="relative z-20 bg-[var(--main-black)]">
+		<footer className="bg-main-black relative z-20">
 			<div className="flex flex-col items-center gap-y-10 px-6 pt-14 pb-6 backdrop-blur-xl">
 				<div>
 					<ul className="flex gap-x-10">
@@ -46,7 +46,7 @@ export function Footer() {
 					© 2025 TryPy. Todos os direitos reservados. Icons by{' '}
 					<a
 						href="https://icons8.com.br/"
-						className="underline transition-colors hover:text-[var(--main-green)]"
+						className="hover:text-main-green underline transition-colors"
 						target="_blank"
 					>
 						Icons8

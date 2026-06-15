@@ -74,13 +74,13 @@ export function UserOverview() {
 					<p className="flex gap-x-2">
 						ID de usuário:
 						<span
-							className="group relative flex cursor-pointer items-center transition-colors hover:text-[var(--main-purple)]"
+							className="group hover:text-main-purple relative flex cursor-pointer items-center transition-colors"
 							onClick={(e) =>
 								void copyText(e.currentTarget.textContent.replace('#', ''))
 							}
 							onMouseLeave={() => setTimeout(() => setIsCopied(false), 100)}
 						>
-							<span className="mr-0.5 text-[var(--main-purple)]">#</span>
+							<span className="text-main-purple mr-0.5">#</span>
 							{authState.data?.id}
 							<img
 								src={`/assets/images/icons/${isCopied ? 'success' : 'copy'}.png`}

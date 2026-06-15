@@ -26,11 +26,9 @@ export function Support() {
 		<div className="flex min-h-screen items-center justify-center">
 			<div className="relative z-10 my-20">
 				<div className="mb-12">
-					<h1 className="mb-10 text-4xl text-[var(--main-purple)]">
-						Contate-nos
-					</h1>
+					<h1 className="text-main-purple mb-10 text-4xl">Contate-nos</h1>
 					<form className="flex gap-x-12">
-						<div className="flex flex-col justify-around border-l border-l-[var(--main-purple)] pl-4">
+						<div className="border-l-main-purple flex flex-col justify-around border-l pl-4">
 							<div className="flex flex-col gap-y-1">
 								<label htmlFor="subject" className="text-sm">
 									Assunto:
@@ -67,7 +65,7 @@ export function Support() {
 							<input
 								type="submit"
 								value="Enviar"
-								className="cursor-pointer rounded-md border border-[var(--main-purple)] bg-[#7955c21e] py-1 text-sm transition-all duration-300 hover:bg-[#7955c270] hover:shadow-[0_0_10px_#7955c270]"
+								className="border-main-purple cursor-pointer rounded-md border bg-[#7955c21e] py-1 text-sm transition-all duration-300 hover:bg-[#7955c270] hover:shadow-[0_0_10px_#7955c270]"
 							/>
 						</div>
 						<div className="flex flex-col gap-y-2">
@@ -86,7 +84,7 @@ export function Support() {
 				</div>
 				<div className="flex max-w-[825px] flex-col gap-y-5">
 					<div className="flex flex-col gap-y-3">
-						<h2 className="text-2xl text-[var(--main-green)]">
+						<h2 className="text-main-green text-2xl">
 							Outras formas de contato
 						</h2>
 						<p className="leading-6">
@@ -109,9 +107,7 @@ export function Support() {
 											setTimeout(() => setIsCopied(false), 100)
 										}
 									>
-										<span className="hover:text-[var(--main-green)]">
-											{value}
-										</span>
+										<span className="hover:text-main-green">{value}</span>
 										<img
 											src={
 												isCopied

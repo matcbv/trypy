@@ -14,7 +14,7 @@ export function Header() {
 				header.style.backgroundColor = 'transparent';
 				header.style.zIndex = '10';
 			} else {
-				header.style.backgroundColor = 'var(--main-black)';
+				header.style.backgroundColor = 'var(--color-main-black)';
 				header.style.zIndex = '30';
 			}
 		};
@@ -28,13 +28,17 @@ export function Header() {
 	return (
 		<header
 			ref={headerRef}
-			className="fixed top-0 z-10 flex h-[68px] w-full items-center justify-between bg-transparent px-10 backdrop-blur-xs transition-colors"
+			className="fixed top-0 z-10 flex h-[68px] w-full items-center justify-between bg-transparent px-16 backdrop-blur-xs transition-colors"
 		>
 			<Link
 				to="/"
-				className="text-[28px] font-bold text-[var(--main-green)] transition-all duration-500 hover:text-shadow-[0_0_15px_#00a63e75]"
+				className="text-main-green font-bold transition-all duration-500"
 			>
-				&lt;TryPy&gt;
+				<img
+					src="/assets/images/trypy-logo.png"
+					alt="Logo TryPy"
+					draggable="false"
+				/>
 			</Link>
 			<HeaderList />
 		</header>

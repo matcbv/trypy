@@ -163,7 +163,7 @@ export function Module() {
 			</div>
 			<button
 				type="button"
-				className="fixed right-4 bottom-4 z-30 cursor-pointer rounded-full bg-[var(--main-green)]/70 p-1 shadow-[0_0_10px_#000000b0] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_#00ff002b]"
+				className="bg-main-green/70 fixed right-4 bottom-4 z-30 cursor-pointer rounded-full p-1 shadow-[0_0_10px_#000000b0] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_#00ff002b]"
 				onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
 			>
 				<img src="/assets/images/icons/arrow_up.png" alt="Voltar ao topo" />

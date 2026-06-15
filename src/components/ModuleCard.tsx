@@ -24,7 +24,7 @@ export function ModuleCard({ card }: { card: ModuleCardData }) {
 				type: 'info',
 				data: {
 					type: 'info',
-					text: 'Faça login ou cria uma conta para dar início à trilha de aprendizagem.',
+					text: 'Faça login ou crie uma conta para dar início à trilha de aprendizagem.',
 				},
 			});
 			void navigate('/session');

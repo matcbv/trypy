@@ -22,7 +22,7 @@ export function HeaderList() {
 	};
 
 	return (
-		<ul className="flex gap-x-10 font-bold text-white">
+		<ul className="font-jetbrains flex gap-x-10 font-bold text-white">
 			<li
 				className="flex flex-col items-center p-2"
 				onMouseEnter={showUnderline}
@@ -33,7 +33,7 @@ export function HeaderList() {
 				) : (
 					<Link to="/session">Iniciar sessão</Link>
 				)}
-				<span className="block h-0.5 w-0 rounded-full bg-[var(--main-green)] transition-all"></span>
+				<span className="bg-main-green block h-0.5 w-0 rounded-full transition-all"></span>
 			</li>
 			<li
 				className="flex flex-col items-center p-2"
@@ -41,7 +41,7 @@ export function HeaderList() {
 				onMouseLeave={hideUnderline}
 			>
 				<Link to="/learning-path">Trilha de aprendizagem</Link>
-				<span className="block h-0.5 w-0 rounded-full bg-[var(--main-green)] transition-all"></span>
+				<span className="bg-main-green block h-0.5 w-0 rounded-full transition-all"></span>
 			</li>
 		</ul>
 	);

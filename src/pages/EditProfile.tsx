@@ -83,7 +83,7 @@ export function EditProfile() {
 					value={userPassword}
 					placeholder="Senha atual"
 					onChange={(e) => setUserPassword(e.target.value)}
-					className="w-[300px] rounded-md border-2 border-[var(--main-purple)]/60 bg-white/5 py-2 pr-9 pl-3 text-sm transition-shadow outline-none focus:border-[var(--main-purple)] focus:shadow-[0_0_5px_#ffffff1f]"
+					className="border-main-purple/60 focus:border-main-purple w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-shadow outline-none focus:shadow-[0_0_5px_#ffffff1f]"
 					type={isVisible ? 'text' : 'password'}
 				/>
 				<img
@@ -103,7 +103,7 @@ export function EditProfile() {
 					value={deleteInputValue}
 					placeholder="Código de exclusão"
 					onChange={(e) => setDeleteInputValue(e.target.value)}
-					className="w-[300px] rounded-md border-2 border-[var(--main-purple)]/60 bg-white/5 py-2 pr-9 pl-3 text-sm transition-shadow outline-none focus:border-[var(--main-purple)] focus:shadow-[0_0_5px_#ffffff1f]"
+					className="border-main-purple/60 focus:border-main-purple w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-shadow outline-none focus:shadow-[0_0_5px_#ffffff1f]"
 					type="text"
 				/>
 			</>

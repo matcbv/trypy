@@ -39,12 +39,12 @@ export function contentfulFormatter(content: Document) {
 				}
 			},
 			[BLOCKS.UL_LIST]: (_, children) => (
-				<ul className="ml-5 flex list-disc flex-col gap-y-2 marker:text-[var(--main-green)]">
+				<ul className="marker:text-main-green ml-5 flex list-disc flex-col gap-y-2">
 					{children}
 				</ul>
 			),
 			[BLOCKS.HEADING_2]: (_, children) => (
-				<h2 className="text-2xl text-[var(--main-green)]">{children}</h2>
+				<h2 className="text-main-green text-2xl">{children}</h2>
 			),
 			[BLOCKS.HEADING_3]: (_, children) => (
 				<h3 className="text-lg">{children}</h3>

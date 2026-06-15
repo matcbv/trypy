@@ -1,12 +1,3 @@
-/* Colors */
-:root {
-	--main-bg-color: #06010d;
-	--main-green: #00a63e;
-	--main-purple: #7a55c2;
-	--main-black: #000000f2;
-	--main-red: #f24854;
-}
-
 input[type='password']::-webkit-textfield-decoration-container {
 	display: none !important;
 }
@@ -18,11 +9,11 @@ input[type='password']::-ms-clear {
 
 /* react-toastify */
 .Toastify__toast--success .Toastify__progress-bar {
-	background: var(--main-green);
+	background: var(--color-main-green);
 }
 
 .Toastify__toast--error .Toastify__progress-bar {
-	background: var(--main-red);
+	background: var(--color-main-red);
 }
 
 .Toastify__progress-bar--bg {

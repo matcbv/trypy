@@ -13,8 +13,8 @@ export function LearningPath() {
 	}
 
 	const cardStyles: Record<Themes, CardStyleProps> = {
-		green: { cardColor: '--main-green', slideButtonColor: '#20663b' },
-		purple: { cardColor: '--main-purple', slideButtonColor: '#402d66' },
+		green: { cardColor: '--color-main-green', slideButtonColor: '#20663b' },
+		purple: { cardColor: '--color-main-purple', slideButtonColor: '#402d66' },
 	};
 
 	const [cardContent, setCardContent] = useState<ModuleCardData[]>([]);
@@ -55,7 +55,7 @@ export function LearningPath() {
 								<ModuleCard card={card} />
 								<svg className="absolute right-1/2 z-20 h-[230px] w-[5px]">
 									<polyline
-										className="fill-none stroke-[var(--cardColor)] stroke-[5]"
+										className="fill-none stroke-[var(--cardColor)] stroke-5"
 										points="0,0 0,230"
 										strokeDasharray="15"
 									/>

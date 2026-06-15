@@ -43,7 +43,7 @@ export function ProgressBar() {
 				r={80}
 				strokeDasharray={perimeter}
 				strokeDashoffset={perimeter - (perimeter * progressPercentual) / 100}
-				className="origin-center -rotate-90 fill-none stroke-[var(--main-green)] stroke-[40px] transition-all duration-500"
+				className="stroke-main-green origin-center -rotate-90 fill-none stroke-[40px] transition-all duration-500"
 			/>
 			<text
 				x={100}

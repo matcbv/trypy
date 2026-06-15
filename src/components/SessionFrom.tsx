@@ -13,6 +13,8 @@ import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ToastData } from '../types/toast';
 import { LoadingPage } from '../pages/LoadingPage';
+import { signOut } from 'firebase/auth';
+import { auth } from '../database/configs/firebase';
 
 export function SessionForm() {
 	const navigate = useNavigate();
@@ -118,6 +120,7 @@ export function SessionForm() {
 				},
 			});
 		} catch (error) {
+			await signOut(auth);
 			logError(error);
 		} finally {
 			setIsSubmitting(false);
@@ -136,7 +139,7 @@ export function SessionForm() {
 			<div className="flex w-[350px] flex-col gap-y-6 text-sm">
 				{Object.entries(userCredentials).map(([key, value]) => (
 					<div
-						className="relative flex w-full items-end border-b-2 border-b-[var(--main-green)]"
+						className="border-b-main-green relative flex w-full items-end border-b-2"
 						key={key}
 					>
 						<label className="font-jetbrains w-20 font-bold" htmlFor={key}>

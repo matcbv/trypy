@@ -16,6 +16,8 @@ import { useSafeContext } from '../hooks/useSafeContext';
 import type { ToastData } from '../types/toast';
 import { idGenerator } from '../utils/idGenerator';
 import { LoadingPage } from '../pages/LoadingPage';
+import { signOut } from 'firebase/auth';
+import { auth } from '../database/configs/firebase';
 
 export function RegisterForm() {
 	const navigate = useNavigate();
@@ -151,6 +153,7 @@ export function RegisterForm() {
 				},
 			});
 		} catch (error) {
+			await signOut(auth);
 			logError(error);
 		} finally {
 			setIsSubmitting(false);
@@ -175,7 +178,7 @@ export function RegisterForm() {
 						id="birthDate"
 						onChange={handleChange}
 						value={userData.birthDate}
-						className={`w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 tracking-wider outline-none focus:border-[var(--main-green)] ${!placeholders.birthDate ? 'placeholder-gray-400' : 'placeholder-red-400'}`}
+						className={`focus:border-main-green w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 tracking-wider outline-none ${!placeholders.birthDate ? 'placeholder-gray-400' : 'placeholder-red-400'}`}
 					/>
 				);
 			default:
@@ -186,7 +189,7 @@ export function RegisterForm() {
 						onChange={handleChange}
 						value={userData[key]}
 						placeholder={placeholders[key]}
-						className="w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 placeholder-red-400 outline-none focus:border-[var(--main-green)]"
+						className="focus:border-main-green w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 placeholder-red-400 outline-none"
 					/>
 				);
 		}
@@ -218,19 +221,19 @@ export function RegisterForm() {
 					</div>
 				</div>
 				<div className="flex h-full flex-col justify-center gap-y-6">
-					<p className="font-space-grotesk w-[303px] text-center text-4xl leading-14 tracking-wide text-shadow-[5px_5px_10px_rgba(0,_0,_0,_0.5)]">
+					<p className="font-space-grotesk w-[303px] text-center text-4xl leading-14 tracking-wide text-shadow-[5px_5px_10px_#00000080]">
 						O{' '}
-						<span className="underline decoration-[var(--main-green)] decoration-2 underline-offset-[10px]">
+						<span className="decoration-main-green underline decoration-2 underline-offset-10">
 							primeiro passo
 						</span>{' '}
 						é sempre o mais{' '}
-						<span className="text-5xl tracking-wider text-[var(--main-purple)] italic">
+						<span className="text-main-purple text-5xl tracking-wider italic">
 							importante
 						</span>
 					</p>
 					<div className="flex flex-col items-center gap-y-4">
 						<span
-							className="register-form-btn flex items-center justify-center gap-x-2 border-[var(--main-purple)]"
+							className="register-form-btn border-main-purple flex items-center justify-center gap-x-2"
 							onClick={() => void handleGoogle()}
 						>
 							<p className="text-lg">Google</p>
@@ -240,7 +243,7 @@ export function RegisterForm() {
 								alt="Conta Google"
 							/>
 						</span>
-						<span className="register-form-btn flex items-center justify-center gap-x-2 border-[var(--main-purple)]">
+						<span className="register-form-btn border-main-purple flex items-center justify-center gap-x-2">
 							<p className="text-lg">GitHub</p>
 							<img
 								className="h-8 w-8"
@@ -251,7 +254,7 @@ export function RegisterForm() {
 						<input
 							type="submit"
 							value="Continuar"
-							className="register-form-btn border-[var(--main-green)]"
+							className="register-form-btn border-main-green"
 						/>
 					</div>
 				</div>

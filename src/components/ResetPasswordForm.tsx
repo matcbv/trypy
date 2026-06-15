@@ -39,7 +39,7 @@ export function ResetPasswordForm() {
 	return (
 		<form className="mb-8 w-[350px]" onSubmit={(e) => void handleSubmit(e)}>
 			<div className="flex flex-col gap-y-8 text-sm">
-				<div className="relative flex w-full items-end border-b-2 border-b-[var(--main-green)]">
+				<div className="border-b-main-green relative flex w-full items-end border-b-2">
 					<label htmlFor="" className="font-jetbrains w-20">
 						E-mail
 					</label>
