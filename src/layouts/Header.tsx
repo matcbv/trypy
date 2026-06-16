@@ -32,7 +32,7 @@ export function Header() {
 		>
 			<Link
 				to="/"
-				className="text-main-green font-bold transition-all duration-500"
+				className="text-main-green w-[56px] font-bold transition-all duration-500"
 			>
 				<img
 					src="/assets/images/trypy-logo.png"
