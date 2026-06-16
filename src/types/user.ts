@@ -7,6 +7,8 @@ export interface UserData {
 	lastname: string | null;
 	birthDate: string | null;
 	picture: string | null;
+	createdAt: Date;
+	supporter: boolean;
 	savedTips: string[];
 }
 

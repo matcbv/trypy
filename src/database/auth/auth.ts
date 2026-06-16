@@ -18,6 +18,7 @@ import { ToastNotification } from '../../components/Notifications';
 import { fetchInitialProgress } from '../../content/services/fetchInitialProgress';
 
 type SignUpType = UserData & { password: string };
+
 type Providers = (typeof ProviderId)[keyof typeof ProviderId];
 interface DeleteOptions {
 	uid: string;

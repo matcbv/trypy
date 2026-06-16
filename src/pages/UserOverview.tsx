@@ -6,6 +6,7 @@ import { ProgressBar } from '../components/ProgressBar';
 import { logError } from '../utils/logger';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { SkeletonLoader } from '../components/SkeletonLoader';
+import { Timestamp } from 'firebase/firestore';
 
 export function UserOverview() {
 	const { authState } = useSafeContext(AuthContext);
@@ -16,6 +17,16 @@ export function UserOverview() {
 		subtopic: '',
 	});
 	const [isCopied, setIsCopied] = useState(false);
+
+	const accountDate = () => {
+		const { createdAt } = authState.data!;
+
+		if (createdAt && createdAt instanceof Timestamp) {
+			return new Date(createdAt.toDate()).toLocaleDateString('pt-br');
+		}
+
+		return <SkeletonLoader height={18} width={85} />;
+	};
 
 	useEffect(() => {
 		void (async () => {
@@ -90,10 +101,13 @@ export function UserOverview() {
 						</span>
 					</p>
 					<p>
-						Criada em: <span className="ml-1">23/10/2025</span>
+						Criada em: <span className="ml-1">{accountDate()}</span>
 					</p>
 					<p>
-						Apoiador(a): <span className="ml-1">Não</span>
+						Apoiador(a):{' '}
+						<span className="ml-1">
+							{authState.data?.supporter ? 'Sim' : 'Não'}
+						</span>
 					</p>
 				</div>
 			</div>

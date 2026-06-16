@@ -97,6 +97,8 @@ export function RegisterForm() {
 				...formattedData,
 				id: 'TPY-' + idGenerator().generateID(),
 				picture: null,
+				createdAt: new Date(),
+				supporter: false,
 				savedTips: [],
 			});
 
