@@ -97,7 +97,12 @@ export function EditProfile() {
 			<>
 				<p className="text-sm">
 					Digite o código gerado para concluir a exclusão da conta:{' '}
-					<span className="font-bold text-red-300">{deleteCode}</span>
+					<span
+						className="font-bold text-red-300 select-none"
+						onCopy={(e) => e.preventDefault()}
+					>
+						{deleteCode}
+					</span>
 				</p>
 				<input
 					value={deleteInputValue}
