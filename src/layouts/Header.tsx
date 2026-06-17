@@ -12,10 +12,8 @@ export function Header() {
 		const changeColor = () => {
 			if (window.scrollY === 0) {
 				header.style.backgroundColor = 'transparent';
-				header.style.zIndex = '10';
 			} else {
 				header.style.backgroundColor = 'var(--color-main-black)';
-				header.style.zIndex = '30';
 			}
 		};
 		window.addEventListener('scroll', changeColor);
@@ -28,7 +26,7 @@ export function Header() {
 	return (
 		<header
 			ref={headerRef}
-			className="fixed top-0 z-10 flex h-[68px] w-full items-center justify-between bg-transparent px-16 backdrop-blur-xs transition-colors"
+			className="fixed top-0 z-30 flex h-[68px] w-full items-center justify-between bg-transparent px-[68px] backdrop-blur-xs transition-colors duration-500"
 		>
 			<Link
 				to="/"

@@ -24,7 +24,7 @@ export function Support() {
 
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<div className="relative z-10 my-20">
+			<div className="relative my-20">
 				<div className="mb-12">
 					<h1 className="text-main-purple mb-10 text-4xl">Contate-nos</h1>
 					<form className="flex gap-x-12">

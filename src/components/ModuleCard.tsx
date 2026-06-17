@@ -46,7 +46,7 @@ export function ModuleCard({ card }: { card: ModuleCardData }) {
 	return (
 		<div
 			key={card.title}
-			className="relative z-20 h-[460px] w-[467px] overflow-hidden rounded-md bg-[url('/assets/images/batthern.png')] shadow-[0_0_20px_#000000a1]"
+			className="relative h-[460px] w-[467px] overflow-hidden rounded-md bg-[url('/assets/images/batthern.png')] shadow-[0_0_20px_#000000a1]"
 		>
 			<div className="flex h-full w-full flex-col bg-[#0f0d16dc]">
 				<h2 className="flex gap-x-3 rounded-t-md border-b border-(--card-color) p-5">

@@ -135,7 +135,7 @@ export function Module() {
 	return (
 		<div className="relative flex justify-center gap-x-10 py-[120px]">
 			<ModuleSideBar topics={topics} />
-			<div className="z-20 w-[1200px] rounded-lg bg-[#0d0a14] p-10 shadow-[0_0_20px_#ffffff0f]">
+			<div className="w-[1200px] rounded-lg bg-[#0d0a14] p-10 shadow-[0_0_20px_#ffffff0f]">
 				<h1 className="mb-5 text-3xl text-green-600">{subtopicData?.title}</h1>
 				<div className="mb-10 flex flex-col gap-y-5">
 					{subtopicData?.content && contentfulFormatter(subtopicData.content)}
@@ -163,10 +163,10 @@ export function Module() {
 			</div>
 			<button
 				type="button"
-				className="bg-main-green/70 fixed right-4 bottom-4 z-30 cursor-pointer rounded-full p-1 shadow-[0_0_10px_#000000b0] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_#00ff002b]"
+				className="bg-main-green/70 fixed right-4 bottom-4 z-10 cursor-pointer rounded-full p-1 shadow-[0_0_10px_#000000b0] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_#00ff002b]"
 				onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
 			>
-				<img src="/assets/images/icons/arrow_up.png" alt="Voltar ao topo" />
+				<img src="/assets/images/icons/arrow-up.png" alt="Voltar ao topo" />
 			</button>
 		</div>
 	);

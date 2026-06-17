@@ -17,7 +17,7 @@ export function Home() {
 			<div className="flex w-full justify-center border-b-2 border-b-indigo-950">
 				<HeroBanner />
 			</div>
-			<section className="relative z-10 flex justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
+			<section className="relative flex justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
 				<div className="flex flex-col gap-y-12">
 					<div>
 						<h2 className="text-main-purple mb-6 text-5xl">
@@ -31,18 +31,18 @@ export function Home() {
 						</p>
 					</div>
 					<button className="border-main-purple group relative h-[70px] w-[280px] cursor-pointer rounded-md border text-lg font-bold transition-shadow hover:shadow-[0_0_20px_#ffffff24]">
-						<span className="absolute top-0 left-0 h-full w-full rounded-md bg-linear-to-br from-[#00ff5998] to-[#8000ff88] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-						<p className="relative z-10">Conheça nosso canal</p>
+						<span className="absolute inset-0 rounded-md bg-linear-to-br from-[#00ff5998] to-[#8000ff88] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+						<p className="relative">Conheça nosso canal</p>
 					</button>
 				</div>
 				<img
 					className="h-[425px] w-[600px] rounded-md shadow-[0_0_15px_#00ff9960,0_0_30px_#7f00ff80]"
-					src="/assets/images/video_lesson.png"
+					src="/assets/images/video-lesson.png"
 					alt="Vídeo aula"
 					draggable="false"
 				/>
 			</section>
-			<section className="relative z-10 flex flex-row-reverse justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
+			<section className="relative flex flex-row-reverse justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
 				<div className="flex flex-col gap-y-12">
 					<div>
 						<h2 className="text-main-green mb-6 text-5xl">
@@ -74,7 +74,7 @@ export function Home() {
 					/>
 				</div>
 			</section>
-			<section className="relative z-10 flex justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
+			<section className="relative flex justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
 				<div>
 					<h2 className="text-main-purple mb-6 text-5xl">Aprendizado Guiado</h2>
 					<p className="w-[600px] text-xl leading-9">
@@ -85,7 +85,7 @@ export function Home() {
 					</p>
 				</div>
 			</section>
-			<section className="relative z-10 flex flex-row-reverse justify-center gap-x-20 py-40">
+			<section className="relative flex flex-row-reverse justify-center gap-x-20 py-40">
 				<div className="flex flex-col gap-y-12 py-5">
 					<div>
 						<h2 className="text-main-green mb-6 text-5xl">Suporte ao aluno</h2>

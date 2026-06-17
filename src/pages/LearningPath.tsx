@@ -53,7 +53,7 @@ export function LearningPath() {
 								}
 							>
 								<ModuleCard card={card} />
-								<svg className="absolute right-1/2 z-20 h-[230px] w-[5px]">
+								<svg className="absolute right-1/2 h-[230px] w-[5px]">
 									<polyline
 										className="fill-none stroke-(--card-color) stroke-5"
 										points="0,0 0,230"

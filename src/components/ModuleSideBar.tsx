@@ -55,7 +55,7 @@ export function ModuleSideBar({ topics }: { topics: TopicData[] }) {
 	};
 
 	return (
-		<div className="s z-20 flex h-screen w-[300px] shrink-0 flex-col gap-y-4 rounded-lg bg-[#27214950] p-4 shadow-[0_0_20px_#ffffff0f]">
+		<div className="flex h-screen w-[300px] shrink-0 flex-col gap-y-4 rounded-lg bg-[#27214950] p-4 shadow-[0_0_20px_#ffffff0f]">
 			{topics?.map((topic) => (
 				<div
 					key={topic.title}
