@@ -1,5 +1,5 @@
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import type { ChangeEvent } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import { storage } from '../database/configs/firebase';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { toast } from 'react-toastify';
@@ -13,6 +13,7 @@ import { userDataRef } from '../database/refs/userRefs';
 
 export function PictureInput() {
 	const { authState, authDispatch } = useSafeContext(AuthContext);
+	const [isUpdating, setIsUpdating] = useState(false);
 	const picturePreview =
 		authState.data?.picture || '/assets/images/profile-picture.png';
 
@@ -20,6 +21,8 @@ export function PictureInput() {
 		try {
 			const file = e.target.files?.[0];
 			if (!file) return;
+
+			setIsUpdating(true);
 
 			const { uid } = authState;
 			const storageRef = ref(storage, `pictures/${uid}`);
@@ -41,6 +44,8 @@ export function PictureInput() {
 			});
 		} catch (error) {
 			logError(error, 'Falha ao atualizar a foto. Tente novamente.');
+		} finally {
+			setIsUpdating(false);
 		}
 	};
 
@@ -48,11 +53,21 @@ export function PictureInput() {
 		<div className="mb-10">
 			<h2 className="mb-5 text-lg">Foto de perfil</h2>
 			<label htmlFor="picture" className="group relative">
-				<div className="overflow-hidden rounded-full">
-					<img
-						src={picturePreview}
-						className="h-[120px] w-[120px] cursor-pointer object-cover"
-					/>
+				<div className="h-[120px] w-[120px] overflow-hidden rounded-full">
+					{isUpdating ? (
+						<div className="flex size-full items-center justify-center bg-black/50">
+							<img
+								src="/assets/images/loading.png"
+								alt="Atualizando foto"
+								className="h-[40px] w-[40px]"
+							/>
+						</div>
+					) : (
+						<img
+							src={picturePreview}
+							className="size-full cursor-pointer object-cover"
+						/>
+					)}
 				</div>
 
 				<div className="absolute -right-3 bottom-0 scale-0 transition-transform group-hover:scale-100">
