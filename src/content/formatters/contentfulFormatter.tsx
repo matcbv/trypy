@@ -73,7 +73,7 @@ export function contentfulFormatter(content: Document) {
 					<img
 						src={file.url}
 						alt={title}
-						className="w-[512px] self-center bg-[radial-gradient(circle,_#00ff002b,_transparent_70%)] opacity-60"
+						className="w-[512px] self-center bg-[radial-gradient(circle,#00ff002b,transparent_70%)] opacity-60"
 						draggable={false}
 					/>
 				);
