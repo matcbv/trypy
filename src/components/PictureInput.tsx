@@ -14,7 +14,7 @@ import { userDataRef } from '../database/refs/userRefs';
 export function PictureInput() {
 	const { authState, authDispatch } = useSafeContext(AuthContext);
 	const picturePreview =
-		authState.data?.picture || '/assets/images/profile_picture.png';
+		authState.data?.picture || '/assets/images/profile-picture.png';
 
 	const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
 		try {

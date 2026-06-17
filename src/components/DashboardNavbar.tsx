@@ -11,8 +11,8 @@ export function DashboardNavbar() {
 	const navigate = useNavigate();
 
 	const objectsMap = [
-		{ slug: '', title: 'Visão geral', icon: 'user_overview' },
-		{ slug: 'profile', title: 'Editar conta', icon: 'edit_account' },
+		{ slug: '', title: 'Visão geral', icon: 'user-overview' },
+		{ slug: 'profile', title: 'Editar conta', icon: 'edit-account' },
 		{ slug: 'certifications', title: 'Certificações', icon: 'certificate' },
 		{ slug: 'resolutions', title: 'Resoluções', icon: 'resolution' },
 		{ slug: 'tips', title: 'Dicas salvas', icon: 'tip' },
