@@ -5,9 +5,10 @@ interface SkeletonProps {
 }
 
 export function SkeletonLoader({ width, height, quantity = 1 }: SkeletonProps) {
+	console.log(height);
 	return (
 		<>
-			{Array.from({ length: quantity }, (_, i) => {
+			{Array.from({ length: quantity }, (_, i) => (
 				<span
 					key={i}
 					className="block animate-pulse rounded-xs bg-white/25"
@@ -15,8 +16,8 @@ export function SkeletonLoader({ width, height, quantity = 1 }: SkeletonProps) {
 						height: `${height}px`,
 						width: `${width}px`,
 					}}
-				/>;
-			})}
+				/>
+			))}
 		</>
 	);
 }
