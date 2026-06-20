@@ -22,6 +22,7 @@ import AuthProvider from '../contexts/AuthProvider';
 import ProgressProvider from '../contexts/ProgressProvider';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { ProtectedRoute } from './ProtectedRoute';
+import { TerminalProvier } from '../contexts/TerminalProvider';
 
 export function AppRoutes() {
 	return (
@@ -50,7 +51,12 @@ export function AppRoutes() {
 								<Route
 									element={<ProtectedRoute middlewares={[authMiddleware]} />}
 								>
-									<Route path="/learning-path/:moduleId" element={<Module />} />
+									<Route element={<TerminalProvier />}>
+										<Route
+											path="/learning-path/:moduleId"
+											element={<Module />}
+										/>
+									</Route>
 								</Route>
 							</Route>
 							<Route path="/support" element={<Support />} />
