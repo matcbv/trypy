@@ -5,7 +5,6 @@ interface SkeletonProps {
 }
 
 export function SkeletonLoader({ width, height, quantity = 1 }: SkeletonProps) {
-	console.log(height);
 	return (
 		<>
 			{Array.from({ length: quantity }, (_, i) => (
@@ -16,7 +15,7 @@ export function SkeletonLoader({ width, height, quantity = 1 }: SkeletonProps) {
 						height: `${height}px`,
 						width: `${width}px`,
 					}}
-				/>
+				></span>
 			))}
 		</>
 	);

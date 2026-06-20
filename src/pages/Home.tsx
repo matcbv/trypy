@@ -31,7 +31,7 @@ export function Home() {
 						</p>
 					</div>
 					<button className="border-main-purple group relative h-[70px] w-[280px] cursor-pointer rounded-md border text-lg font-bold transition-shadow hover:shadow-[0_0_20px_#ffffff24]">
-						<span className="absolute inset-0 rounded-md bg-linear-to-br from-[#00ff5998] to-[#8000ff88] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+						<span className="absolute inset-0 rounded-md bg-linear-to-br from-[#00ff5998] to-[#8000ff88] opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
 						<p className="relative">Conheça nosso canal</p>
 					</button>
 				</div>
@@ -99,7 +99,7 @@ export function Home() {
 
 					<Link
 						to="/support"
-						className="hover:bg-main-combination flex w-[280px] cursor-pointer items-center justify-center rounded-md border border-white py-5 text-lg font-bold transition-all duration-300 hover:border-black hover:shadow-[0_0_25px_#FFFFFF26]"
+						className="hover:bg-main-combination flex w-[280px] cursor-pointer items-center justify-center rounded-md border border-white py-5 text-lg font-bold transition-all duration-300 hover:border-black hover:shadow-[0_0_25px_#FFFFFF]/25"
 					>
 						Fale conosco
 					</Link>

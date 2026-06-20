@@ -13,6 +13,7 @@ import { logError } from '../utils/logger';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleData, SubtopicData, TopicData } from '../types/content';
 import { mapContent } from '../content/mappers/mapContent';
+import { Terminal } from '../components/Terminal';
 
 export function Module() {
 	const { authState } = useSafeContext(AuthContext);
@@ -133,11 +134,12 @@ export function Module() {
 	]);
 
 	return (
-		<div className="relative flex justify-center gap-x-10 py-[120px]">
+		<div className="relative flex min-h-screen justify-center gap-x-10 py-[120px]">
 			<ModuleSideBar topics={topics} />
 			<div className="w-[1200px] rounded-lg bg-[#0d0a14] p-10 shadow-[0_0_20px_#ffffff0f]">
-				<h1 className="mb-5 text-3xl text-green-600">{subtopicData?.title}</h1>
+				<h1 className="text-main-green mb-5 text-3xl">{subtopicData?.title}</h1>
 				<div className="mb-10 flex flex-col gap-y-5">
+					{subtopicData?.isExercise && <Terminal />}
 					{subtopicData?.content && contentfulFormatter(subtopicData.content)}
 					{subtopicData?.videoLink && (
 						<div className="flex justify-center">
@@ -163,7 +165,7 @@ export function Module() {
 			</div>
 			<button
 				type="button"
-				className="bg-main-green/70 fixed right-4 bottom-4 z-10 cursor-pointer rounded-full p-1 shadow-[0_0_10px_#000000b0] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_#00ff002b]"
+				className="bg-main-green fixed right-4 bottom-4 z-10 cursor-pointer rounded-full p-1 shadow-[0_0_10px_#000000b0] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_#00ff002b]"
 				onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
 			>
 				<img src="/assets/images/icons/arrow-up.png" alt="Voltar ao topo" />
