@@ -1,10 +1,8 @@
-import { useEffect, useReducer } from 'react';
-import reducer from './reducer';
+import { useEffect, useState } from 'react';
 import { NavigationContext } from './context';
 import { Outlet } from 'react-router-dom';
 import { storageKeys } from '../../constants/storageKeys';
 import { AuthContext } from '../AuthProvider/context';
-import actionTypes from './actionTypes';
 import { logError } from '../../utils/logger';
 import { hydrateNavigationState } from '../../database/services/hydrateNavigationState';
 import { useSafeContext } from '../../hooks/useSafeContext';
@@ -13,11 +11,7 @@ import initialState from './initialState';
 
 export function NavigationProvider() {
 	const { authState } = useSafeContext(AuthContext);
-	const [navigationState, navigationDispatch] = useReducer(
-		reducer,
-		null,
-		getInitialModuleState,
-	);
+	const [navigationState, setNavigationState] = useState(getInitialModuleState);
 
 	// * Lazy initializer para a obtenção dos valores iniciais do nosso estado.
 	function getInitialModuleState() {
@@ -38,10 +32,7 @@ export function NavigationProvider() {
 
 			try {
 				const progressData = await hydrateNavigationState(authState.uid);
-				navigationDispatch({
-					type: actionTypes.SET_CURRENT_PROGRESS,
-					payload: progressData,
-				});
+				setNavigationState((prev) => ({ ...prev, ...progressData }));
 			} catch (error) {
 				logError(error);
 			}
@@ -57,7 +48,7 @@ export function NavigationProvider() {
 	}, [navigationState]);
 
 	return (
-		<NavigationContext value={{ navigationState, navigationDispatch }}>
+		<NavigationContext value={{ navigationState, setNavigationState }}>
 			<Outlet />
 		</NavigationContext>
 	);

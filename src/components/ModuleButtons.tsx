@@ -6,7 +6,6 @@ import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { useNavigate, useParams } from 'react-router-dom';
 import { updateDoc } from 'firebase/firestore';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
-import navigationActionTypes from '../contexts/NavigationProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleData, SubtopicData, TopicData } from '../types/content';
 import type { ProgressState } from '../types/states';
@@ -32,7 +31,7 @@ export function ModuleButtons({
 }: ModuleButtonsProps) {
 	const { authState } = useSafeContext(AuthContext);
 	const { progressState, progressDispatch } = useSafeContext(ProgressContext);
-	const { navigationState, navigationDispatch } =
+	const { navigationState, setNavigationState } =
 		useSafeContext(NavigationContext);
 	const params = useParams<{ moduleId: string }>();
 	const navigate = useNavigate();
@@ -64,7 +63,7 @@ export function ModuleButtons({
 				data.doneSubtopics?.includes(subtopic.slug),
 			);
 
-			// * Caso concluído, iremos adicioná-lo à ela.
+			// * Caso concluído, iremos adicioná-lo à lista de tópicos concluídos.
 			if (
 				isTopicDone &&
 				!progressState.doneTopics.includes(navigationState.currentTopic)
@@ -94,18 +93,12 @@ export function ModuleButtons({
 				if (!progressState.doneSubtopics.includes(nextSubtopic.slug))
 					data.inProgressSubtopic = nextSubtopic.slug;
 
-				navigationDispatch({
-					type: navigationActionTypes.SET_CURRENT_PROGRESS,
-					payload: {
-						currentTopic: nextTopic.slug,
-						currentSubtopic: nextSubtopic.slug,
-					},
-				});
-
-				navigationDispatch({
-					type: navigationActionTypes.SET_CURRENT_PROGRESS,
-					payload: { isLastSubtopic: isLastSubtopic },
-				});
+				setNavigationState((prev) => ({
+					...prev,
+					currentTopic: nextTopic.slug,
+					currentSubtopic: nextSubtopic.slug,
+					isLastSubtopic: isLastSubtopic,
+				}));
 			} else {
 				toast<ToastData>(ToastNotification, {
 					type: 'info',
@@ -131,20 +124,17 @@ export function ModuleButtons({
 
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
-		navigationDispatch({
-			type: navigationActionTypes.SET_CURRENT_PROGRESS,
-			payload: { isLastSubtopic: false },
-		});
+		setNavigationState((prev) => ({ ...prev, isLastSubtopic: false }));
 
 		const previousSubtopic = subtopics.find(
 			(subtopic) => subtopic.order === subtopicData.order - 1,
 		);
 
 		if (previousSubtopic) {
-			navigationDispatch({
-				type: navigationActionTypes.SET_CURRENT_PROGRESS,
-				payload: { currentSubtopic: previousSubtopic.slug },
-			});
+			setNavigationState((prev) => ({
+				...prev,
+				currentSubtopic: previousSubtopic.slug,
+			}));
 			return;
 		}
 
@@ -159,13 +149,11 @@ export function ModuleButtons({
 			(subtopic) => subtopic.order === previousSubtopics.length,
 		);
 
-		navigationDispatch({
-			type: navigationActionTypes.SET_CURRENT_PROGRESS,
-			payload: {
-				currentTopic: previousTopic!.slug,
-				currentSubtopic: newSubtopic!.slug,
-			},
-		});
+		setNavigationState((prev) => ({
+			...prev,
+			currentTopic: previousTopic!.slug,
+			currentSubtopic: newSubtopic!.slug,
+		}));
 	};
 
 	const finishModule = async () => {
@@ -221,15 +209,13 @@ export function ModuleButtons({
 			});
 		}
 
-		navigationDispatch({
-			type: navigationActionTypes.SET_CURRENT_PROGRESS,
-			payload: {
-				currentModule: nextModule.slug,
-				currentTopic: nextTopic.slug,
-				currentSubtopic: nextSubtopic.slug,
-				isLastSubtopic: false,
-			},
-		});
+		setNavigationState((prev) => ({
+			...prev,
+			currentModule: nextModule.slug,
+			currentTopic: nextTopic.slug,
+			currentSubtopic: nextSubtopic.slug,
+			isLastSubtopic: false,
+		}));
 
 		void navigate('/learning-path');
 	};

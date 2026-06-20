@@ -5,7 +5,6 @@ import { fetchContent } from '../content/services/fetchContent';
 import { contentfulFormatter } from '../content/formatters/contentfulFormatter';
 import { ModuleButtons } from '../components/ModuleButtons';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
-import navigationActionTypes from '../contexts/NavigationProvider/actionTypes';
 import { hydrateNavigationState } from '../database/services/hydrateNavigationState';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
@@ -18,7 +17,7 @@ import { Terminal } from '../components/Terminal';
 export function Module() {
 	const { authState } = useSafeContext(AuthContext);
 	const { progressState } = useSafeContext(ProgressContext);
-	const { navigationState, navigationDispatch } =
+	const { navigationState, setNavigationState } =
 		useSafeContext(NavigationContext);
 	const [moduleData, setModuleData] = useState<ModuleData | null>(null);
 	const [topics, setTopics] = useState<TopicData[]>([]);
@@ -58,25 +57,25 @@ export function Module() {
 		void (async () => {
 			try {
 				const progressData = await hydrateNavigationState(authState.uid!);
-				navigationDispatch({
-					type: navigationActionTypes.SET_CURRENT_PROGRESS,
-					payload: progressData,
-				});
+				setNavigationState((prev) => ({ ...prev, ...progressData }));
 			} catch (error) {
 				logError(error);
 			}
 		})();
-	}, [navigationState, navigationDispatch, authState.uid]);
+	}, [navigationState, authState.uid, setNavigationState]);
 
 	// * useEffect responsável pela atualização do estado de navegação ao navegar entre módulos.
 	useEffect(() => {
-		if (!moduleData || !params.moduleId) return;
+		const { moduleId } = params;
+
+		if (!moduleData || !moduleId) return;
 		// * Caso o módulo acessado (params.moduleId) não estiver incluído na lista de módulos concluídos, significa que ainda está sendo feito, portanto não iremos direcionar o usuário ao conteúdo final dele. Além disso, caso o módulo seja o último acessado, os dados corretos já estão em vigor. Nesses dois casos, iremos apenas dar return.
 		if (
-			!progressState.doneModules.includes(params.moduleId) ||
+			!progressState.doneModules.includes(moduleId) ||
 			navigationState.currentModule === params.moduleId
-		)
+		) {
 			return;
+		}
 
 		const lastModuleTopic = moduleData.topics.find(
 			(topic) => topic.order === moduleData.topics.length,
@@ -90,17 +89,15 @@ export function Module() {
 
 		if (!lastModuleSubtopic) return;
 
-		navigationDispatch({
-			type: navigationActionTypes.SET_CURRENT_PROGRESS,
-			payload: {
-				currentModule: params.moduleId,
-				currentTopic: lastModuleTopic.slug,
-				currentSubtopic: lastModuleSubtopic.slug,
-				isLastSubtopic: true,
-			},
-		});
+		setNavigationState((prev) => ({
+			...prev,
+			currentModule: moduleId,
+			currentTopic: lastModuleTopic.slug,
+			currentSubtopic: lastModuleSubtopic.slug,
+			isLastSubtopic: true,
+		}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [params.moduleId, moduleData, navigationDispatch]);
+	}, [params.moduleId, moduleData]);
 
 	// * useEffect responsável por atualizar os estados com o conteúdo do módulo obtido.
 	useEffect(() => {

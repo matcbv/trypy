@@ -1,6 +1,5 @@
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
-import navigationActionTypes from '../contexts/NavigationProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { TopicData } from '../types/content';
 import type { RefObject } from 'react';
@@ -18,7 +17,7 @@ export function SubtopicDropdown({
 	lastSubtopicSlug,
 }: DropdownProps) {
 	const { progressState } = useSafeContext(ProgressContext);
-	const { navigationDispatch } = useSafeContext(NavigationContext);
+	const { setNavigationState } = useSafeContext(NavigationContext);
 
 	const changeSubtopic = (slug: string) => {
 		try {
@@ -30,14 +29,12 @@ export function SubtopicDropdown({
 
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 
-			navigationDispatch({
-				type: navigationActionTypes.SET_CURRENT_PROGRESS,
-				payload: {
-					currentTopic: topic.slug,
-					currentSubtopic: slug,
-					isLastSubtopic: slug === lastSubtopicSlug,
-				},
-			});
+			setNavigationState((prev) => ({
+				...prev,
+				currentTopic: topic.slug,
+				currentSubtopic: slug,
+				isLastSubtopic: slug === lastSubtopicSlug,
+			}));
 		} catch (error) {
 			logError(error);
 		}
