@@ -24,8 +24,9 @@ export function SubtopicDropdown({
 			if (
 				!progressState.doneTopics.includes(topic.slug) &&
 				progressState.inProgressTopic !== topic.slug
-			)
+			) {
 				return;
+			}
 
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 

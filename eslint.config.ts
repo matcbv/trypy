@@ -49,4 +49,9 @@ export default defineConfig([
 		},
 	},
 	eslintConfigPrettier,
+	{
+		rules: {
+			curly: ['error', 'multi-line'],
+		},
+	},
 ]);

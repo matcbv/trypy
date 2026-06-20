@@ -6,8 +6,10 @@ export async function fetchInitialProgress() {
 	const firstModule = modules[0]?.fields;
 	const firstTopic = firstModule?.topics[0]?.fields;
 	const firstSubtopic = firstTopic?.subtopics[0]?.fields;
-	if (!firstModule || !firstTopic || !firstSubtopic)
+	if (!firstModule || !firstTopic || !firstSubtopic) {
 		throw new Error('Falha ao obter o conteúdo inicial.');
+	}
+
 	return {
 		inProgressModule: firstModule.slug,
 		inProgressTopic: firstTopic.slug,

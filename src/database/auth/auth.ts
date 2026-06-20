@@ -100,8 +100,9 @@ export const deleteAccount = async ({
 	provider,
 	password,
 }: DeleteOptions) => {
-	if (!auth.currentUser)
+	if (!auth.currentUser) {
 		throw new Error('Sessão expirada. Faça login e tente novamente.');
+	}
 
 	try {
 		switch (provider) {

@@ -23,8 +23,9 @@ export function Tips() {
 							orderOrSlug: slug,
 						});
 
-						if (!res[0])
+						if (!res[0]) {
 							throw new Error(`Não foi possível obter a dica ${slug}`);
+						}
 
 						return res[0].fields;
 					}),

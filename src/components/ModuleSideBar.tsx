@@ -15,19 +15,23 @@ export function ModuleSideBar({ topics }: { topics: TopicData[] }) {
 		if (
 			!progressState.doneTopics.includes(slug) &&
 			progressState.inProgressTopic !== slug
-		)
+		) {
 			return;
+		}
 
 		const dropdown = dropdownsContainer.current.find(
 			(dropdown) => dropdown?.id === slug,
 		)!;
 		const arrow = arrows.current.find((arrow) => arrow?.id === slug)!;
 
-		if (currentContainer.current)
+		if (currentContainer.current) {
 			currentContainer.current.style =
 				'height: 0; padding: 0 16px; opacity: 0%';
-		if (currentArrow.current)
+		}
+
+		if (currentArrow.current) {
 			currentArrow.current.style = 'transform: rotate(0deg)';
+		}
 
 		if (dropdown === currentContainer.current) {
 			dropdown.style = 'height: 0; padding: 0 16px; opacity: 0%';
@@ -48,8 +52,9 @@ export function ModuleSideBar({ topics }: { topics: TopicData[] }) {
 			return { src: '/assets/images/icons/success.png', alt: 'Concluído' };
 		}
 
-		if (progressState.inProgressTopic === topic.slug)
+		if (progressState.inProgressTopic === topic.slug) {
 			return { src: '/assets/images/icons/progress.png', alt: 'Em progresso' };
+		}
 
 		return { src: '/assets/images/icons/locked.png', alt: 'Bloqueado' };
 	};
