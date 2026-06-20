@@ -22,3 +22,9 @@ export interface NavigationState {
 	isLastSubtopic: boolean;
 	isHydrated: boolean;
 }
+
+export interface TerminalState {
+	status: 'idle' | 'loading' | 'ready' | 'running' | 'error';
+	output: string | null;
+	error: string | null;
+}

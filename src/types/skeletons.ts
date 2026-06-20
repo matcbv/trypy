@@ -32,6 +32,7 @@ export type SubtopicSkeleton = EntrySkeletonType<
 		videoLink: EntryFieldTypes.Symbol;
 		slug: EntryFieldTypes.Symbol;
 		order: EntryFieldTypes.Integer;
+		isExercise: EntryFieldTypes.Boolean;
 	},
 	'subtopic'
 >;

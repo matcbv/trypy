@@ -1,8 +1,13 @@
-import type { Dispatch } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import type authActionTypes from '../contexts/AuthProvider/actionTypes';
 import type progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import type navigationActionTypes from '../contexts/NavigationProvider/actionTypes';
-import type { AuthState, NavigationState, ProgressState } from './states';
+import type {
+	AuthState,
+	NavigationState,
+	ProgressState,
+	TerminalState,
+} from './states';
 import type { UserData } from './user';
 
 export interface AuthContextType {
@@ -27,4 +32,11 @@ export interface NavigationContextType {
 		type: keyof typeof navigationActionTypes;
 		payload: Partial<NavigationState>;
 	}>;
+}
+
+export interface TerminalContextType {
+	terminalState: TerminalState;
+	setTerminalState: Dispatch<SetStateAction<TerminalState>>;
+	runCode: (code: string) => void;
+	stopCodeExecution: () => void;
 }

@@ -21,6 +21,7 @@ export interface SubtopicData {
 	videoLink: string;
 	slug: string;
 	order: number;
+	isExercise: boolean;
 }
 
 export interface ModuleCardData {
