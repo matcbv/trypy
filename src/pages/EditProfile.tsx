@@ -7,7 +7,6 @@ import { ToastNotification } from '../components/Notifications';
 import { Link, useNavigate } from 'react-router-dom';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
-import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { storageKeys } from '../constants/storageKeys';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ToastData } from '../types/toast';
@@ -15,13 +14,14 @@ import { FirebaseError } from 'firebase/app';
 import { auth } from '../database/configs/firebase';
 import { getIdTokenResult, ProviderId } from 'firebase/auth';
 import { idGenerator } from '../utils/idGenerator';
+import progressInitialState from '../contexts/ProgressProvider/initialState';
 
 export function EditProfile() {
 	type Providers = (typeof ProviderId)[keyof typeof ProviderId];
 
 	const navigate = useNavigate();
 	const { authState, authDispatch } = useSafeContext(AuthContext);
-	const { progressDispatch } = useSafeContext(ProgressContext);
+	const { setProgressState } = useSafeContext(ProgressContext);
 	const [userPassword, setUserPassword] = useState('');
 	const [isVisible, setIsVisible] = useState(false);
 	const [provider, setProvider] = useState<Providers | null>(null);
@@ -46,7 +46,7 @@ export function EditProfile() {
 			}
 
 			authDispatch({ type: authActionTypes.LOGOUT });
-			progressDispatch({ type: progressActionTypes.RESET_PROGRESS });
+			setProgressState(progressInitialState);
 			localStorage.removeItem(storageKeys.NAVIGATION_STATE);
 
 			void navigate('/', { replace: true });

@@ -9,7 +9,6 @@ import { signInWithCredentials } from '../database/auth/auth';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { logError } from '../utils/logger';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
-import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ToastData } from '../types/toast';
 import { LoadingPage } from '../pages/LoadingPage';
@@ -19,7 +18,7 @@ import { auth } from '../database/configs/firebase';
 export function SessionForm() {
 	const navigate = useNavigate();
 	const { authDispatch } = useSafeContext(AuthContext);
-	const { progressDispatch } = useSafeContext(ProgressContext);
+	const { setProgressState } = useSafeContext(ProgressContext);
 	const [userCredentials, setUserCredentials] = useState({
 		email: '',
 		password: '',
@@ -75,12 +74,11 @@ export function SessionForm() {
 				type: authActionTypes.SET_DATA,
 				payload: { uid, data: userData },
 			});
-			progressDispatch({
-				type: progressActionTypes.SET_PROGRESS,
-				payload: progressData,
-			});
+
+			setProgressState((prev) => ({ ...prev, ...progressData }));
 
 			void navigate('/dashboard', { replace: true });
+
 			toast<ToastData>(ToastNotification, {
 				type: 'success',
 				data: {
@@ -106,10 +104,8 @@ export function SessionForm() {
 				type: authActionTypes.SET_DATA,
 				payload: { uid, data: providerData },
 			});
-			progressDispatch({
-				type: progressActionTypes.SET_PROGRESS,
-				payload: progressData,
-			});
+
+			setProgressState((prev) => ({ ...prev, ...progressData }));
 
 			void navigate('/dashboard', { replace: true });
 			toast<ToastData>(ToastNotification, {

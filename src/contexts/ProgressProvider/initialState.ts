@@ -1,3 +1,5 @@
+import type { ProgressState } from '../../types/states';
+
 const initialState = {
 	inProgressModule: '',
 	inProgressTopic: '',
@@ -5,6 +7,6 @@ const initialState = {
 	doneModules: [],
 	doneTopics: [],
 	doneSubtopics: [],
-};
+} as ProgressState;
 
 export default initialState;

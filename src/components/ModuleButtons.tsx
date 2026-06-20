@@ -2,7 +2,6 @@ import { AuthContext } from '../contexts/AuthProvider/context';
 import { getNextContent } from '../content/navigation/getNextContent';
 import { logError } from '../utils/logger';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
-import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { useNavigate, useParams } from 'react-router-dom';
 import { updateDoc } from 'firebase/firestore';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
@@ -30,7 +29,7 @@ export function ModuleButtons({
 	subtopicData,
 }: ModuleButtonsProps) {
 	const { authState } = useSafeContext(AuthContext);
-	const { progressState, progressDispatch } = useSafeContext(ProgressContext);
+	const { progressState, setProgressState } = useSafeContext(ProgressContext);
 	const { navigationState, setNavigationState } =
 		useSafeContext(NavigationContext);
 	const params = useParams<{ moduleId: string }>();
@@ -108,11 +107,7 @@ export function ModuleButtons({
 					},
 				});
 			}
-
-			progressDispatch({
-				type: progressActionTypes.SET_PROGRESS,
-				payload: data,
-			});
+			setProgressState((prev) => ({ ...prev, ...data }));
 			await updateDoc(userProgressRef(authState.uid!), data);
 		} catch (error) {
 			logError(error);
@@ -191,10 +186,7 @@ export function ModuleButtons({
 				inProgressSubtopic: nextSubtopic.slug,
 			};
 
-			progressDispatch({
-				type: progressActionTypes.SET_PROGRESS,
-				payload: data,
-			});
+			setProgressState((prev) => ({ ...prev, ...data }));
 
 			await updateDoc(userProgressRef(authState.uid!), data);
 

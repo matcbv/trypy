@@ -11,7 +11,6 @@ import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { logError } from '../utils/logger';
 import { signInWithGoogle } from '../database/auth/oAuth';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
-import progressActionTypes from '../contexts/ProgressProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ToastData } from '../types/toast';
 import { idGenerator } from '../utils/idGenerator';
@@ -22,7 +21,7 @@ import { auth } from '../database/configs/firebase';
 export function RegisterForm() {
 	const navigate = useNavigate();
 	const { authDispatch } = useSafeContext(AuthContext);
-	const { progressDispatch } = useSafeContext(ProgressContext);
+	const { setProgressState } = useSafeContext(ProgressContext);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const [userData, setUserData] = useState({
@@ -109,10 +108,7 @@ export function RegisterForm() {
 				payload: { uid, data: persistedData },
 			});
 
-			progressDispatch({
-				type: progressActionTypes.SET_PROGRESS,
-				payload: initialProgressData,
-			});
+			setProgressState((prev) => ({ ...prev, ...initialProgressData }));
 
 			void navigate('/dashboard', { replace: true });
 			toast<ToastData>(ToastNotification, {
@@ -141,10 +137,7 @@ export function RegisterForm() {
 				payload: { uid, data: providerData },
 			});
 
-			progressDispatch({
-				type: progressActionTypes.SET_PROGRESS,
-				payload: progressData,
-			});
+			setProgressState((prev) => ({ ...prev, ...progressData }));
 
 			void navigate('/dashboard', { replace: true });
 			toast(ToastNotification, {

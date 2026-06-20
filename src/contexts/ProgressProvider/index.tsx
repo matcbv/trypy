@@ -1,10 +1,8 @@
-import { useEffect, useReducer, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import initialState from './initialState';
 import { ProgressContext } from './context';
-import reducer from './reducer';
 import { getDoc, setDoc } from 'firebase/firestore';
 import { auth } from '../../database/configs/firebase';
-import actionTypes from './actionTypes';
 import { onAuthStateChanged } from 'firebase/auth';
 import { userProgressRef } from '../../database/refs/userRefs';
 
@@ -13,7 +11,7 @@ export default function ProgressProvider({
 }: {
 	children: ReactNode;
 }) {
-	const [progressState, progressDispatch] = useReducer(reducer, initialState);
+	const [progressState, setProgressState] = useState(initialState);
 
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
@@ -21,24 +19,19 @@ export default function ProgressProvider({
 				if (user) {
 					const progress = await getDoc(userProgressRef(user.uid));
 					if (progress.exists()) {
-						progressDispatch({
-							type: actionTypes.SET_PROGRESS,
-							payload: progress.data(),
-						});
+						setProgressState((prev) => ({ ...prev, ...progress.data() }));
 					} else {
 						await setDoc(userProgressRef(user.uid), initialState);
 					}
 				} else {
-					progressDispatch({
-						type: actionTypes.RESET_PROGRESS,
-					});
+					setProgressState(initialState);
 				}
 			})();
 		});
 	}, []);
 
 	return (
-		<ProgressContext value={{ progressState, progressDispatch }}>
+		<ProgressContext value={{ progressState, setProgressState }}>
 			{children}
 		</ProgressContext>
 	);
