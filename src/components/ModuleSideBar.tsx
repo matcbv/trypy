@@ -55,38 +55,42 @@ export function ModuleSideBar({ topics }: { topics: TopicData[] }) {
 	};
 
 	return (
-		<div className="flex h-screen w-[300px] shrink-0 flex-col gap-y-4 rounded-lg bg-[#27214950] p-4 shadow-[0_0_20px_#ffffff0f]">
-			{topics?.map((topic) => (
-				<div
-					key={topic.title}
-					className="flex cursor-pointer flex-col overflow-hidden rounded-lg bg-[#0d0a14]"
-					onClick={() => handleClick(topic.slug)}
-				>
-					<div className="flex h-[75px] w-full items-center justify-between gap-x-2 px-3">
-						<div className="flex items-center gap-x-3">
-							<img {...iconData(topic)} className="w-5" draggable={false} />
-							<p className="font-jetbrains text-sm leading-6">{topic.title}</p>
+		<div className="relative w-[300px] shrink-0 rounded-lg bg-[#272149]/40 p-4 shadow-[0_0_20px_#ffffff0f]">
+			<div className="sticky top-[84px] flex flex-col gap-y-4">
+				{topics?.map((topic) => (
+					<div
+						key={topic.title}
+						className="flex cursor-pointer flex-col overflow-hidden rounded-lg bg-[#0d0a14]/80"
+						onClick={() => handleClick(topic.slug)}
+					>
+						<div className="flex h-[75px] w-full items-center justify-between gap-x-2 px-3">
+							<div className="flex items-center gap-x-3">
+								<img {...iconData(topic)} className="w-5" draggable={false} />
+								<p className="font-jetbrains text-sm leading-6">
+									{topic.title}
+								</p>
+							</div>
+							{(progressState.doneTopics.includes(topic.slug) ||
+								progressState.inProgressTopic === topic.slug) && (
+								<img
+									id={topic.slug}
+									src="/assets/images/icons/arrow.png"
+									className="transition-transform duration-300"
+									ref={(el) => {
+										arrows.current.push(el);
+									}}
+									alt="Seta"
+								/>
+							)}
 						</div>
-						{(progressState.doneTopics.includes(topic.slug) ||
-							progressState.inProgressTopic === topic.slug) && (
-							<img
-								id={topic.slug}
-								src="/assets/images/icons/arrow.png"
-								className="transition-transform duration-300"
-								ref={(el) => {
-									arrows.current.push(el);
-								}}
-								alt="Seta"
-							/>
-						)}
+						<SubtopicDropdown
+							lastSubtopicSlug={topics.at(-1)!.subtopics.at(-1)!.slug}
+							topic={topic}
+							dropdownsContainer={dropdownsContainer}
+						/>
 					</div>
-					<SubtopicDropdown
-						lastSubtopicSlug={topics.at(-1)!.subtopics.at(-1)!.slug}
-						topic={topic}
-						dropdownsContainer={dropdownsContainer}
-					/>
-				</div>
-			))}
+				))}
+			</div>
 		</div>
 	);
 }
