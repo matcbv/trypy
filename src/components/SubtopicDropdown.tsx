@@ -28,6 +28,8 @@ export function SubtopicDropdown({
 			)
 				return;
 
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+
 			navigationDispatch({
 				type: navigationActionTypes.SET_CURRENT_PROGRESS,
 				payload: {
@@ -44,7 +46,7 @@ export function SubtopicDropdown({
 	return (
 		<div
 			id={topic.slug}
-			className="h-0 bg-[#110e1c] px-4 text-[0.85rem] opacity-0 transition-all duration-300"
+			className="h-0 bg-[#0d0a14] px-4 text-[0.85rem] opacity-0 transition-all duration-300"
 			ref={(el) => {
 				dropdownsContainer.current.push(el);
 			}}
