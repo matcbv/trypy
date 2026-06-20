@@ -26,9 +26,6 @@ export async function getNextContent(
 			nextModule: currentModuleData,
 			nextTopic: currentTopicData,
 			nextSubtopic: nextSubtopic,
-			isLastSubtopic: nextTopic
-				? false
-				: nextSubtopic.order === subtopics.length,
 		};
 	}
 
@@ -43,7 +40,6 @@ export async function getNextContent(
 			nextModule: currentModuleData,
 			nextTopic: nextTopic,
 			nextSubtopic: firstNextTopicSubtopic,
-			isLastSubtopic: false,
 		};
 	}
 
@@ -71,7 +67,6 @@ export async function getNextContent(
 			nextModule: mappedModuleContent,
 			nextTopic: nextModuleTopic,
 			nextSubtopic: nextTopicSubtopic,
-			isLastSubtopic: true,
 		};
 	}
 
@@ -80,6 +75,5 @@ export async function getNextContent(
 		nextModule: currentModuleData,
 		nextTopic: currentTopicData,
 		nextSubtopic: currentSubtopicData,
-		isLastSubtopic: true,
 	};
 }

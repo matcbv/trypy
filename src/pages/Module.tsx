@@ -29,16 +29,19 @@ export function Module() {
 	// * useEffect para obter o conteúdo do módulo a ser exibido.
 	useEffect(() => {
 		void (async () => {
-			if (!params.moduleId) return;
+			const { moduleId } = params;
+			if (!moduleId) return;
 
 			try {
 				const content = await fetchContent({
 					contentType: 'module',
 					include: 4,
-					orderOrSlug: params.moduleId,
+					orderOrSlug: moduleId,
 				});
-				if (!content[0])
-					throw new Error(`Não foi possível obter o módulo ${params.moduleId}`);
+
+				if (!content[0]) {
+					throw new Error(`Não foi possível obter o módulo ${moduleId}`);
+				}
 
 				setModuleData(mapContent(content[0]));
 			} catch (error) {
@@ -48,7 +51,7 @@ export function Module() {
 				);
 			}
 		})();
-	}, [params.moduleId]);
+	}, [params]);
 
 	// * useEffect responsável por repor o estado de navegação caso não esteja presente no usuário.
 	useEffect(() => {
@@ -69,11 +72,15 @@ export function Module() {
 		const { moduleId } = params;
 
 		if (!moduleData || !moduleId) return;
-		// * Caso o módulo acessado (params.moduleId) não estiver incluído na lista de módulos concluídos, significa que ainda está sendo feito, portanto não iremos direcionar o usuário ao conteúdo final dele. Além disso, caso o módulo seja o último acessado, os dados corretos já estão em vigor. Nesses dois casos, iremos apenas dar return.
-		if (
-			!progressState.doneModules.includes(moduleId) ||
-			navigationState.currentModule === params.moduleId
-		) {
+
+		// * Caso o módulo acessado não esteja presente na lista de módulos concluídos, significa que ainda está em progresso. Portanto, iremos atualizar o estado de navegação com os dados do progresso do usuário.
+		if (!progressState.doneModules.includes(moduleId)) {
+			setNavigationState((prev) => ({
+				...prev,
+				currentModule: progressState.inProgressModule,
+				currentTopic: progressState.inProgressTopic,
+				currentSubtopic: progressState.inProgressSubtopic,
+			}));
 			return;
 		}
 
@@ -89,24 +96,20 @@ export function Module() {
 
 		if (!lastModuleSubtopic) return;
 
+		// * Caso o módulo já tenha sido concluído, iremos atualizar o estado de navegação com o último tópico e subtópico daquele módulo.
 		setNavigationState((prev) => ({
 			...prev,
 			currentModule: moduleId,
 			currentTopic: lastModuleTopic.slug,
 			currentSubtopic: lastModuleSubtopic.slug,
-			isLastSubtopic: true,
 		}));
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params.moduleId, moduleData]);
 
 	// * useEffect responsável por atualizar os estados com o conteúdo do módulo obtido.
 	useEffect(() => {
-		if (
-			!moduleData ||
-			!navigationState.currentTopic ||
-			!navigationState.currentSubtopic
-		)
-			return;
+		if (!moduleData) return;
 
 		const topic = moduleData.topics.find(
 			(topic) => topic.slug === navigationState.currentTopic,
@@ -124,10 +127,18 @@ export function Module() {
 		setTopicData(topic);
 		setSubtopics(topic.subtopics.map((subtopic) => subtopic));
 		setSubtopicData(subtopic);
+
+		const lastSubtopic = moduleData.topics.at(-1)?.subtopics.at(-1);
+
+		setNavigationState((prev) => ({
+			...prev,
+			isLastSubtopic: subtopic.slug === lastSubtopic?.slug,
+		}));
 	}, [
 		moduleData,
 		navigationState.currentTopic,
 		navigationState.currentSubtopic,
+		setNavigationState,
 	]);
 
 	return (

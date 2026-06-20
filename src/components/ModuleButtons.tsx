@@ -42,7 +42,7 @@ export function ModuleButtons({
 		const data: Partial<ProgressState> = { ...progressState };
 
 		try {
-			const { nextTopic, nextSubtopic, isLastSubtopic } = await getNextContent(
+			const { nextTopic, nextSubtopic } = await getNextContent(
 				moduleData,
 				topicData,
 				subtopicData,
@@ -63,7 +63,7 @@ export function ModuleButtons({
 				data.doneSubtopics?.includes(subtopic.slug),
 			);
 
-			// * Caso concluído, iremos adicioná-lo à lista de tópicos concluídos.
+			// * Caso concluído e não presente na lista de tópicos concluídos, iremos adicioná-lo à ela.
 			if (
 				isTopicDone &&
 				!progressState.doneTopics.includes(navigationState.currentTopic)
@@ -90,14 +90,14 @@ export function ModuleButtons({
 
 			if (!isNextSubtopicBlocked) {
 				// * Caso o próximo subtópico não esteja na lista de concluídos, iremos adicioná-lo como o subtópico em progresso do usuário.
-				if (!progressState.doneSubtopics.includes(nextSubtopic.slug))
+				if (!progressState.doneSubtopics.includes(nextSubtopic.slug)) {
 					data.inProgressSubtopic = nextSubtopic.slug;
+				}
 
 				setNavigationState((prev) => ({
 					...prev,
 					currentTopic: nextTopic.slug,
 					currentSubtopic: nextSubtopic.slug,
-					isLastSubtopic: isLastSubtopic,
 				}));
 			} else {
 				toast<ToastData>(ToastNotification, {
@@ -123,8 +123,6 @@ export function ModuleButtons({
 		if (subtopicData.slug === topics[0]?.subtopics[0]?.slug) return;
 
 		window.scrollTo({ top: 0, behavior: 'smooth' });
-
-		setNavigationState((prev) => ({ ...prev, isLastSubtopic: false }));
 
 		const previousSubtopic = subtopics.find(
 			(subtopic) => subtopic.order === subtopicData.order - 1,
@@ -214,7 +212,6 @@ export function ModuleButtons({
 			currentModule: nextModule.slug,
 			currentTopic: nextTopic.slug,
 			currentSubtopic: nextSubtopic.slug,
-			isLastSubtopic: false,
 		}));
 
 		void navigate('/learning-path');
