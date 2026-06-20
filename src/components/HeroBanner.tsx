@@ -4,24 +4,6 @@ import { Link } from 'react-router-dom';
 export function HeroBanner() {
 	const [pointerPosition, setPointerPosition] = useState({ x: 0, y: 0 });
 
-	const code = `
-		class Student:
-			def __init__(self, name):
-				self.name = name
-				self.knowledge = []
-
-			def study(self, topic):
-				for lesson in topic:
-					self.learn(lesson)
-
-			def learn(self, lesson):
-				self.knowledge.append(lesson)
-
-			@property
-			def progress(self):
-				return "One step closer..."
-	`;
-
 	useEffect(() => {
 		const heading = document.querySelector('h1')!;
 		const ext = '.py'.split('');
@@ -61,9 +43,9 @@ export function HeroBanner() {
 					})
 				}
 				style={{
-					backgroundImage: `radial-gradient(circle 1200px at ${pointerPosition.x}px ${pointerPosition.y}px, color-mix(in srgb, var(--color-main-purple) 5%, transparent) 0%, transparent 70%)`,
+					backgroundImage: `radial-gradient(circle 1200px at ${pointerPosition.x}px ${pointerPosition.y}px, color-mix(in srgb, var(--color-main-purple) 7%, transparent) 0%, transparent 70%)`,
 				}}
-			/>
+			></div>
 			<div className="flex w-fit flex-col items-start gap-y-7">
 				<h1 className="font-jetbrains text-main-green text-9xl">try</h1>
 				<p className="font-jetbrains text-xl">
@@ -76,9 +58,6 @@ export function HeroBanner() {
 					Vamos lá!
 				</Link>
 			</div>
-			<pre className="font-jetbrains text-main-green/4 absolute top-0 right-0 text-5xl blur-[2px] select-none">
-				{code}
-			</pre>
 		</div>
 	);
 }
