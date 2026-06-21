@@ -20,3 +20,10 @@ export interface UserProgress {
 	doneTopics: string[];
 	doneSubtopics: string[];
 }
+
+interface NavigationItem {
+	currentTopic: string;
+	currentSubtopic: string;
+}
+
+export type UserNavigation = Record<number, NavigationItem>;

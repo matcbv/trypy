@@ -15,13 +15,12 @@ export interface ProgressState {
 	doneSubtopics: string[];
 }
 
-export interface NavigationState {
-	currentModule: string;
+interface NavigationItem {
 	currentTopic: string;
 	currentSubtopic: string;
-	isLastSubtopic: boolean;
-	isHydrated: boolean;
 }
+
+export type NavigationState = Record<number, NavigationItem>;
 
 export interface TerminalState {
 	status: 'idle' | 'loading' | 'ready' | 'running' | 'error';
