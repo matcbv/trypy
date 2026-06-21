@@ -32,8 +32,12 @@ export function AppRoutes() {
 					<Routes>
 						<Route element={<BaseLayout />}>
 							<Route path="/" element={<Home />} />
-							<Route path="/session" element={<Session />} />
-							<Route path="/register" element={<Register />} />
+
+							<Route element={<NavigationProvider />}>
+								<Route path="/session" element={<Session />} />
+								<Route path="/register" element={<Register />} />
+							</Route>
+
 							<Route
 								element={<ProtectedRoute middlewares={[authMiddleware]} />}
 							>

@@ -14,11 +14,13 @@ import type { ToastData } from '../types/toast';
 import { LoadingPage } from '../pages/LoadingPage';
 import { signOut } from 'firebase/auth';
 import { auth } from '../database/configs/firebase';
+import { NavigationContext } from '../contexts/NavigationProvider/context';
 
 export function SessionForm() {
 	const navigate = useNavigate();
 	const { authDispatch } = useSafeContext(AuthContext);
 	const { setProgressState } = useSafeContext(ProgressContext);
+	const { setNavigationState } = useSafeContext(NavigationContext);
 	const [userCredentials, setUserCredentials] = useState({
 		email: '',
 		password: '',
@@ -68,7 +70,7 @@ export function SessionForm() {
 				userCredentials.password,
 			);
 
-			const { uid, userData, progressData } = res;
+			const { uid, userData, progressData, navigationData } = res;
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
@@ -76,6 +78,7 @@ export function SessionForm() {
 			});
 
 			setProgressState((prev) => ({ ...prev, ...progressData }));
+			setNavigationState(navigationData);
 
 			void navigate('/dashboard', { replace: true });
 
@@ -98,14 +101,14 @@ export function SessionForm() {
 
 		try {
 			const res = await signInWithGoogle();
-			const { uid, providerData, progressData } = res;
+			const { uid, providerData, progressData, navigationData } = res;
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
 				payload: { uid, data: providerData },
 			});
-
 			setProgressState((prev) => ({ ...prev, ...progressData }));
+			setNavigationState(navigationData);
 
 			void navigate('/dashboard', { replace: true });
 			toast<ToastData>(ToastNotification, {

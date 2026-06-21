@@ -8,10 +8,11 @@ import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleData, SubtopicData, TopicData } from '../types/content';
 import type { ProgressState } from '../types/states';
-import { userProgressRef } from '../database/refs/userRefs';
+import { userNavigationRef, userProgressRef } from '../database/refs/userRefs';
 import { toast } from 'react-toastify';
 import type { ToastData } from '../types/toast';
 import { ToastNotification } from './Notifications';
+import { useEffect, useState } from 'react';
 
 interface ModuleButtonsProps {
 	topics: TopicData[];
@@ -34,6 +35,16 @@ export function ModuleButtons({
 		useSafeContext(NavigationContext);
 	const params = useParams<{ moduleId: string }>();
 	const navigate = useNavigate();
+	const [isLastSubtopic, setIsLastSubtopic] = useState(false);
+
+	useEffect(() => {
+		if (!moduleData) return;
+
+		const lastSubtopic = moduleData.topics.at(-1)!.subtopics.at(-1)!;
+		setIsLastSubtopic(
+			navigationState[moduleData.order]?.currentSubtopic === lastSubtopic.slug,
+		);
+	}, [moduleData, navigationState]);
 
 	const handleNext = async () => {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -49,11 +60,13 @@ export function ModuleButtons({
 
 			// * Adicionando o subtópico concluído à lista de progresso do usuário, caso não esteja presente.
 			if (
-				!progressState.doneSubtopics.includes(navigationState.currentSubtopic)
+				!progressState.doneSubtopics.includes(
+					navigationState[moduleData.order]!.currentSubtopic,
+				)
 			) {
 				data.doneSubtopics = [
 					...progressState.doneSubtopics,
-					navigationState.currentSubtopic,
+					navigationState[moduleData.order]!.currentSubtopic,
 				];
 			}
 
@@ -65,16 +78,18 @@ export function ModuleButtons({
 			// * Caso concluído e não presente na lista de tópicos concluídos, iremos adicioná-lo à ela.
 			if (
 				isTopicDone &&
-				!progressState.doneTopics.includes(navigationState.currentTopic)
+				!progressState.doneTopics.includes(
+					navigationState[moduleData.order]!.currentTopic,
+				)
 			) {
 				data.doneTopics = [
 					...progressState.doneTopics,
-					navigationState.currentTopic,
+					navigationState[moduleData.order]!.currentTopic,
 				];
 
 				const secureNextTopic =
 					topics.find((topic) => topic.order === topicData.order + 1)?.slug ||
-					navigationState.currentTopic;
+					navigationState[moduleData.order]!.currentTopic;
 
 				data.inProgressTopic = secureNextTopic;
 			}
@@ -82,7 +97,7 @@ export function ModuleButtons({
 			// * Checando se o próximo subtópico está bloqueado.
 			const isNextSubtopicBlocked =
 				!isTopicDone &&
-				nextTopic.slug !== navigationState.currentTopic &&
+				nextTopic.slug !== navigationState[moduleData.order]!.currentTopic &&
 				nextTopic.subtopics.some(
 					(subtopic) => nextSubtopic.slug === subtopic.slug,
 				);
@@ -95,8 +110,10 @@ export function ModuleButtons({
 
 				setNavigationState((prev) => ({
 					...prev,
-					currentTopic: nextTopic.slug,
-					currentSubtopic: nextSubtopic.slug,
+					[moduleData.order]: {
+						currentTopic: nextTopic.slug,
+						currentSubtopic: nextSubtopic.slug,
+					},
 				}));
 			} else {
 				toast<ToastData>(ToastNotification, {
@@ -126,7 +143,10 @@ export function ModuleButtons({
 		if (previousSubtopic) {
 			setNavigationState((prev) => ({
 				...prev,
-				currentSubtopic: previousSubtopic.slug,
+				[moduleData.order]: {
+					...prev[moduleData.order]!,
+					currentSubtopic: previousSubtopic.slug,
+				},
 			}));
 			return;
 		}
@@ -144,8 +164,10 @@ export function ModuleButtons({
 
 		setNavigationState((prev) => ({
 			...prev,
-			currentTopic: previousTopic!.slug,
-			currentSubtopic: newSubtopic!.slug,
+			[moduleData.order]: {
+				currentTopic: previousTopic!.slug,
+				currentSubtopic: newSubtopic!.slug,
+			},
 		}));
 	};
 
@@ -173,22 +195,39 @@ export function ModuleButtons({
 			subtopicData,
 		);
 
+		console.log(nextModule, nextTopic, nextSubtopic);
+
 		if (!progressState.doneModules.includes(params.moduleId)) {
 			const data = {
 				doneSubtopics: [
 					...progressState.doneSubtopics,
-					navigationState.currentSubtopic,
+					navigationState[moduleData.order]!.currentSubtopic,
 				],
-				doneTopics: [...progressState.doneTopics, navigationState.currentTopic],
+				doneTopics: [
+					...progressState.doneTopics,
+					navigationState[moduleData.order]!.currentTopic,
+				],
 				doneModules: [...progressState.doneModules, params.moduleId],
 				inProgressModule: nextModule.slug,
 				inProgressTopic: nextTopic.slug,
 				inProgressSubtopic: nextSubtopic.slug,
 			};
 
+			const nextModuleValue = {
+				[nextModule.order]: {
+					currentTopic: topicData.slug,
+					currentSubtopic: subtopicData.slug,
+				},
+			};
+
 			setProgressState((prev) => ({ ...prev, ...data }));
+			setNavigationState((prev) => ({
+				...prev,
+				...nextModuleValue,
+			}));
 
 			await updateDoc(userProgressRef(authState.uid!), data);
+			await updateDoc(userNavigationRef(authState.uid!), nextModuleValue);
 
 			toast<ToastData>(ToastNotification, {
 				type: 'success',
@@ -201,9 +240,10 @@ export function ModuleButtons({
 
 		setNavigationState((prev) => ({
 			...prev,
-			currentModule: nextModule.slug,
-			currentTopic: nextTopic.slug,
-			currentSubtopic: nextSubtopic.slug,
+			[nextModule.order]: {
+				currentTopic: nextTopic.slug,
+				currentSubtopic: nextSubtopic.slug,
+			},
 		}));
 
 		void navigate('/learning-path');
@@ -223,7 +263,7 @@ export function ModuleButtons({
 				/>
 				Voltar
 			</button>
-			{navigationState.isLastSubtopic ? (
+			{isLastSubtopic ? (
 				<button
 					type="button"
 					className={`module-btn group cursor-pointer`}

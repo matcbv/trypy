@@ -4,7 +4,12 @@ import { SubtopicDropdown } from './SubtopicDropdown';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { TopicData } from '../types/content';
 
-export function ModuleSideBar({ topics }: { topics: TopicData[] }) {
+interface SidebarProps {
+	topics: TopicData[];
+	moduleOrder: number;
+}
+
+export function ModuleSideBar({ topics, moduleOrder }: SidebarProps) {
 	const { progressState } = useSafeContext(ProgressContext);
 	const dropdownsContainer = useRef<(HTMLDivElement | null)[]>([]);
 	const currentContainer = useRef<HTMLDivElement>(null);
@@ -89,6 +94,7 @@ export function ModuleSideBar({ topics }: { topics: TopicData[] }) {
 							)}
 						</div>
 						<SubtopicDropdown
+							moduleOrder={moduleOrder}
 							topic={topic}
 							dropdownsContainer={dropdownsContainer}
 						/>

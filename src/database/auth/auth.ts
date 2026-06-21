@@ -11,7 +11,11 @@ import {
 import { auth, googleProvider } from '../configs/firebase';
 import { deleteDoc, getDoc, setDoc } from 'firebase/firestore';
 import type { UserData } from '../../types/user';
-import { userDataRef, userProgressRef } from '../refs/userRefs';
+import {
+	userDataRef,
+	userNavigationRef,
+	userProgressRef,
+} from '../refs/userRefs';
 import { toast } from 'react-toastify';
 import type { ToastData } from '../../types/toast';
 import { ToastNotification } from '../../components/Notifications';
@@ -72,8 +76,9 @@ export const signInWithCredentials = async (
 	const { uid } = res.data;
 	const userDoc = await getDoc(userDataRef(uid));
 	const progressDoc = await getDoc(userProgressRef(uid));
+	const navigationDoc = await getDoc(userNavigationRef(uid));
 
-	if (!userDoc.exists()) {
+	if (!userDoc.exists() || !progressDoc.exists() || !navigationDoc.exists()) {
 		toast<ToastData>(ToastNotification, {
 			type: 'error',
 			data: {
@@ -84,14 +89,11 @@ export const signInWithCredentials = async (
 		throw new Error('Erro na requisição dos dados do usuário.');
 	}
 
-	const initialProgressData = await fetchInitialProgress();
-
 	return {
 		uid,
 		userData: userDoc.data(),
-		progressData: progressDoc.exists()
-			? progressDoc.data()
-			: initialProgressData,
+		progressData: progressDoc.data(),
+		navigationData: navigationDoc.data(),
 	};
 };
 
@@ -123,9 +125,10 @@ export const deleteAccount = async ({
 			}
 		}
 		await Promise.all([
+			deleteUser(auth.currentUser),
 			deleteDoc(userDataRef(uid)),
 			deleteDoc(userProgressRef(uid)),
-			deleteUser(auth.currentUser),
+			deleteDoc(userNavigationRef(uid)),
 		]);
 		return { success: true };
 	} catch (error) {

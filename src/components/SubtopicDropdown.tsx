@@ -8,9 +8,14 @@ import { logError } from '../utils/logger';
 interface DropdownProps {
 	topic: TopicData;
 	dropdownsContainer: RefObject<(HTMLDivElement | null)[]>;
+	moduleOrder: number;
 }
 
-export function SubtopicDropdown({ topic, dropdownsContainer }: DropdownProps) {
+export function SubtopicDropdown({
+	topic,
+	dropdownsContainer,
+	moduleOrder,
+}: DropdownProps) {
 	const { progressState } = useSafeContext(ProgressContext);
 	const { setNavigationState } = useSafeContext(NavigationContext);
 
@@ -27,8 +32,10 @@ export function SubtopicDropdown({ topic, dropdownsContainer }: DropdownProps) {
 
 			setNavigationState((prev) => ({
 				...prev,
-				currentTopic: topic.slug,
-				currentSubtopic: slug,
+				[moduleOrder]: {
+					currentTopic: topic.slug,
+					currentSubtopic: slug,
+				},
 			}));
 		} catch (error) {
 			logError(error);

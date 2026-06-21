@@ -17,11 +17,13 @@ import { idGenerator } from '../utils/idGenerator';
 import { LoadingPage } from '../pages/LoadingPage';
 import { signOut } from 'firebase/auth';
 import { auth } from '../database/configs/firebase';
+import { NavigationContext } from '../contexts/NavigationProvider/context';
 
 export function RegisterForm() {
 	const navigate = useNavigate();
 	const { authDispatch } = useSafeContext(AuthContext);
 	const { setProgressState } = useSafeContext(ProgressContext);
+	const { setNavigationState } = useSafeContext(NavigationContext);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const [userData, setUserData] = useState({
@@ -130,14 +132,14 @@ export function RegisterForm() {
 
 		try {
 			const res = await signInWithGoogle();
-			const { uid, providerData, progressData } = res;
+			const { uid, providerData, progressData, navigationData } = res;
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
 				payload: { uid, data: providerData },
 			});
-
 			setProgressState((prev) => ({ ...prev, ...progressData }));
+			setNavigationState(navigationData);
 
 			void navigate('/dashboard', { replace: true });
 			toast(ToastNotification, {

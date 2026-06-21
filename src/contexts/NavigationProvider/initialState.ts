@@ -1,9 +1,3 @@
-const initialState = {
-	currentModule: '',
-	currentTopic: '',
-	currentSubtopic: '',
-	isLastSubtopic: false,
-	isHydrated: false,
-};
+const initialState = {};
 
 export default initialState;
