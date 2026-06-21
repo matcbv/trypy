@@ -8,14 +8,9 @@ import { logError } from '../utils/logger';
 interface DropdownProps {
 	topic: TopicData;
 	dropdownsContainer: RefObject<(HTMLDivElement | null)[]>;
-	lastSubtopicSlug: string;
 }
 
-export function SubtopicDropdown({
-	topic,
-	dropdownsContainer,
-	lastSubtopicSlug,
-}: DropdownProps) {
+export function SubtopicDropdown({ topic, dropdownsContainer }: DropdownProps) {
 	const { progressState } = useSafeContext(ProgressContext);
 	const { setNavigationState } = useSafeContext(NavigationContext);
 
@@ -34,7 +29,6 @@ export function SubtopicDropdown({
 				...prev,
 				currentTopic: topic.slug,
 				currentSubtopic: slug,
-				isLastSubtopic: slug === lastSubtopicSlug,
 			}));
 		} catch (error) {
 			logError(error);

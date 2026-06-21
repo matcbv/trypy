@@ -89,7 +89,6 @@ export function ModuleSideBar({ topics }: { topics: TopicData[] }) {
 							)}
 						</div>
 						<SubtopicDropdown
-							lastSubtopicSlug={topics.at(-1)!.subtopics.at(-1)!.slug}
 							topic={topic}
 							dropdownsContainer={dropdownsContainer}
 						/>
