@@ -41,7 +41,17 @@ export function EditProfile() {
 				if (userPassword.length <= 0) return;
 				await deleteAccount({ uid: authState.uid!, password: userPassword });
 			} else {
-				if (!provider || deleteCode !== deleteInputValue) return;
+				if (!provider) return;
+				if (deleteCode !== deleteInputValue) {
+					toast<ToastData>(ToastNotification, {
+						type: 'warning',
+						data: {
+							type: 'warning',
+							text: 'Código de exclusão inválido. Tente novamente.',
+						},
+					});
+					return;
+				}
 				await deleteAccount({ uid: authState.uid!, provider: provider });
 			}
 
@@ -107,7 +117,7 @@ export function EditProfile() {
 				<input
 					value={deleteInputValue}
 					placeholder="Código de exclusão"
-					onChange={(e) => setDeleteInputValue(e.target.value)}
+					onChange={(e) => setDeleteInputValue(e.target.value.toUpperCase())}
 					className="border-main-purple/60 focus:border-main-purple w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-shadow outline-none focus:shadow-[0_0_5px_#ffffff1f]"
 					type="text"
 				/>
