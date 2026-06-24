@@ -27,6 +27,7 @@ export function EditProfile() {
 	const [provider, setProvider] = useState<Providers | null>(null);
 	const [deleteInputValue, setDeleteInputValue] = useState<string>('');
 	const [deleteCode] = useState(() => idGenerator().generateID());
+	const [isDeleting, setIsDeleting] = useState(false);
 
 	useEffect(() => {
 		void (async () => {
@@ -36,9 +37,14 @@ export function EditProfile() {
 	});
 
 	const deleteAccountWrapper = async () => {
+		if (isDeleting) return;
+
 		try {
 			if (provider === ProviderId.PASSWORD) {
 				if (userPassword.length <= 0) return;
+
+				setIsDeleting(true);
+
 				await deleteAccount({ uid: authState.uid!, password: userPassword });
 			} else {
 				if (!provider) return;
@@ -52,6 +58,9 @@ export function EditProfile() {
 					});
 					return;
 				}
+
+				setIsDeleting(true);
+
 				await deleteAccount({ uid: authState.uid!, provider: provider });
 			}
 
@@ -131,10 +140,7 @@ export function EditProfile() {
 				<ProfileForm />
 				<div>
 					<h3 className="mb-4">Esqueceu sua senha?</h3>
-					<Link
-						to="/reset-password"
-						className="form-btn block w-[120px] text-sm"
-					>
+					<Link to="/reset-password" className="form-btn w-[120px] text-sm">
 						Alterar senha
 					</Link>
 				</div>
@@ -151,8 +157,17 @@ export function EditProfile() {
 							type="button"
 							className="form-btn w-[120px] cursor-pointer text-sm"
 							onClick={() => void deleteAccountWrapper()}
+							disabled={isDeleting}
 						>
-							Continuar
+							{isDeleting ? (
+								<img
+									src="/assets/images/loading.png"
+									alt="Carregando"
+									className="w-[25px]"
+								/>
+							) : (
+								'Continuar'
+							)}
 						</button>
 					</div>
 				</div>
