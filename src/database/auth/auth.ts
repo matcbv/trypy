@@ -107,22 +107,12 @@ export const deleteAccount = async ({
 	}
 
 	try {
-		switch (provider) {
-			case ProviderId.PASSWORD: {
-				const credential = EmailAuthProvider.credential(
-					auth.currentUser.email!,
-					password!,
-				);
-				await reauthenticateWithCredential(auth.currentUser, credential);
-				break;
-			}
-			case ProviderId.GOOGLE: {
-				await reauthenticateWithPopup(auth.currentUser, googleProvider);
-				break;
-			}
-			case ProviderId.GITHUB: {
-				break;
-			}
+		if (provider === ProviderId.PASSWORD) {
+			const credential = EmailAuthProvider.credential(
+				auth.currentUser.email!,
+				password!,
+			);
+			await reauthenticateWithCredential(auth.currentUser, credential);
 		}
 		await Promise.all([
 			deleteUser(auth.currentUser),
