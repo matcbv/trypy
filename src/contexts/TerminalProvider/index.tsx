@@ -3,17 +3,19 @@ import initialState from './initialState';
 import { useEffect, useRef, useState } from 'react';
 import type { TerminalState } from '../../types/states';
 import { TerminalContext } from './context';
+import type { WorkerRequest, WorkerResponse } from '../../types/workers';
+import type { RunCodeParams } from '../../types/contexts';
 
-interface WorkerResponse {
-	type: 'stdout' | 'stderr' | 'status' | 'error';
-	status?: TerminalState['status'];
-	data?: string;
-}
+// * Wrapper aplicando tipagem para a mensagem de requisição do worker.
+const postMessageWrapper = (worker: Worker, message: WorkerRequest) =>
+	worker.postMessage(message);
 
 export function TerminalProvier() {
 	const [terminalState, setTerminalState] =
 		useState<TerminalState>(initialState);
 	const workerRef = useRef<Worker | null>(null);
+	const expectedOutputRef = useRef<string | null>(null);
+	const outputBufferRef = useRef<string>('');
 
 	useEffect(() => {
 		const worker = createWorker();
@@ -31,17 +33,35 @@ export function TerminalProvier() {
 			{ type: 'module' },
 		);
 
-		worker.postMessage({ type: 'init' });
+		postMessageWrapper(worker, { type: 'init' });
 
 		worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
-			const { type, status, data } = event.data;
+			const { type, status, data, error } = event.data;
 
 			switch (type) {
 				case 'status': {
+					let solved = false;
+
+					if (status === 'success') {
+						solved = expectedOutputRef.current
+							? expectedOutputRef.current.trim() ===
+								outputBufferRef.current.trim()
+							: true;
+
+						if (solved) {
+							setTerminalState((prev) => ({ ...prev, solved }));
+						}
+					}
+
 					setTerminalState((prev) => ({ ...prev, status: status! }));
+
 					break;
 				}
 				case 'stdout': {
+					outputBufferRef.current = outputBufferRef.current
+						? outputBufferRef.current + '\n' + data!
+						: data!;
+
 					setTerminalState((prev) => ({
 						...prev,
 						output: prev.output ? prev.output + '\n' + data! : data!,
@@ -51,14 +71,19 @@ export function TerminalProvier() {
 				case 'stderr': {
 					setTerminalState((prev) => ({
 						...prev,
-						output: prev.output ? prev.output + '\n' + data! : data!,
+						output: prev.output ? prev.output + '\n' + error! : error!,
+						solved: false,
 					}));
 					break;
 				}
 				case 'error': {
-					const errorLines = data!.trim().split('\n');
+					const errorLines = error!.trim().split('\n');
 					const filteredError = errorLines[errorLines.length - 1];
-					setTerminalState((prev) => ({ ...prev, error: filteredError! }));
+					setTerminalState((prev) => ({
+						...prev,
+						error: filteredError!,
+						solved: false,
+					}));
 					break;
 				}
 			}
@@ -67,13 +92,21 @@ export function TerminalProvier() {
 		return worker;
 	}
 
-	function runCode(code: string) {
-		if (!workerRef.current || !code) return;
+	// * Função responsável por rodar o código do usuário.
+	function runCode({ userCode, testCode, expectedOutput }: RunCodeParams) {
+		if (!workerRef.current || !userCode) return;
 		setTerminalState((prev) => ({ ...prev, output: null, error: null }));
 		setTerminalState((prev) => ({ ...prev, status: 'running' }));
-		workerRef.current.postMessage({ type: 'run', code });
+		expectedOutputRef.current = expectedOutput;
+		outputBufferRef.current = '';
+		postMessageWrapper(workerRef.current, {
+			type: 'run',
+			userCode,
+			testCode: testCode!,
+		});
 	}
 
+	// * Função responsável por encerrar e recriar worker, parando a execução do código.
 	function stopCodeExecution() {
 		if (!workerRef.current) return;
 

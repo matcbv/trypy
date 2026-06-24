@@ -1,20 +1,21 @@
 import { loadPyodide, type PyodideInterface } from 'pyodide';
-
-interface WorkerRequest {
-	type: 'init' | 'run';
-	code?: string;
-}
+import type { WorkerRequest, WorkerResponse } from '../types/workers';
 
 let pyodideInstance: PyodideInterface | null = null;
 
+// * Wrapper aplicando tipagem para a mensagem de resposta do worker.
+const postMessageWrapper = (message: WorkerResponse) =>
+	self.postMessage(message);
+
+// * Função responsável por inicializar o worker.
 async function initPyodide(): Promise<PyodideInterface> {
 	const pyodide = await loadPyodide({
 		stdout: (res: string) => {
-			self.postMessage({ type: 'stdout', data: res });
+			postMessageWrapper({ type: 'stdout', data: res });
 		},
 
 		stderr: (res: string) => {
-			self.postMessage({ type: 'stderr', data: res });
+			postMessageWrapper({ type: 'stderr', error: res });
 		},
 	});
 
@@ -22,31 +23,33 @@ async function initPyodide(): Promise<PyodideInterface> {
 }
 
 self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
-	const { type, code } = event.data;
+	const { type, userCode, testCode } = event.data;
 
 	if (type === 'init') {
-		self.postMessage({ type: 'status', status: 'loading' });
+		postMessageWrapper({ type: 'status', status: 'loading' });
 		pyodideInstance = await initPyodide();
-		self.postMessage({ type: 'status', status: 'ready' });
+		postMessageWrapper({ type: 'status', status: 'ready' });
 	}
 
 	if (type === 'run') {
 		if (!pyodideInstance) {
-			self.postMessage({
+			postMessageWrapper({
 				type: 'error',
-				data: 'O terminal ainda não foi inicializado. Tente novamente.',
+				data: 'O terminal ainda não foi inicializado. Tente novamente em instantes.',
 			});
 			return;
 		}
 
-		self.postMessage({ type: 'status', status: 'running' });
+		postMessageWrapper({ type: 'status', status: 'running' });
 
 		try {
-			await pyodideInstance.runPythonAsync(code!);
-			self.postMessage({ type: 'status', status: 'ready' });
+			const fullCode = `${userCode}\n${testCode}`;
+			await pyodideInstance.runPythonAsync(fullCode);
+			postMessageWrapper({ type: 'status', status: 'success' });
 		} catch (error) {
-			self.postMessage({ type: 'error', data: (error as Error).message });
-			self.postMessage({ type: 'status', status: 'ready' });
+			postMessageWrapper({ type: 'error', error: (error as Error).message });
+		} finally {
+			postMessageWrapper({ type: 'status', status: 'ready' });
 		}
 	}
 };
