@@ -22,6 +22,10 @@ export interface SubtopicData {
 	slug: string;
 	order: number;
 	isExercise: boolean;
+	solutionCode: string | null;
+	testCode: string | null;
+	starterCode: string | null;
+	expectedOutput: string | null;
 }
 
 export interface ModuleCardData {
