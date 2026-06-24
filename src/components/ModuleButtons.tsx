@@ -12,7 +12,8 @@ import { userNavigationRef, userProgressRef } from '../database/refs/userRefs';
 import { toast } from 'react-toastify';
 import type { ToastData } from '../types/toast';
 import { ToastNotification } from './Notifications';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type MouseEvent } from 'react';
+import { TerminalContext } from '../contexts/TerminalProvider/context';
 
 interface ModuleButtonsProps {
 	topics: TopicData[];
@@ -33,9 +34,15 @@ export function ModuleButtons({
 	const { progressState, setProgressState } = useSafeContext(ProgressContext);
 	const { navigationState, setNavigationState } =
 		useSafeContext(NavigationContext);
+	const { terminalState } = useSafeContext(TerminalContext);
 	const params = useParams<{ moduleId: string }>();
 	const navigate = useNavigate();
 	const [isLastSubtopic, setIsLastSubtopic] = useState(false);
+
+	const isNextButtonLocked =
+		subtopicData.isExercise &&
+		!progressState.doneSubtopics.includes(subtopicData.slug) &&
+		!terminalState.solved;
 
 	useEffect(() => {
 		if (!moduleData) return;
@@ -46,7 +53,19 @@ export function ModuleButtons({
 		);
 	}, [moduleData, navigationState]);
 
-	const handleNext = async () => {
+	const handleNext = async (e: MouseEvent) => {
+		if (isNextButtonLocked) {
+			e.preventDefault();
+			toast<ToastData>(ToastNotification, {
+				type: 'info',
+				data: {
+					type: 'info',
+					text: 'Conclua o exercício proposto para avançar ao próximo subtópico.',
+				},
+			});
+			return;
+		}
+
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
 		const data: Partial<ProgressState> = { ...progressState };
@@ -195,8 +214,6 @@ export function ModuleButtons({
 			subtopicData,
 		);
 
-		console.log(nextModule, nextTopic, nextSubtopic);
-
 		if (!progressState.doneModules.includes(params.moduleId)) {
 			const data = {
 				doneSubtopics: [
@@ -280,7 +297,7 @@ export function ModuleButtons({
 				<button
 					type="button"
 					className={`module-btn group cursor-pointer`}
-					onClick={() => void handleNext()}
+					onClick={(e) => void handleNext(e)}
 				>
 					Avançar
 					<img
