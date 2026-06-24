@@ -23,7 +23,8 @@ interface NavigationItem {
 export type NavigationState = Record<number, NavigationItem>;
 
 export interface TerminalState {
-	status: 'idle' | 'loading' | 'ready' | 'running' | 'error';
+	status: 'idle' | 'loading' | 'ready' | 'running' | 'success' | 'error';
+	solved: boolean;
 	output: string | null;
 	error: string | null;
 }

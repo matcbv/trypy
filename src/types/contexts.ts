@@ -26,9 +26,15 @@ export interface NavigationContextType {
 	setNavigationState: Dispatch<SetStateAction<NavigationState>>;
 }
 
+export interface RunCodeParams {
+	userCode: string;
+	testCode: string | null;
+	expectedOutput: string | null;
+}
+
 export interface TerminalContextType {
 	terminalState: TerminalState;
 	setTerminalState: Dispatch<SetStateAction<TerminalState>>;
-	runCode: (code: string) => void;
+	runCode: (params: RunCodeParams) => void;
 	stopCodeExecution: () => void;
 }
