@@ -63,7 +63,7 @@ export function Module() {
 
 		if (!topic) return;
 
-		const subtopic = topic?.subtopics.find(
+		const subtopic = topic.subtopics.find(
 			(subtopic) =>
 				subtopic.slug === navigationState[moduleData.order]!.currentSubtopic,
 		);
@@ -76,14 +76,15 @@ export function Module() {
 		setSubtopicData(subtopic);
 	}, [moduleData, navigationState]);
 
+	// * useEffect para atualização persistente dos dados de navegação do usuário no banco de dados.
 	useEffect(() => {
-		if (!moduleData) return;
+		if (!moduleData || !topicData || !subtopicData) return;
 
 		void (async () => {
 			await updateDoc(userNavigationRef(authState.uid!), {
 				[moduleData.order]: {
-					currentTopic: topicData!.slug,
-					currentSubtopic: subtopicData!.slug,
+					currentTopic: topicData.slug,
+					currentSubtopic: subtopicData.slug,
 				},
 			});
 		})();
@@ -92,17 +93,16 @@ export function Module() {
 
 	return (
 		<div className="relative flex min-h-screen justify-center gap-x-10 py-[120px]">
-			{!moduleData ? (
+			{!moduleData || !topicData || !subtopicData ? (
 				<LoadingPage />
 			) : (
 				<>
 					<ModuleSideBar topics={topics} moduleOrder={moduleData.order} />
 					<div className="w-[1200px] rounded-lg bg-[#0d0a14] p-10 shadow-[0_0_20px_#ffffff0f]">
-						<h1 className="text-main-green mb-5 text-3xl">
+						<h1 className="text-main-green mb-5 text-3xl tracking-wide">
 							{subtopicData?.title}
 						</h1>
 						<div className="mb-10 flex flex-col gap-y-5">
-							{subtopicData?.isExercise && <Terminal />}
 							{subtopicData?.content &&
 								contentfulFormatter(subtopicData.content)}
 							{subtopicData?.videoLink && (
@@ -118,13 +118,16 @@ export function Module() {
 									></iframe>
 								</div>
 							)}
+							{subtopicData?.isExercise && (
+								<Terminal subtopicData={subtopicData} />
+							)}
 						</div>
 						<ModuleButtons
 							topics={topics}
 							subtopics={subtopics}
 							moduleData={moduleData}
-							topicData={topicData!}
-							subtopicData={subtopicData!}
+							topicData={topicData}
+							subtopicData={subtopicData}
 						/>
 					</div>
 					<button
