@@ -73,7 +73,7 @@ export function ModuleSideBar({ topics, moduleOrder }: SidebarProps) {
 						className="flex cursor-pointer flex-col overflow-hidden rounded-lg bg-[#0d0a14]/80"
 						onClick={() => handleClick(topic.slug)}
 					>
-						<div className="flex h-[75px] w-full items-center justify-between gap-x-2 px-3">
+						<div className="flex h-[75px] w-full items-center justify-between gap-x-2 rounded-lg border border-black px-3">
 							<div className="flex items-center gap-x-3">
 								<img {...iconData(topic)} className="w-5" draggable={false} />
 								<p className="font-jetbrains text-sm leading-6">

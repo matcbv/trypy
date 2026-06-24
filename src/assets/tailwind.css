@@ -4,6 +4,7 @@
 	/* Cores */
 	--color-main-bg: #06010d;
 	--color-main-green: #00a63e;
+	--color-highlight-green: #b5fbbe;
 	--color-main-purple: #7a55c2;
 	--color-main-combination: #3d7d80;
 	--color-main-black: #000000f2;
@@ -74,7 +75,7 @@
 	}
 
 	.form-btn {
-		@apply cursor-pointer rounded-md border border-white/50 bg-white/5 py-2 text-center font-sans transition-shadow hover:shadow-[0_0_10px_#ffffff1f];
+		@apply flex h-[38px] cursor-pointer items-center justify-center rounded-md border border-white/50 bg-white/5 text-center font-sans transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff1f];
 	}
 
 	.module-btn {

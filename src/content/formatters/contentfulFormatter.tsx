@@ -44,10 +44,10 @@ export function contentfulFormatter(content: Document) {
 				</ul>
 			),
 			[BLOCKS.HEADING_2]: (_, children) => (
-				<h2 className="text-main-green text-2xl">{children}</h2>
+				<h2 className="text-main-green text-2xl tracking-wide">{children}</h2>
 			),
 			[BLOCKS.HEADING_3]: (_, children) => (
-				<h3 className="text-lg">{children}</h3>
+				<h3 className="text-lg tracking-wide">{children}</h3>
 			),
 			[BLOCKS.HR]: () => <hr className="my-8" />,
 			[BLOCKS.PARAGRAPH]: (node, children) => {
@@ -80,7 +80,9 @@ export function contentfulFormatter(content: Document) {
 			},
 		},
 		renderMark: {
-			[MARKS.BOLD]: (text) => <span className="text-[#b5fbbe]">{text}</span>,
+			[MARKS.BOLD]: (text) => (
+				<span className="text-highlight-green">{text}</span>
+			),
 		},
 	});
 }

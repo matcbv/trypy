@@ -56,7 +56,7 @@ export function ResetPasswordForm() {
 					<button
 						type="button"
 						onClick={() => void navigate(-1)}
-						className="form-btn block w-[120px]"
+						className="form-btn w-[120px]"
 					>
 						Voltar
 					</button>

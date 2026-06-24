@@ -21,7 +21,7 @@ export function Session() {
 						<h2 className="mb-3 text-lg font-bold tracking-wider">
 							Ainda não possui conta?
 						</h2>
-						<Link to={'/register'} className="form-btn block w-[150px]">
+						<Link to={'/register'} className="form-btn w-[150px]">
 							Cadastre-se
 						</Link>
 					</div>

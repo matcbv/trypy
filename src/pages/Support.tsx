@@ -65,7 +65,7 @@ export function Support() {
 							<input
 								type="submit"
 								value="Enviar"
-								className="border-main-purple cursor-pointer rounded-md border bg-[#7955c21e] py-1 text-sm transition-all duration-300 hover:bg-[#7955c270] hover:shadow-[0_0_10px_#7955c270]"
+								className="border-main-purple cursor-pointer rounded-md border bg-[#7955c2]/20 py-1 text-sm transition-all duration-300 hover:bg-[#7955c2]/70 hover:shadow-[0_0_15px_#7955c270]"
 							/>
 						</div>
 						<div className="flex flex-col gap-y-2">
