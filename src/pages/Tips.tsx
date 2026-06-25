@@ -51,7 +51,7 @@ export function Tips() {
 				</div>
 			) : (
 				<div className="flex flex-col items-center justify-center gap-y-5 opacity-60">
-					<div className="rounded-full bg-[radial-gradient(circle,_#594486e3,_transparent_70%)]">
+					<div className="rounded-full bg-[radial-gradient(circle,#594486e3,transparent_70%)]">
 						<img
 							src="/assets/images/favorites.png"
 							alt="Certificação"

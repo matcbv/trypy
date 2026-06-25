@@ -45,7 +45,7 @@ export function DashboardNavbar() {
 					<li key={object.title}>
 						<Link
 							to={`/dashboard/${object.slug}`}
-							className="flex w-full cursor-pointer justify-center bg-white/5 hover:bg-[radial-gradient(ellipse,_transparent,_#ffffff0f)]"
+							className="flex w-full cursor-pointer justify-center bg-white/5 hover:bg-[radial-gradient(ellipse,transparent,#ffffff0f)]"
 						>
 							<div className="flex w-[141px] gap-x-3 py-5">
 								<img
@@ -60,7 +60,7 @@ export function DashboardNavbar() {
 				<li>
 					<button
 						type="button"
-						className="flex w-full cursor-pointer justify-center bg-white/5 py-5 hover:bg-[radial-gradient(ellipse,_transparent,_#ff00000f)]"
+						className="flex w-full cursor-pointer justify-center bg-white/5 py-5 hover:bg-[radial-gradient(ellipse,transparent,#ff00000f)]"
 						onClick={() => void logout()}
 					>
 						<div className="flex w-[137px] gap-x-3">
