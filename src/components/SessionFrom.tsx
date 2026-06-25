@@ -21,12 +21,12 @@ export function SessionForm() {
 	const { authDispatch } = useSafeContext(AuthContext);
 	const { setProgressState } = useSafeContext(ProgressContext);
 	const { setNavigationState } = useSafeContext(NavigationContext);
+	const [isVisible, setIsVisible] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [userCredentials, setUserCredentials] = useState({
 		email: '',
 		password: '',
 	});
-	const [isVisible, setIsVisible] = useState(false);
-	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setUserCredentials((prev) => ({
@@ -170,13 +170,13 @@ export function SessionForm() {
 						value="Acessar conta"
 					/>
 					<img
-						className="cursor-pointer transition-transform hover:scale-105"
+						className="cursor-pointer transition-transform duration-300 hover:scale-110"
 						src="/assets/images/icons/google.png"
 						alt="Conta Google"
 						onClick={() => void handleGoogle()}
 					/>
 					<img
-						className="cursor-pointer transition-transform hover:scale-105"
+						className="cursor-pointer transition-transform duration-300 hover:scale-110"
 						src="/assets/images/icons/github.png"
 						alt="Conta GitHub"
 						onClick={() => void handleGitHub()}
