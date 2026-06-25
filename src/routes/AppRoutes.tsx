@@ -50,8 +50,8 @@ export function AppRoutes() {
 								</Route>
 							</Route>
 
+							<Route path="/learning-path" element={<LearningPath />} />
 							<Route element={<NavigationProvider />}>
-								<Route path="/learning-path" element={<LearningPath />} />
 								<Route
 									element={<ProtectedRoute middlewares={[authMiddleware]} />}
 								>
