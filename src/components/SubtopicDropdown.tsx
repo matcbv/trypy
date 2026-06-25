@@ -7,7 +7,7 @@ import { logError } from '../utils/logger';
 
 interface DropdownProps {
 	topic: TopicData;
-	dropdownsContainer: RefObject<(HTMLDivElement | null)[]>;
+	dropdownsContainer: RefObject<Array<HTMLDivElement | null>>;
 	moduleOrder: number;
 }
 

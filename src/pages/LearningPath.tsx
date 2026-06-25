@@ -4,19 +4,19 @@ import { ModuleCard } from '../components/ModuleCard';
 import type { ModuleCardData } from '../types/content';
 import { logError } from '../utils/logger';
 
+type Themes = 'green' | 'purple';
+
+interface CardStyleProps {
+	cardColor: string;
+	slideButtonColor: string;
+}
+
+const cardStyles: Record<Themes, CardStyleProps> = {
+	green: { cardColor: '--color-main-green', slideButtonColor: '#20663b' },
+	purple: { cardColor: '--color-main-purple', slideButtonColor: '#402d66' },
+};
+
 export function LearningPath() {
-	type Themes = 'green' | 'purple';
-
-	interface CardStyleProps {
-		cardColor: string;
-		slideButtonColor: string;
-	}
-
-	const cardStyles: Record<Themes, CardStyleProps> = {
-		green: { cardColor: '--color-main-green', slideButtonColor: '#20663b' },
-		purple: { cardColor: '--color-main-purple', slideButtonColor: '#402d66' },
-	};
-
 	const [cardContent, setCardContent] = useState<ModuleCardData[]>([]);
 
 	useEffect(() => {

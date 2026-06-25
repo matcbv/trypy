@@ -11,9 +11,9 @@ interface SidebarProps {
 
 export function ModuleSideBar({ topics, moduleOrder }: SidebarProps) {
 	const { progressState } = useSafeContext(ProgressContext);
-	const dropdownsContainer = useRef<(HTMLDivElement | null)[]>([]);
+	const dropdownsContainer = useRef<Array<HTMLDivElement | null>>([]);
 	const currentContainer = useRef<HTMLDivElement>(null);
-	const arrows = useRef<(HTMLImageElement | null)[]>([]);
+	const arrows = useRef<Array<HTMLImageElement | null>>([]);
 	const currentArrow = useRef<HTMLImageElement>(null);
 
 	const handleClick = (slug: string) => {

@@ -16,9 +16,9 @@ import { getIdTokenResult, ProviderId } from 'firebase/auth';
 import { idGenerator } from '../utils/idGenerator';
 import progressInitialState from '../contexts/ProgressProvider/initialState';
 
-export function EditProfile() {
-	type Providers = (typeof ProviderId)[keyof typeof ProviderId];
+type Providers = (typeof ProviderId)[keyof typeof ProviderId];
 
+export function EditProfile() {
 	const navigate = useNavigate();
 	const { authState, authDispatch } = useSafeContext(AuthContext);
 	const { setProgressState } = useSafeContext(ProgressContext);
@@ -34,7 +34,7 @@ export function EditProfile() {
 			const { signInProvider } = await getIdTokenResult(auth.currentUser!);
 			setProvider(signInProvider as Providers);
 		})();
-	});
+	}, []);
 
 	const deleteAccountWrapper = async () => {
 		if (isDeleting) return;
