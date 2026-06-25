@@ -19,6 +19,14 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../database/configs/firebase';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 
+const formMap = {
+	email: 'E-mail',
+	password: 'Senha',
+	name: 'Nome',
+	lastname: 'Sobrenome',
+	birthDate: 'Data de nascimento',
+};
+
 export function RegisterForm() {
 	const navigate = useNavigate();
 	const { authDispatch } = useSafeContext(AuthContext);
@@ -33,14 +41,6 @@ export function RegisterForm() {
 		lastname: '',
 		birthDate: '',
 	});
-
-	const formMap = {
-		email: 'E-mail',
-		password: 'Senha',
-		name: 'Nome',
-		lastname: 'Sobrenome',
-		birthDate: 'Data de nascimento',
-	};
 
 	const [placeholders, setPlaceholders] = useState({
 		email: '',

@@ -12,27 +12,25 @@ import { userDataRef } from '../database/refs/userRefs';
 import type { ToastData } from '../types/toast';
 import { validationRegex } from '../constants/validationRegex';
 
+const formMap = {
+	email: 'E-mail',
+	name: 'Nome',
+	lastname: 'Sobrenome',
+	birthDate: 'Data de nascimento',
+};
+
 export function ProfileForm() {
 	const { authState, authDispatch } = useSafeContext(AuthContext);
-	const [fieldErrors, setFieldErrors] = useState<Array<keyof typeof formMap>>(
-		[],
-	);
-
+	const [placeholders, setPlaceholders] = useState(formMap);
 	const [currentData, setCurrentData] = useState({
 		email: '',
 		name: '',
 		lastname: '',
 		birthDate: '',
 	});
-
-	const formMap = {
-		email: 'E-mail',
-		name: 'Nome',
-		lastname: 'Sobrenome',
-		birthDate: 'Data de nascimento',
-	};
-
-	const [placeholders, setPlaceholders] = useState(formMap);
+	const [fieldErrors, setFieldErrors] = useState<Array<keyof typeof formMap>>(
+		[],
+	);
 
 	useEffect(() => {
 		if (!authState.data) return;
