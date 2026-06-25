@@ -26,3 +26,4 @@ dist-ssr
 # Confidential data
 .env
 src/content/contentfulClient.js
+*.tsbuildinfo
