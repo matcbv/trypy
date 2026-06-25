@@ -10,7 +10,15 @@ export function mapContent(
 
 	const topics: TopicData[] = content.topics.map((rawTopic) => {
 		const subtopics: SubtopicData[] = rawTopic!.fields.subtopics.map(
-			(rawSubtopic) => rawSubtopic!.fields,
+			(rawSubtopic) => ({
+				...rawSubtopic!.fields,
+				videoDescription: rawSubtopic!.fields.videoDescription ?? null,
+				videoLink: rawSubtopic!.fields.videoLink ?? null,
+				solutionCode: rawSubtopic!.fields.solutionCode ?? null,
+				testCode: rawSubtopic!.fields.testCode ?? null,
+				starterCode: rawSubtopic!.fields.starterCode ?? null,
+				expectedOutput: rawSubtopic!.fields.expectedOutput ?? null,
+			}),
 		);
 
 		return { ...rawTopic!.fields, subtopics };
