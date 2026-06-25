@@ -67,11 +67,11 @@
 
 @layer components {
 	.register-form-btn {
-		@apply h-[50px] w-[200px] cursor-pointer rounded-md border bg-linear-to-br from-[#00800063] to-[#3f0080a3] text-white transition-shadow hover:shadow-[0_0_10px_#ffffff24];
+		@apply from-main-green/40 to-main-purple/40 h-[50px] w-[200px] cursor-pointer rounded-md border bg-linear-to-br text-white transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff24];
 	}
 
 	.footer-links {
-		@apply border-l-main-green hover:text-main-green cursor-pointer border-l-2 pl-2 transition-colors;
+		@apply border-l-main-green hover:text-main-green cursor-pointer border-l-2 pl-2 transition-colors duration-300;
 	}
 
 	.form-btn {
@@ -79,7 +79,7 @@
 	}
 
 	.module-btn {
-		@apply border-main-green flex w-[150px] items-center justify-center gap-x-2 rounded-md border-2 bg-[#00a63e0f] py-2 text-sm text-white transition-shadow duration-300 hover:shadow-[0_0_12px_#ffffff0f];
+		@apply border-main-green bg-main-green/10 flex w-[150px] cursor-pointer items-center justify-center gap-x-2 rounded-md border-2 py-2 text-sm text-white transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff0f];
 	}
 
 	.support-fields {
