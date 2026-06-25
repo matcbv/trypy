@@ -44,6 +44,7 @@ export function ModuleButtons({
 		!progressState.doneSubtopics.includes(subtopicData.slug) &&
 		!terminalState.solved;
 
+	// * useEffect responsável por verificar se o subtópico acessado é o último do módulo.
 	useEffect(() => {
 		if (!moduleData) return;
 
@@ -270,7 +271,7 @@ export function ModuleButtons({
 		<div className="flex justify-end gap-x-10">
 			<button
 				type="button"
-				className="module-btn group cursor-pointer"
+				className="module-btn group"
 				onClick={handlePrevious}
 			>
 				<img
@@ -283,7 +284,7 @@ export function ModuleButtons({
 			{isLastSubtopic ? (
 				<button
 					type="button"
-					className={`module-btn group cursor-pointer`}
+					className={`module-btn group`}
 					onClick={() => void finishModule()}
 				>
 					Concluir
@@ -296,7 +297,7 @@ export function ModuleButtons({
 			) : (
 				<button
 					type="button"
-					className={`module-btn group cursor-pointer`}
+					className={`module-btn group`}
 					onClick={(e) => void handleNext(e)}
 				>
 					Avançar
