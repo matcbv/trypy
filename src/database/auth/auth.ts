@@ -6,9 +6,8 @@ import {
 	reauthenticateWithCredential,
 	ProviderId,
 	EmailAuthProvider,
-	reauthenticateWithPopup,
 } from 'firebase/auth';
-import { auth, googleProvider } from '../configs/firebase';
+import { auth } from '../configs/firebase';
 import { deleteDoc, getDoc, setDoc } from 'firebase/firestore';
 import type { UserData } from '../../types/user';
 import {

@@ -1,4 +1,9 @@
+import type { TipSkeleton } from '../../types/skeletons';
+import { CodeBlock } from '../../components/CodeBlock';
+import { TipPy } from '../../components/TipPy';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import type { ResolvedAsset, ResolvedEntry } from '../../types/richText';
+import type { EntrySkeletonType } from 'contentful';
 import {
 	BLOCKS,
 	MARKS,
@@ -8,11 +13,6 @@ import {
 	type Paragraph,
 	type Text,
 } from '@contentful/rich-text-types';
-import { TipPy } from '../../components/TipPy';
-import type { ResolvedAsset, ResolvedEntry } from '../../types/richText';
-import type { EntrySkeletonType } from 'contentful';
-import type { TipSkeleton } from '../../types/skeletons';
-import { CodeBlock } from '../../components/CodeBlock';
 
 type ResolvedEntryBlock<T extends EntrySkeletonType> = Omit<
 	EntryLinkBlock,
