@@ -9,7 +9,7 @@ import {
 } from 'firebase/auth';
 import { auth } from '../configs/firebase';
 import { deleteDoc, getDoc, setDoc } from 'firebase/firestore';
-import type { UserData } from '../../types/user';
+import type { UserData, UserNavigation } from '../../types/user';
 import {
 	userDataRef,
 	userNavigationRef,
@@ -53,7 +53,21 @@ export const signUpWithCredentials = async (userData: SignUpType) => {
 	const initialProgressData = await fetchInitialProgress();
 	await setDoc(userProgressRef(uid), initialProgressData);
 
-	return { uid, persistedData, initialProgressData };
+	const initialNavigationState: UserNavigation = {
+		1: {
+			currentTopic: initialProgressData.inProgressTopic,
+			currentSubtopic: initialProgressData.inProgressSubtopic,
+		},
+	};
+
+	await setDoc(userNavigationRef(uid), initialNavigationState);
+
+	return {
+		uid,
+		userData: persistedData,
+		progressData: initialProgressData,
+		navigationData: initialNavigationState,
+	};
 };
 
 export const signInWithCredentials = async (

@@ -103,14 +103,14 @@ export function RegisterForm() {
 				savedTips: [],
 			});
 
-			const { uid, persistedData, initialProgressData } = res;
+			const { uid, userData, progressData, navigationData } = res;
 
 			authDispatch({
 				type: authActionTypes.SET_DATA,
-				payload: { uid, data: persistedData },
+				payload: { uid, data: userData },
 			});
-
-			setProgressState((prev) => ({ ...prev, ...initialProgressData }));
+			setProgressState((prev) => ({ ...prev, ...progressData }));
+			setNavigationState((prev) => ({ ...prev, ...navigationData }));
 
 			void navigate('/dashboard', { replace: true });
 			toast<ToastData>(ToastNotification, {
@@ -175,7 +175,7 @@ export function RegisterForm() {
 						id="birthDate"
 						onChange={handleChange}
 						value={userData.birthDate}
-						className={`focus:border-main-green w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 tracking-wider outline-none ${!placeholders.birthDate ? 'placeholder-gray-400' : 'placeholder-red-400'}`}
+						className={`focus:border-main-green w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 tracking-wider transition-colors duration-300 outline-none ${!placeholders.birthDate ? 'placeholder-gray-400' : 'placeholder-red-400'}`}
 					/>
 				);
 			default:
@@ -186,7 +186,7 @@ export function RegisterForm() {
 						onChange={handleChange}
 						value={userData[key]}
 						placeholder={placeholders[key]}
-						className="focus:border-main-green w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 placeholder-red-400 outline-none"
+						className="focus:border-main-green w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 placeholder-red-400 transition-colors duration-300 outline-none"
 					/>
 				);
 		}
@@ -218,7 +218,7 @@ export function RegisterForm() {
 					</div>
 				</div>
 				<div className="flex h-full flex-col justify-center gap-y-6">
-					<p className="font-space-grotesk w-[303px] text-center text-4xl leading-14 tracking-wide text-shadow-[5px_5px_10px_#00000080]">
+					<p className="font-space-grotesk w-[303px] text-center text-4xl leading-14 tracking-wide text-shadow-[5px_5px_10px_#000000]/80">
 						O{' '}
 						<span className="decoration-main-green underline decoration-2 underline-offset-10">
 							primeiro passo
@@ -237,7 +237,7 @@ export function RegisterForm() {
 							<img
 								className="h-8 w-8"
 								src="/assets/images/icons/google.png"
-								alt="Conta Google"
+								alt="Google"
 							/>
 						</span>
 						<span className="register-form-btn border-main-purple flex items-center justify-center gap-x-2">
@@ -245,7 +245,7 @@ export function RegisterForm() {
 							<img
 								className="h-8 w-8"
 								src="/assets/images/icons/github.png"
-								alt="Conta GitHub"
+								alt="GitHub"
 							/>
 						</span>
 						<input
