@@ -15,19 +15,22 @@ import { auth } from '../database/configs/firebase';
 import { getIdTokenResult, ProviderId } from 'firebase/auth';
 import { idGenerator } from '../utils/idGenerator';
 import progressInitialState from '../contexts/ProgressProvider/initialState';
+import { NavigationContext } from '../contexts/NavigationProvider/context';
+import navigationInitialState from '../contexts/NavigationProvider/initialState';
 
 type Providers = (typeof ProviderId)[keyof typeof ProviderId];
 
 export function EditProfile() {
-	const navigate = useNavigate();
 	const { authState, authDispatch } = useSafeContext(AuthContext);
 	const { setProgressState } = useSafeContext(ProgressContext);
+	const { setNavigationState } = useSafeContext(NavigationContext);
 	const [userPassword, setUserPassword] = useState('');
 	const [isVisible, setIsVisible] = useState(false);
 	const [provider, setProvider] = useState<Providers | null>(null);
 	const [deleteInputValue, setDeleteInputValue] = useState<string>('');
 	const [deleteCode] = useState(() => idGenerator().generateID());
 	const [isDeleting, setIsDeleting] = useState(false);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		void (async () => {
@@ -66,6 +69,7 @@ export function EditProfile() {
 
 			authDispatch({ type: authActionTypes.LOGOUT });
 			setProgressState(progressInitialState);
+			setNavigationState(navigationInitialState);
 			localStorage.removeItem(storageKeys.NAVIGATION_STATE);
 
 			void navigate('/', { replace: true });
@@ -100,9 +104,9 @@ export function EditProfile() {
 			<div className="relative flex w-[300px] items-center">
 				<input
 					value={userPassword}
-					placeholder="Senha atual"
+					placeholder="Sua senha"
 					onChange={(e) => setUserPassword(e.target.value)}
-					className="border-main-purple/60 focus:border-main-purple w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-shadow outline-none focus:shadow-[0_0_5px_#ffffff1f]"
+					className="border-main-purple/60 focus:border-main-purple w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10"
 					type={isVisible ? 'text' : 'password'}
 				/>
 				<img
@@ -127,7 +131,7 @@ export function EditProfile() {
 					value={deleteInputValue}
 					placeholder="Código de exclusão"
 					onChange={(e) => setDeleteInputValue(e.target.value.toUpperCase())}
-					className="border-main-purple/60 focus:border-main-purple w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-shadow outline-none focus:shadow-[0_0_5px_#ffffff1f]"
+					className="border-main-purple/70 focus:border-main-purple w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10"
 					type="text"
 				/>
 			</>
