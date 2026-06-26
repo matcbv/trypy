@@ -172,13 +172,13 @@ export function SessionForm() {
 					<img
 						className="cursor-pointer transition-transform duration-300 hover:scale-110"
 						src="/assets/images/icons/google.png"
-						alt="Conta Google"
+						alt="Google"
 						onClick={() => void handleGoogle()}
 					/>
 					<img
 						className="cursor-pointer transition-transform duration-300 hover:scale-110"
 						src="/assets/images/icons/github.png"
-						alt="Conta GitHub"
+						alt="GitHub"
 						onClick={() => void handleGitHub()}
 					/>
 				</div>

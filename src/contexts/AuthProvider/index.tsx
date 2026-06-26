@@ -40,10 +40,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 				} catch (error) {
 					await signOut(auth);
 					void navigate('/', { replace: true });
-
 					logError(
 						error,
-						'Ocorreu um erro ao renovar a sessão. Faça login novamente.',
+						'Não foi possível renovar a sessão. Faça login novamente.',
 					);
 				} finally {
 					authDispatch({
