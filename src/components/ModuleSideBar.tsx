@@ -65,7 +65,7 @@ export function ModuleSideBar({ topics, moduleOrder }: SidebarProps) {
 	};
 
 	return (
-		<div className="relative w-[300px] shrink-0 rounded-lg bg-[#272149]/40 p-4 shadow-[0_0_20px_#ffffff0f]">
+		<div className="relative w-[300px] shrink-0 rounded-lg bg-[#272149]/40 p-4 shadow-[0_0_20px_#ffffff]/5">
 			<div className="sticky top-[84px] flex flex-col gap-y-4">
 				{topics?.map((topic) => (
 					<div

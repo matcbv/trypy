@@ -98,7 +98,7 @@ export function Module() {
 			) : (
 				<>
 					<ModuleSideBar topics={topics} moduleOrder={moduleData.order} />
-					<div className="w-[1200px] rounded-lg bg-[#0d0a14] p-10 shadow-[0_0_20px_#ffffff0f]">
+					<div className="w-[1200px] rounded-lg bg-[#0d0a14] p-10 shadow-[0_0_20px_#ffffff]/5">
 						<h1 className="text-main-green mb-5 text-3xl tracking-wide">
 							{subtopicData?.title}
 						</h1>

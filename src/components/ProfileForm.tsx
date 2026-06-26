@@ -131,7 +131,7 @@ export function ProfileForm() {
 									value={currentData[key]}
 									placeholder={placeholders[key]}
 									onChange={handleChange}
-									className={`border-main-green/60 focus:border-main-green w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff1f] ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
+									className={`border-main-green/70 focus:border-main-green w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10 ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
 									type="text"
 								/>
 							);

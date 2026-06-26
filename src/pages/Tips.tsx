@@ -51,7 +51,7 @@ export function Tips() {
 				</div>
 			) : (
 				<div className="flex flex-col items-center justify-center gap-y-5 opacity-60">
-					<div className="rounded-full bg-[radial-gradient(circle,#594486e3,transparent_70%)]">
+					<div className="rounded-full bg-[radial-gradient(circle,#594486,transparent_70%)]">
 						<img
 							src="/assets/images/favorites.png"
 							alt="Certificação"
@@ -60,7 +60,7 @@ export function Tips() {
 						/>
 					</div>
 
-					<p className="text-2xl select-none text-shadow-[0_0_15px_#624b93e3]">
+					<p className="text-2xl select-none text-shadow-[0_0_15px_#624b93]">
 						Nenhuma dica salva
 					</p>
 				</div>

@@ -39,13 +39,13 @@ export function DashboardNavbar() {
 	};
 
 	return (
-		<div className="h-fit w-[200px] overflow-hidden rounded-l-md shadow-[0_0_20px_#ffffff0f]">
+		<div className="h-fit w-[200px] overflow-hidden rounded-l-md shadow-[0_0_20px_#ffffff]/10">
 			<ul className="flex flex-col">
 				{objectsMap.map((object) => (
 					<li key={object.title}>
 						<Link
 							to={`/dashboard/${object.slug}`}
-							className="flex w-full cursor-pointer justify-center bg-white/5 hover:bg-[radial-gradient(ellipse,transparent,#ffffff0f)]"
+							className="flex w-full cursor-pointer justify-center bg-white/5 hover:bg-[radial-gradient(ellipse,transparent,#ffffff1a)]"
 						>
 							<div className="flex w-[141px] gap-x-3 py-5">
 								<img
@@ -60,7 +60,7 @@ export function DashboardNavbar() {
 				<li>
 					<button
 						type="button"
-						className="flex w-full cursor-pointer justify-center bg-white/5 py-5 hover:bg-[radial-gradient(ellipse,transparent,#ff00000f)]"
+						className="flex w-full cursor-pointer justify-center bg-white/5 py-5 hover:bg-[radial-gradient(ellipse,transparent,#ff00001a)]"
 						onClick={() => void logout()}
 					>
 						<div className="flex w-[137px] gap-x-3">

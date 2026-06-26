@@ -80,8 +80,8 @@ export function UserOverview() {
 				<h1 className="mb-8 text-3xl font-bold">
 					Olá, {authState.data?.name}!
 				</h1>
-				<h2 className="mb-2 text-lg">Dados da conta:</h2>
-				<div className="flex w-1/2 flex-col gap-y-2 rounded-md bg-black/40 p-4 shadow-[0_0_10px_#0000009c]">
+				<h2 className="mb-2 text-xl">Dados da conta:</h2>
+				<div className="flex w-1/2 flex-col gap-y-2 rounded-md bg-black/40 p-4 shadow-[0_0_20px_#000000]/50">
 					<p className="flex gap-x-2">
 						ID de usuário:
 						<span
@@ -112,8 +112,8 @@ export function UserOverview() {
 				</div>
 			</div>
 			<div>
-				<h2 className="mb-4 text-2xl tracking-wide">Progresso da trilha</h2>
-				<div className="flex items-center gap-x-10 rounded-md bg-black/40 p-8 shadow-[0_0_15px_#0000009c]">
+				<h2 className="mb-2 text-2xl tracking-wide">Progresso da trilha</h2>
+				<div className="flex items-center gap-x-10 rounded-md bg-black/40 p-8 shadow-[0_0_20px_#000000]/50">
 					<ProgressBar />
 					<div className="flex flex-col gap-y-5">
 						<p className="flex flex-col gap-y-1">
@@ -138,8 +138,8 @@ export function UserOverview() {
 				</div>
 			</div>
 			<div>
-				<h2 className="mb-4 text-2xl">Conquistas</h2>
-				<div className="flex items-center gap-x-1 rounded-md bg-black/40 p-8 shadow-[0_0_15px_#0000009c]">
+				<h2 className="mb-2 text-2xl">Conquistas</h2>
+				<div className="flex items-center gap-x-2 rounded-md bg-black/40 p-8 shadow-[0_0_20px_#000000]/50">
 					<img src="/assets/images/icons/loading.png" alt="Carregando" />
 					<p className="text-xl">Em produção...</p>
 				</div>

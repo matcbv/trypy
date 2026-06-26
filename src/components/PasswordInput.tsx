@@ -33,7 +33,7 @@ export function PasswordInput({
 					onBlur={toggleText}
 					value={value}
 					placeholder={placeholder}
-					className="focus:border-main-green w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 placeholder-red-400 outline-none"
+					className="focus:border-main-green w-[300px] rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 placeholder-red-400 transition-colors duration-300 outline-none"
 				/>
 				<img
 					className="absolute right-3 cursor-pointer"

@@ -14,16 +14,17 @@ export function Home() {
 
 	return (
 		<>
-			<div className="flex w-full justify-center border-b-2 border-b-indigo-950">
+			<div className="flex w-full justify-center">
 				<HeroBanner />
 			</div>
-			<section className="relative flex justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
-				<div className="flex flex-col gap-y-12">
+			<span className="block h-[2px] bg-indigo-950"></span>
+			<section className="relative my-[160px] flex justify-center gap-x-20">
+				<div className="flex w-[600px] flex-col gap-y-12">
 					<div>
 						<h2 className="text-main-purple mb-6 text-5xl">
 							Video-aulas integradas
 						</h2>
-						<p className="w-[600px] text-xl leading-9">
+						<p className="text-xl leading-9">
 							Vídeo-aulas publicadas em nosso canal no YouTube e integradas à
 							trilha de aprendizagem, complementando o conteúdo estudado ao
 							longo do curso. Inscreva-se em nosso canal para tirar suas dúvidas
@@ -42,13 +43,14 @@ export function Home() {
 					draggable="false"
 				/>
 			</section>
-			<section className="relative flex flex-row-reverse justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
-				<div className="flex flex-col gap-y-12">
+			<span className="block h-[2px] bg-indigo-950"></span>
+			<section className="relative my-[160px] flex flex-row-reverse justify-center gap-x-20">
+				<div className="flex w-[600px] flex-col gap-y-12">
 					<div>
 						<h2 className="text-main-green mb-6 text-5xl">
 							Certificado gratuito e personalizado
 						</h2>
-						<p className="w-[600px] text-xl leading-9">
+						<p className="text-xl leading-9">
 							Ao concluir a trilha de aprendizagem, você recebe um certificado
 							digital emitido em seu nome, contendo a carga horária total, os
 							módulos concluídos e os principais conteúdos estudados durante o
@@ -59,10 +61,10 @@ export function Home() {
 						value={studentName}
 						onChange={handleChange}
 						placeholder="Digite seu nome..."
-						className="border-main-green h-[60px] w-[320px] rounded-md border bg-white/5 px-4 text-xl placeholder-green-100/50 transition-shadow duration-300 placeholder:text-xl focus:shadow-[0_0_20px_#00ff5940] focus:outline-none"
+						className="border-main-green h-[60px] w-[320px] rounded-md border bg-white/5 px-4 text-xl placeholder-green-100/50 transition-shadow duration-300 placeholder:text-xl focus:shadow-[0_0_20px_var(--color-glow-green)]/20 focus:outline-none"
 					/>
 				</div>
-				<div className="relative shrink-0 overflow-hidden rounded-md shadow-[0_0_30px_#00ff5940]">
+				<div className="relative shrink-0 overflow-hidden rounded-md shadow-[0_0_10px_var(--color-glow-green)]/30">
 					<span className="absolute top-[38%] left-15 text-5xl select-none">
 						{studentName || 'Aluno'}
 					</span>
@@ -74,10 +76,11 @@ export function Home() {
 					/>
 				</div>
 			</section>
-			<section className="relative flex justify-center gap-x-20 border-b-2 border-b-indigo-950 py-40">
-				<div>
+			<span className="block h-[2px] bg-indigo-950"></span>
+			<section className="relative my-[160px] flex justify-center gap-x-20">
+				<div className="w-[600px]">
 					<h2 className="text-main-purple mb-6 text-5xl">Aprendizado Guiado</h2>
-					<p className="w-[600px] text-xl leading-9">
+					<p className="text-xl leading-9">
 						Nossa trilha de aprendizagem combina conteúdo teórico, videoaulas e
 						exercícios práticos em uma progressão estruturada, permitindo que
 						você aplique cada conceito aprendido antes de avançar para o próximo
@@ -85,11 +88,12 @@ export function Home() {
 					</p>
 				</div>
 			</section>
-			<section className="relative flex flex-row-reverse justify-center gap-x-20 py-40">
-				<div className="flex flex-col gap-y-12 py-5">
+			<span className="block h-[2px] bg-indigo-950"></span>
+			<section className="relative my-[160px] flex flex-row-reverse justify-center gap-x-20">
+				<div className="flex w-[600px] flex-col gap-y-12 py-5">
 					<div>
 						<h2 className="text-main-green mb-6 text-5xl">Suporte ao aluno</h2>
-						<p className="w-[600px] text-xl leading-9">
+						<p className="text-xl leading-9">
 							Conte com nosso suporte sempre que precisar. Disponibilizamos
 							diversos canais de contato para que você possa tirar dúvidas e
 							receber ajuda durante sua jornada de aprendizado. Responderemos o

@@ -5,7 +5,7 @@ export function Resolutions() {
 				Exercícios resolvidos
 			</h1>
 			<div className="flex flex-col items-center justify-center gap-y-5 opacity-60">
-				<div className="rounded-full bg-[radial-gradient(circle,_#594486e3,_transparent_70%)]">
+				<div className="rounded-full bg-[radial-gradient(circle,_#594486,_transparent_70%)]">
 					<img
 						src="/assets/images/resolutions.png"
 						alt="Resolução"
@@ -14,7 +14,7 @@ export function Resolutions() {
 					/>
 				</div>
 
-				<p className="text-2xl select-none text-shadow-[0_0_15px_#624b93e3]">
+				<p className="text-2xl select-none text-shadow-[0_0_15px_#624b93]">
 					Nenhum exercício resolvido
 				</p>
 			</div>

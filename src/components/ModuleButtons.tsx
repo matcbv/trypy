@@ -277,7 +277,7 @@ export function ModuleButtons({
 				<img
 					src={`/assets/images/icons/left_arrow.png`}
 					alt="Voltar"
-					className="rounded- transition-transform duration-300 group-hover:-translate-x-3"
+					className="transition-transform duration-300 group-hover:-translate-x-2"
 				/>
 				Voltar
 			</button>
@@ -304,7 +304,7 @@ export function ModuleButtons({
 					<img
 						src={`/assets/images/icons/right_arrow.png`}
 						alt="Avançar"
-						className="transition-transform duration-300 group-hover:translate-x-3"
+						className="transition-transform duration-300 group-hover:translate-x-2"
 					/>
 				</button>
 			)}

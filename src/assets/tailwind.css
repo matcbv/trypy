@@ -2,9 +2,10 @@
 
 @theme {
 	/* Cores */
-	--color-main-bg: #06010d;
+	--color-main-bg: #080014;
 	--color-main-green: #00a63e;
 	--color-highlight-green: #b5fbbe;
+	--color-glow-green: #00ff5f;
 	--color-main-purple: #7a55c2;
 	--color-main-combination: #3d7d80;
 	--color-main-black: #000000f2;
@@ -67,7 +68,7 @@
 
 @layer components {
 	.register-form-btn {
-		@apply from-main-green/40 to-main-purple/40 h-[50px] w-[200px] cursor-pointer rounded-md border bg-linear-to-br text-white transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff24];
+		@apply from-main-green/40 to-main-purple/40 h-[50px] w-[200px] cursor-pointer rounded-md border bg-linear-to-br text-white transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff]/15;
 	}
 
 	.footer-links {
@@ -75,14 +76,14 @@
 	}
 
 	.form-btn {
-		@apply flex h-[38px] cursor-pointer items-center justify-center rounded-md border border-white/50 bg-white/5 text-center font-sans transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff1f];
+		@apply flex h-[38px] cursor-pointer items-center justify-center rounded-md border border-white/50 bg-white/10 text-center font-sans transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff]/10;
 	}
 
 	.module-btn {
-		@apply border-main-green bg-main-green/10 flex w-[150px] cursor-pointer items-center justify-center gap-x-2 rounded-md border-2 py-2 text-sm text-white transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff0f];
+		@apply border-main-green bg-main-green/10 flex w-[150px] cursor-pointer items-center justify-center gap-x-2 rounded-md border-2 py-2 text-sm text-white transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff]/5;
 	}
 
 	.support-fields {
-		@apply rounded-md bg-black/50 p-2 transition-shadow focus:border-none focus:shadow-[0_0_12px_#ffffff0f] focus:outline-none;
+		@apply rounded-md bg-black/50 p-2 transition-shadow focus:border-none focus:shadow-[0_0_12px_#ffffff]/5 focus:outline-none;
 	}
 }

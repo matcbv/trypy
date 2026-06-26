@@ -4,7 +4,7 @@ import { SessionForm } from '../components/SessionFrom';
 export function Session() {
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<div className="to-main-bg relative my-20 rounded-lg bg-linear-to-br from-[#12612f] via-[#240051] shadow-[0_0_20px_#ffffff1f]">
+			<div className="to-main-bg relative my-20 rounded-lg bg-linear-to-br from-[#12612f] via-[#240051] shadow-[0_0_20px_#ffffff]/10">
 				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer.png")] opacity-15 backdrop-blur-3xl'></div>
 				<div className="relative flex h-[500px] w-[500px] flex-col justify-center p-10">
 					<h1 className="mb-10 text-3xl font-bold tracking-wider">
