@@ -1,18 +1,18 @@
 import { useState } from 'react';
 
+const contactsMap = {
+	gmail: {
+		title: 'Gmail',
+		value: 'contato.trypy@gmail.com',
+	},
+	whatsapp: {
+		title: 'WhatsApp',
+		value: '(24) 98100-2374',
+	},
+};
+
 export function Support() {
 	const [isCopied, setIsCopied] = useState(false);
-
-	const contactsMap = {
-		email: {
-			title: 'E-mail',
-			value: 'contato.trypy@gmail.com',
-		},
-		whatsapp: {
-			title: 'WhatsApp',
-			value: '(24) 98100-2374',
-		},
-	};
 
 	const copyText = async (text: string) => {
 		await navigator.clipboard.writeText(text);
@@ -98,7 +98,11 @@ export function Support() {
 							<div key={key} className="flex flex-col items-start gap-y-5">
 								<div>
 									<p className="mb-2 flex gap-x-2">
-										<img src={`/assets/images/icons/${key}.png`} alt={title} />
+										<img
+											src={`/assets/images/icons/${key}.png`}
+											alt={title}
+											className="size-[24px]"
+										/>
 										{title}
 									</p>
 									<p
