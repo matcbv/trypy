@@ -13,6 +13,7 @@ export function DashboardNavbar() {
 	const objectsMap = [
 		{ slug: '', title: 'Visão geral', icon: 'user-overview' },
 		{ slug: 'profile', title: 'Editar conta', icon: 'edit-account' },
+		{ slug: 'support-us', title: 'Apoie-nos', icon: 'support-us' },
 		{ slug: 'certifications', title: 'Certificações', icon: 'certificate' },
 		{ slug: 'resolutions', title: 'Resoluções', icon: 'resolution' },
 		{ slug: 'tips', title: 'Dicas salvas', icon: 'tip' },
