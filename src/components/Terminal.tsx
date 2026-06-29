@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import type { ToastData } from '../types/toast';
 import { ToastNotification } from './Notifications';
 import { updateDoc } from 'firebase/firestore';
-import { userProgressRef } from '../database/refs/userRefs';
+import { userDataRef, userProgressRef } from '../database/refs/userRefs';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { logError } from '../utils/logger';
 
@@ -43,8 +43,17 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 						...prev,
 						doneSubtopics,
 					}));
-					await updateDoc(userProgressRef(authState.uid!), { doneSubtopics });
 
+					const resolutions = {
+						...authState.data?.resolutions,
+						[subtopicData.slug]: {
+							title: subtopicData.title,
+							code: userCode,
+						},
+					};
+
+					await updateDoc(userDataRef(authState.uid!), { resolutions });
+					await updateDoc(userProgressRef(authState.uid!), { doneSubtopics });
 					setTerminalState((prev) => ({ ...prev, solved: false }));
 
 					toast<ToastData>(ToastNotification, {
@@ -123,7 +132,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 							extensions={[python()]}
 							theme={oneDark}
 							height="400px"
-							className="overflow-hidden rounded-t-md"
+							className="overflow-hidden rounded-t-md [&_.cm-scroller]:scrollbar-none"
 							onChange={(value) => setUserCode(value)}
 						></CodeMirror>
 					)}

@@ -72,6 +72,7 @@ export const signInWithGoogle = async () => {
 		createdAt: new Date(),
 		supporter: false,
 		savedTips: [],
+		resolutions: {},
 	});
 
 	const initialProgressData = await fetchInitialProgress();

@@ -10,6 +10,7 @@ export interface UserData {
 	createdAt: Date;
 	supporter: boolean;
 	savedTips: string[];
+	resolutions: Record<string, { title: string; code: string }>;
 }
 
 export interface UserProgress {

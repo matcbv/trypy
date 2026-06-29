@@ -101,6 +101,7 @@ export function RegisterForm() {
 				createdAt: new Date(),
 				supporter: false,
 				savedTips: [],
+				resolutions: {},
 			});
 
 			const { uid, userData, progressData, navigationData } = res;
