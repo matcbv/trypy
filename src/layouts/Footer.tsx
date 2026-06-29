@@ -15,8 +15,8 @@ const iconsMap = {
 
 export function Footer() {
 	return (
-		<footer className="bg-main-black relative">
-			<div className="flex flex-col items-center gap-y-10 px-6 pt-14 pb-6 backdrop-blur-xl">
+		<footer className="bg-main-black/90 relative flex flex-col gap-y-[10px] px-[30px] pt-[60px] pb-[20px]">
+			<div className="flex flex-col items-center gap-y-10">
 				<div>
 					<ul className="flex gap-x-10">
 						{Object.entries(footerMap).map(([key, value]) => (
@@ -31,27 +31,49 @@ export function Footer() {
 					<ul className="flex justify-around">
 						{Object.entries(iconsMap).map(([key, value]) => (
 							<li key={key}>
-								<a href="#">
+								<a href="#" rel="noopener noreferrer" target="_blank">
 									<img
 										src={`/assets/images/icons/${key}.png`}
 										alt={value}
-										className="transition-transform hover:scale-105"
+										className="transition-transform duration-300 hover:scale-110"
 									/>
 								</a>
 							</li>
 						))}
 					</ul>
 				</div>
-				<p className="self-start text-sm">
-					© 2025 TryPy. Todos os direitos reservados. Icons by{' '}
-					<a
-						href="https://icons8.com.br/"
-						className="hover:text-main-green underline transition-colors"
-						target="_blank"
-					>
-						Icons8
-					</a>
-				</p>
+			</div>
+			<div className="flex items-end justify-between text-sm">
+				<p>© 2026 TryCode Technologies Ltda. Todos os direitos reservados.</p>
+				<div>
+					<p className="mb-2">Atribuições</p>
+					<ul className="ml-0.5 flex flex-col gap-0.5">
+						<li>
+							Ícones fornecidos por{' '}
+							<a
+								href="https://icons8.com.br"
+								rel="noopener noreferrer"
+								target="_blank"
+								className="hover:text-main-green underline transition-colors duration-300"
+							>
+								Icons8
+							</a>
+							.
+						</li>
+						<li>
+							Algumas ilustrações foram fornecidos pela{' '}
+							<a
+								href="https://www.magnific.com"
+								rel="noopener noreferrer"
+								target="_blank"
+								className="hover:text-main-purple underline transition-colors duration-300"
+							>
+								Magnific
+							</a>
+							.
+						</li>
+					</ul>
+				</div>
 			</div>
 		</footer>
 	);

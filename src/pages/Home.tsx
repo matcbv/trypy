@@ -21,7 +21,7 @@ export function Home() {
 			<section className="relative my-[160px] flex justify-center gap-x-20">
 				<div className="flex w-[600px] flex-col gap-y-12">
 					<div>
-						<h2 className="text-main-purple mb-6 text-5xl">
+						<h2 className="text-main-purple mb-5 text-5xl">
 							Video-aulas integradas
 						</h2>
 						<p className="text-xl leading-9">
@@ -47,7 +47,7 @@ export function Home() {
 			<section className="relative my-[160px] flex flex-row-reverse justify-center gap-x-20">
 				<div className="flex w-[600px] flex-col gap-y-12">
 					<div>
-						<h2 className="text-main-green mb-6 text-5xl">
+						<h2 className="text-main-green mb-5 text-5xl leading-tight">
 							Certificado gratuito e personalizado
 						</h2>
 						<p className="text-xl leading-9">
@@ -79,7 +79,7 @@ export function Home() {
 			<span className="block h-[2px] bg-indigo-950"></span>
 			<section className="relative my-[160px] flex justify-center gap-x-20">
 				<div className="w-[600px]">
-					<h2 className="text-main-purple mb-6 text-5xl">Aprendizado Guiado</h2>
+					<h2 className="text-main-purple mb-5 text-5xl">Aprendizado Guiado</h2>
 					<p className="text-xl leading-9">
 						Nossa trilha de aprendizagem combina conteúdo teórico, videoaulas e
 						exercícios práticos em uma progressão estruturada, permitindo que
@@ -92,7 +92,7 @@ export function Home() {
 			<section className="relative my-[160px] flex flex-row-reverse justify-center gap-x-20">
 				<div className="flex w-[600px] flex-col gap-y-12 py-5">
 					<div>
-						<h2 className="text-main-green mb-6 text-5xl">Suporte ao aluno</h2>
+						<h2 className="text-main-green mb-5 text-5xl">Suporte ao aluno</h2>
 						<p className="text-xl leading-9">
 							Conte com nosso suporte sempre que precisar. Disponibilizamos
 							diversos canais de contato para que você possa tirar dúvidas e

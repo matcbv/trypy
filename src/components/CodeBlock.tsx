@@ -17,9 +17,7 @@ export function CodeBlock({ code }: { code: string }) {
 			className="font-jetbrains group relative cursor-pointer rounded bg-[#13121b] p-3 px-6 text-sm shadow-[0_0_15px_#000000]/25"
 			onClick={() => void copyText(code)}
 		>
-			<pre>
-				<code>{code}</code>
-			</pre>
+			<code className="whitespace-pre-wrap">{code}</code>
 			<img
 				ref={copyIcon}
 				src={`${isCopied ? '/assets/images/icons/success.png' : '/assets/images/icons/copy.png'}`}
