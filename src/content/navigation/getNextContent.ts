@@ -47,7 +47,7 @@ export async function getNextContent(
 	const nextModule = await fetchContent({
 		contentType: 'module',
 		include: 4,
-		orderOrSlug: currentModuleData.order + 1,
+		order: currentModuleData.order + 1,
 	});
 
 	// * Caso o próximo módulo existir, retornaremos ele, com seus primeiros tópico e subtópico.

@@ -35,17 +35,17 @@ export function UserOverview() {
 					fetchContent({
 						contentType: 'module',
 						include: 0,
-						orderOrSlug: progressState.inProgressModule,
+						slug: progressState.inProgressModule,
 					}),
 					fetchContent({
 						contentType: 'topic',
 						include: 0,
-						orderOrSlug: progressState.inProgressTopic,
+						slug: progressState.inProgressTopic,
 					}),
 					fetchContent({
 						contentType: 'subtopic',
 						include: 0,
-						orderOrSlug: progressState.inProgressSubtopic,
+						slug: progressState.inProgressSubtopic,
 					}),
 				]);
 				setTitles({
@@ -100,8 +100,8 @@ export function UserOverview() {
 							/>
 						</span>
 					</p>
-					<p>
-						Criada em: <span className="ml-1">{accountDate()}</span>
+					<p className="flex items-center gap-x-1">
+						Criada em: <span>{accountDate()}</span>
 					</p>
 					<p>
 						Apoiador(a):{' '}

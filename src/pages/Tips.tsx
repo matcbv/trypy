@@ -20,7 +20,7 @@ export function Tips() {
 						const res = await fetchContent({
 							contentType: 'tipPy',
 							include: 0,
-							orderOrSlug: slug,
+							slug: slug,
 						});
 
 						if (!res[0]) {

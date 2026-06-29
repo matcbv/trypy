@@ -6,7 +6,8 @@ interface ContentfulQuery<K> {
 	// * O tipo genérico recebido será uma das chaves de SkeletonMap.
 	contentType: K;
 	include: number;
-	orderOrSlug?: string | number;
+	order?: number;
+	slug?: string;
 }
 
 // * Interface responsável por determinar a tipagem a ser utilizada em nossas entries do Contentful.
@@ -22,14 +23,14 @@ interface SkeletonsMap {
 export async function fetchContent<K extends keyof SkeletonsMap>({
 	contentType,
 	include,
-	orderOrSlug,
+	order,
+	slug,
 }: ContentfulQuery<K>) {
 	const query = {
 		content_type: contentType, // eslint-disable-line camelcase
 		include: include,
-		// * A consulta é feita através dos campos slug ou order, escolhidos dinamicamente.
-		[typeof orderOrSlug === 'number' ? 'fields.order' : 'fields.slug']:
-			orderOrSlug,
+		'fields.order': order,
+		'fields.slug': slug,
 		// * O campo order define o campo a ser utilizado para ordenação do resultado.
 		order: 'fields.order',
 	};

@@ -36,7 +36,7 @@ export function Module() {
 				const content = await fetchContent({
 					contentType: 'module',
 					include: 4,
-					orderOrSlug: moduleId,
+					slug: moduleId,
 				});
 
 				if (!content[0]) {
