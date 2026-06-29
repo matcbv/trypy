@@ -8,14 +8,25 @@
 	--color-glow-green: #00ff5f;
 	--color-main-purple: #7a55c2;
 	--color-main-combination: #3d7d80;
+	--color-glow-combination: #34a8ad;
 	--color-main-black: #000000f2;
 	--color-main-red: #f24854;
+
+	/* Backgrounds */
+	--background-image-trycode: linear-gradient(
+		to right,
+		#fe2c2a,
+		#00b74e,
+		#0687fe,
+		#fee413
+	);
 
 	/* Fontes */
 	--font-jetbrains: 'JetBrains Mono', monospace;
 	--font-ubuntu: 'Ubuntu', sans-serif;
 	--font-space-grotesk: 'Space Grotesk', sans-serif;
 
+	/* Animações */
 	--animate-swing: swing 3s ease-in-out infinite;
 	--animate-grow: grow 5s ease-in-out 10s infinite;
 
