@@ -18,8 +18,8 @@ import { UserOverview } from '../pages/UserOverview';
 
 // Providers
 import { NavigationProvider } from '../contexts/NavigationProvider';
-import AuthProvider from '../contexts/AuthProvider';
-import ProgressProvider from '../contexts/ProgressProvider';
+import { AuthProvider } from '../contexts/AuthProvider';
+import { ProgressProvider } from '../contexts/ProgressProvider';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { ProtectedRoute } from './ProtectedRoute';
 import { TerminalProvier } from '../contexts/TerminalProvider';
@@ -45,7 +45,6 @@ export function AppRoutes() {
 									<Route path="/session" element={<Session />} />
 									<Route path="/register" element={<Register />} />
 								</Route>
-
 								<Route
 									element={<ProtectedRoute middlewares={[authMiddleware]} />}
 								>
@@ -57,13 +56,6 @@ export function AppRoutes() {
 										<Route path="resolutions" element={<Resolutions />} />
 										<Route path="tips" element={<Tips />} />
 									</Route>
-								</Route>
-
-								<Route path="/learning-path" element={<LearningPath />} />
-
-								<Route
-									element={<ProtectedRoute middlewares={[authMiddleware]} />}
-								>
 									<Route element={<TerminalProvier />}>
 										<Route
 											path="/learning-path/:moduleId"
@@ -71,7 +63,7 @@ export function AppRoutes() {
 										/>
 									</Route>
 								</Route>
-
+								<Route path="/learning-path" element={<LearningPath />} />
 								<Route path="/reset-password" element={<ResetPassword />} />
 								<Route path="/support" element={<Support />} />
 								<Route path="/about-us" element={<AboutUs />} />

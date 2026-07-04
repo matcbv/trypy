@@ -6,7 +6,14 @@ export const authMiddleware: Middleware = (context) => {
 			pending: true,
 		};
 	}
-	if (!context.user.data) {
+	if (!context.user.uid) {
+		if (context.moduleId && context.moduleId === context.initialModuleSlug) {
+			return {
+				pending: false,
+				passed: true,
+			};
+		}
+
 		return {
 			pending: false,
 			passed: false,

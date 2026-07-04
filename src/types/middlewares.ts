@@ -2,6 +2,8 @@ import type { AuthState } from './states';
 
 export interface MiddlewareContext {
 	user: AuthState;
+	moduleId: string | null;
+	initialModuleSlug: string | null;
 }
 
 export interface MiddlewareResponse {

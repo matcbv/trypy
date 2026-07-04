@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useParams } from 'react-router-dom';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import type { Middleware } from '../types/middlewares';
@@ -10,9 +10,14 @@ type GuardProps = {
 
 export function ProtectedRoute({ middlewares }: GuardProps) {
 	const { authState } = useSafeContext(AuthContext);
+	const { moduleId } = useParams();
+	const location = useLocation();
+	const state = location.state as { initialModuleSlug: string };
 
 	const context = {
 		user: authState,
+		moduleId: moduleId || null,
+		initialModuleSlug: state?.initialModuleSlug || null,
 	};
 
 	const results = middlewares.map((middleware) => middleware(context));
