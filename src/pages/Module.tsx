@@ -35,7 +35,7 @@ export function Module() {
 			try {
 				const content = await fetchContent({
 					contentType: 'module',
-					include: 4,
+					include: 3,
 					slug: moduleId,
 				});
 
@@ -56,11 +56,9 @@ export function Module() {
 	// * useEffect responsável por atualizar os estados com o conteúdo do módulo obtido.
 	useEffect(() => {
 		if (!moduleData) return;
-
 		const topic = moduleData.topics.find(
 			(topic) => topic.slug === navigationState[moduleData.order]!.currentTopic,
 		);
-
 		if (!topic) return;
 
 		const subtopic = topic.subtopics.find(

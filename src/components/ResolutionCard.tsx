@@ -28,7 +28,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 	};
 
 	const navigateToExercise = async (slug: string) => {
-		const content = await fetchContent({ contentType: 'module', include: 3 });
+		const content = await fetchContent({ contentType: 'module', include: 2 });
 
 		const module = content.find((module) =>
 			module.fields.topics.some((topic) =>
