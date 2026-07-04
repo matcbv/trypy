@@ -52,8 +52,11 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 						},
 					};
 
-					await updateDoc(userDataRef(authState.uid!), { resolutions });
-					await updateDoc(userProgressRef(authState.uid!), { doneSubtopics });
+					if (authState.uid) {
+						await updateDoc(userDataRef(authState.uid), { resolutions });
+						await updateDoc(userProgressRef(authState.uid), { doneSubtopics });
+					}
+
 					setTerminalState((prev) => ({ ...prev, solved: false }));
 
 					toast<ToastData>(ToastNotification, {

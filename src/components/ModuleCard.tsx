@@ -8,31 +8,47 @@ import type { ToastData } from '../types/toast';
 import { ToastNotification } from './Notifications';
 import { AuthContext } from '../contexts/AuthProvider/context';
 
-export function ModuleCard({ card }: { card: ModuleCardData }) {
+interface ModuleCardProps {
+	card: ModuleCardData;
+	initialModuleSlug: string;
+}
+
+interface CheckModuleAccessProps {
+	event: MouseEvent<HTMLAnchorElement>;
+	moduleId: string;
+}
+
+export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 	const navigate = useNavigate();
 	const { progressState } = useSafeContext(ProgressContext);
 	const { authState } = useSafeContext(AuthContext);
 
-	const isModuleBlocked =
-		!progressState.doneModules.includes(card.moduleId) &&
-		progressState.inProgressModule !== card.moduleId;
-
-	const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
-		if (!authState.data) {
-			e.preventDefault();
-			toast<ToastData>(ToastNotification, {
-				type: 'info',
-				data: {
-					type: 'info',
-					text: 'Faça login ou crie uma conta para dar início à trilha de aprendizagem.',
-				},
-			});
-			void navigate('/session');
-			return;
+	const isModuleBlocked = (moduleId: string) => {
+		if (authState.uid) {
+			return (
+				!progressState.doneModules.includes(card.moduleId) &&
+				progressState.inProgressModule !== card.moduleId
+			);
 		}
 
-		if (isModuleBlocked) {
-			e.preventDefault();
+		return initialModuleSlug !== moduleId;
+	};
+
+	const CheckModuleAccess = ({ event, moduleId }: CheckModuleAccessProps) => {
+		if (isModuleBlocked(moduleId)) {
+			if (!authState.uid) {
+				event.preventDefault();
+				toast<ToastData>(ToastNotification, {
+					type: 'info',
+					data: {
+						type: 'info',
+						text: 'Faça login ou crie uma conta para acessar o módulo.',
+					},
+				});
+				void navigate('/session');
+				return;
+			}
+			event.preventDefault();
 			toast<ToastData>(ToastNotification, {
 				type: 'info',
 				data: {
@@ -71,13 +87,16 @@ export function ModuleCard({ card }: { card: ModuleCardData }) {
 					</div>
 					<Link
 						to={`/learning-path/${card.moduleId}`}
-						className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${isModuleBlocked ? 'cursor-not-allowed' : 'hover:bg-(--slide-button-color) hover:shadow-[0_0_10px_var(--slide-button-color)]'}`}
-						onClick={handleClick}
+						state={{ initialModuleSlug }}
+						className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${isModuleBlocked(card.moduleId) ? 'cursor-not-allowed' : 'hover:bg-(--slide-button-color) hover:shadow-[0_0_10px_var(--slide-button-color)]'}`}
+						onClick={(e) =>
+							CheckModuleAccess({ event: e, moduleId: card.moduleId })
+						}
 					>
 						<p
-							className={`absolute left-10 flex items-center gap-x-3 text-white transition-all duration-300 ${!isModuleBlocked && 'group-hover:left-[292px]'}`}
+							className={`absolute left-10 flex items-center gap-x-3 text-white transition-all duration-300 ${!isModuleBlocked(card.moduleId) && 'group-hover:left-[292px]'}`}
 						>
-							{isModuleBlocked && (
+							{isModuleBlocked(card.moduleId) && (
 								<img src="/assets/images/icons/locked.png" alt="Bloqueado" />
 							)}
 							Acessar módulo

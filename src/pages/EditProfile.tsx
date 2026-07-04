@@ -7,7 +7,6 @@ import { ToastNotification } from '../components/Notifications';
 import { Link, useNavigate } from 'react-router-dom';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
-import { storageKeys } from '../constants/storageKeys';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ToastData } from '../types/toast';
 import { FirebaseError } from 'firebase/app';
@@ -17,6 +16,8 @@ import { idGenerator } from '../utils/idGenerator';
 import progressInitialState from '../contexts/ProgressProvider/initialState';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 import navigationInitialState from '../contexts/NavigationProvider/initialState';
+import { removeNavigationSorage } from '../services/navigationStorage';
+import { removeProgressSorage } from '../services/progressStorage';
 
 type Providers = (typeof ProviderId)[keyof typeof ProviderId];
 
@@ -45,9 +46,7 @@ export function EditProfile() {
 		try {
 			if (provider === ProviderId.PASSWORD) {
 				if (userPassword.length <= 0) return;
-
 				setIsDeleting(true);
-
 				await deleteAccount({ uid: authState.uid!, password: userPassword });
 			} else {
 				if (!provider) return;
@@ -63,14 +62,14 @@ export function EditProfile() {
 				}
 
 				setIsDeleting(true);
-
 				await deleteAccount({ uid: authState.uid!, provider: provider });
 			}
 
 			authDispatch({ type: authActionTypes.LOGOUT });
 			setProgressState(progressInitialState);
 			setNavigationState(navigationInitialState);
-			localStorage.removeItem(storageKeys.NAVIGATION_STATE);
+			removeNavigationSorage();
+			removeProgressSorage();
 
 			void navigate('/', { replace: true });
 			toast<ToastData>(ToastNotification, {

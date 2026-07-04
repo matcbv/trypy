@@ -19,6 +19,8 @@ import { toast } from 'react-toastify';
 import type { ToastData } from '../../types/toast';
 import { ToastNotification } from '../../components/Notifications';
 import { fetchInitialProgress } from '../../content/services/fetchInitialProgress';
+import { getNavigationStorage } from '../../services/navigationStorage';
+import { getProgressStorage } from '../../services/progressStorage';
 
 type SignUpType = UserData & { password: string };
 
@@ -48,18 +50,21 @@ export const signUpWithCredentials = async (userData: SignUpType) => {
 	);
 	const { uid } = res.data;
 
+	const progressStorage = getProgressStorage();
+	const initialProgressData = progressStorage || (await fetchInitialProgress());
+	const navigationStorage = getNavigationStorage();
+	const initialNavigationState: UserNavigation =
+		Object.keys(navigationStorage).length > 0
+			? navigationStorage
+			: {
+					1: {
+						currentTopic: initialProgressData.inProgressTopic,
+						currentSubtopic: initialProgressData.inProgressSubtopic,
+					},
+				};
+
 	await setDoc(userDataRef(uid), persistedData);
-
-	const initialProgressData = await fetchInitialProgress();
 	await setDoc(userProgressRef(uid), initialProgressData);
-
-	const initialNavigationState: UserNavigation = {
-		1: {
-			currentTopic: initialProgressData.inProgressTopic,
-			currentSubtopic: initialProgressData.inProgressSubtopic,
-		},
-	};
-
 	await setDoc(userNavigationRef(uid), initialNavigationState);
 
 	return {

@@ -5,7 +5,8 @@ import { toast } from 'react-toastify';
 import { ToastNotification } from '../components/Notifications';
 import { logError } from '../utils/logger';
 import type { ToastData } from '../types/toast';
-import { storageKeys } from '../constants/storageKeys';
+import { removeNavigationSorage } from '../services/navigationStorage';
+import { removeProgressSorage } from '../services/progressStorage';
 
 export function DashboardNavbar() {
 	const navigate = useNavigate();
@@ -22,9 +23,8 @@ export function DashboardNavbar() {
 	const logout = async () => {
 		try {
 			await signOut(auth);
-
-			localStorage.removeItem(storageKeys.NAVIGATION_STATE);
-
+			removeNavigationSorage();
+			removeProgressSorage();
 			void navigate('/', { replace: true });
 
 			toast<ToastData>(ToastNotification, {

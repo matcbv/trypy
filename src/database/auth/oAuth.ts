@@ -13,6 +13,8 @@ import type { ToastData } from '../../types/toast';
 import { toast } from 'react-toastify';
 import { ToastNotification } from '../../components/Notifications';
 import type { UserNavigation } from '../../types/user';
+import { getNavigationStorage } from '../../services/navigationStorage';
+import { getProgressStorage } from '../../services/progressStorage';
 
 // * Interface contendo as propriedades utilizadas da response oauth do Google.
 export interface OAuthUserPayload {
@@ -62,6 +64,19 @@ export const signInWithGoogle = async () => {
 		};
 	}
 
+	const progressStorage = getProgressStorage();
+	const initialProgressData = progressStorage || (await fetchInitialProgress());
+	const navigationStorage = getNavigationStorage();
+	const initialNavigationState: UserNavigation =
+		Object.keys(navigationStorage).length > 0
+			? navigationStorage
+			: {
+					1: {
+						currentTopic: initialProgressData.inProgressTopic,
+						currentSubtopic: initialProgressData.inProgressSubtopic,
+					},
+				};
+
 	await setDoc(userDataRef(uid), {
 		id: 'TPY-' + idGenerator().generateID(),
 		name,
@@ -74,17 +89,7 @@ export const signInWithGoogle = async () => {
 		savedTips: [],
 		resolutions: {},
 	});
-
-	const initialProgressData = await fetchInitialProgress();
 	await setDoc(userProgressRef(uid), initialProgressData);
-
-	const initialNavigationState: UserNavigation = {
-		1: {
-			currentTopic: initialProgressData.inProgressTopic,
-			currentSubtopic: initialProgressData.inProgressSubtopic,
-		},
-	};
-
 	await setDoc(userNavigationRef(uid), initialNavigationState);
 
 	return {
