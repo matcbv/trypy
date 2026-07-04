@@ -3,7 +3,7 @@ import { getNextContent } from '../content/navigation/getNextContent';
 import { logError } from '../utils/logger';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { useNavigate, useParams } from 'react-router-dom';
-import { updateDoc } from 'firebase/firestore';
+import { setDoc, updateDoc } from 'firebase/firestore';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleData, SubtopicData, TopicData } from '../types/content';
@@ -69,7 +69,7 @@ export function ModuleButtons({
 
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
-		const data: Partial<ProgressState> = { ...progressState };
+		const data: ProgressState = { ...progressState };
 
 		try {
 			const { nextTopic, nextSubtopic } = await getNextContent(
@@ -144,8 +144,10 @@ export function ModuleButtons({
 					},
 				});
 			}
+
 			setProgressState((prev) => ({ ...prev, ...data }));
-			await updateDoc(userProgressRef(authState.uid!), data);
+
+			if (authState.uid) await setDoc(userProgressRef(authState.uid), data);
 		} catch (error) {
 			logError(error);
 		}
@@ -244,8 +246,10 @@ export function ModuleButtons({
 				...nextModuleValue,
 			}));
 
-			await updateDoc(userProgressRef(authState.uid!), data);
-			await updateDoc(userNavigationRef(authState.uid!), nextModuleValue);
+			if (authState.uid) {
+				await updateDoc(userProgressRef(authState.uid), data);
+				await updateDoc(userNavigationRef(authState.uid), nextModuleValue);
+			}
 
 			toast<ToastData>(ToastNotification, {
 				type: 'success',
