@@ -23,31 +23,12 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 	const { progressState } = useSafeContext(ProgressContext);
 	const { authState } = useSafeContext(AuthContext);
 
-	const isModuleBlocked = (moduleId: string) => {
-		if (authState.uid) {
-			return (
-				!progressState.doneModules.includes(card.moduleId) &&
-				progressState.inProgressModule !== card.moduleId
-			);
-		}
-
-		return initialModuleSlug !== moduleId;
-	};
+	const isModuleBlocked =
+		!progressState.doneModules.includes(card.moduleId) &&
+		progressState.inProgressModule !== card.moduleId;
 
 	const CheckModuleAccess = ({ event, moduleId }: CheckModuleAccessProps) => {
-		if (isModuleBlocked(moduleId)) {
-			if (!authState.uid) {
-				event.preventDefault();
-				toast<ToastData>(ToastNotification, {
-					type: 'info',
-					data: {
-						type: 'info',
-						text: 'Faça login ou crie uma conta para acessar o módulo.',
-					},
-				});
-				void navigate('/session');
-				return;
-			}
+		if (isModuleBlocked) {
 			event.preventDefault();
 			toast<ToastData>(ToastNotification, {
 				type: 'info',
@@ -56,6 +37,18 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 					text: 'Complete o módulo anterior para liberar o acesso.',
 				},
 			});
+			return;
+		}
+		if (!authState.uid && moduleId !== initialModuleSlug) {
+			event.preventDefault();
+			toast<ToastData>(ToastNotification, {
+				type: 'info',
+				data: {
+					type: 'info',
+					text: 'Faça login ou crie uma conta para acessar o módulo.',
+				},
+			});
+			void navigate('/session');
 		}
 	};
 
@@ -88,15 +81,15 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 					<Link
 						to={`/learning-path/${card.moduleId}`}
 						state={{ initialModuleSlug }}
-						className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${isModuleBlocked(card.moduleId) ? 'cursor-not-allowed' : 'hover:bg-(--slide-button-color) hover:shadow-[0_0_10px_var(--slide-button-color)]'}`}
+						className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${!isModuleBlocked && 'hover:bg-(--slide-button-color) hover:shadow-[0_0_10px_var(--slide-button-color)]'}`}
 						onClick={(e) =>
 							CheckModuleAccess({ event: e, moduleId: card.moduleId })
 						}
 					>
 						<p
-							className={`absolute left-10 flex items-center gap-x-3 text-white transition-all duration-300 ${!isModuleBlocked(card.moduleId) && 'group-hover:left-[292px]'}`}
+							className={`absolute left-10 flex items-center gap-x-3 text-white transition-all duration-300 ${!isModuleBlocked && 'group-hover:left-[292px]'}`}
 						>
-							{isModuleBlocked(card.moduleId) && (
+							{isModuleBlocked && (
 								<img src="/assets/images/icons/locked.png" alt="Bloqueado" />
 							)}
 							Acessar módulo
