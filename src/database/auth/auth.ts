@@ -124,22 +124,16 @@ export const deleteAccount = async ({
 		throw new Error('Sessão expirada. Faça login e tente novamente.');
 	}
 
-	try {
-		if (provider === ProviderId.PASSWORD) {
-			const credential = EmailAuthProvider.credential(
-				auth.currentUser.email!,
-				password!,
-			);
-			await reauthenticateWithCredential(auth.currentUser, credential);
-		}
-		await Promise.all([
-			deleteUser(auth.currentUser),
-			deleteDoc(userDataRef(uid)),
-			deleteDoc(userProgressRef(uid)),
-			deleteDoc(userNavigationRef(uid)),
-		]);
-		return { success: true };
-	} catch (error) {
-		return { success: false, error };
+	if (provider === ProviderId.PASSWORD) {
+		const credential = EmailAuthProvider.credential(
+			auth.currentUser.email!,
+			password!,
+		);
+		await reauthenticateWithCredential(auth.currentUser, credential);
 	}
+
+	await deleteUser(auth.currentUser);
+	await deleteDoc(userDataRef(uid));
+	await deleteDoc(userProgressRef(uid));
+	await deleteDoc(userNavigationRef(uid));
 };
