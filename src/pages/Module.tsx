@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { ModuleSideBar } from '../components/ModuleSideBar';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fetchContent } from '../content/services/fetchContent';
 import { contentfulFormatter } from '../content/formatters/contentfulFormatter';
 import { ModuleButtons } from '../components/ModuleButtons';
@@ -23,7 +23,29 @@ export function Module() {
 	const [topicData, setTopicData] = useState<TopicData | null>(null);
 	const [subtopics, setSubtopics] = useState<SubtopicData[]>([]);
 	const [subtopicData, setSubtopicData] = useState<SubtopicData | null>(null);
+	const [scrollY, setScrollY] = useState(0);
+	const [offset, setOffset] = useState(20);
+	const footerRef = useRef<HTMLElement>(null);
 	const params = useParams<{ moduleId: string }>();
+
+	// * useEffect para aparição e posicionamento do botão de scroll para o topo.
+	useEffect(() => {
+		footerRef.current = document.querySelector('footer');
+
+		const handleScroll = () => {
+			setScrollY(window.scrollY);
+
+			if (!footerRef.current) return;
+
+			const footerTop = footerRef.current.getBoundingClientRect().top;
+			const overlap = window.innerHeight - footerTop;
+			// Setando o maior valor entre o intervalo citado. Ao descer a tela, o valor irá se aproximar cada vez mais de 20, parando nele.
+			setOffset(Math.max(20, overlap + 20));
+		};
+		window.addEventListener('scroll', handleScroll, { passive: true });
+
+		return () => window.removeEventListener('scroll', handleScroll);
+	}, []);
 
 	// * useEffect para obter o conteúdo do módulo a ser exibido.
 	useEffect(() => {
@@ -76,10 +98,12 @@ export function Module() {
 
 	// * useEffect para atualização persistente dos dados de navegação do usuário no banco de dados.
 	useEffect(() => {
-		if (!moduleData || !topicData || !subtopicData) return;
+		const { uid } = authState;
+
+		if (!uid || !moduleData || !topicData || !subtopicData) return;
 
 		void (async () => {
-			await updateDoc(userNavigationRef(authState.uid!), {
+			await updateDoc(userNavigationRef(uid), {
 				[moduleData.order]: {
 					currentTopic: topicData.slug,
 					currentSubtopic: subtopicData.slug,
@@ -90,7 +114,7 @@ export function Module() {
 	}, [subtopicData]);
 
 	return (
-		<div className="relative flex min-h-screen justify-center gap-x-10 py-[120px]">
+		<div className="relative flex min-h-screen justify-center gap-x-10 px-[50px] py-[120px]">
 			{!moduleData || !topicData || !subtopicData ? (
 				<LoadingPage />
 			) : (
@@ -128,13 +152,15 @@ export function Module() {
 							subtopicData={subtopicData}
 						/>
 					</div>
-					<button
-						type="button"
-						className="bg-main-green fixed right-4 bottom-4 z-10 cursor-pointer rounded-full p-1 shadow-[0_0_10px_#000000b0] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_#00ff002b]"
-						onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-					>
-						<img src="/assets/images/icons/arrow-up.png" alt="Voltar ao topo" />
-					</button>
+					{scrollY > 0 && (
+						<span
+							className={`bg-main-green fixed right-[10px] z-10 flex size-[30px] shrink-0 cursor-pointer items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] transition-shadow transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_var(--color-glow-green)]/50`}
+							onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+							style={{ bottom: `${offset}px` }}
+						>
+							<img src="/assets/images/icons/arrow-up.png" alt="Ir ao topo" />
+						</span>
+					)}
 				</>
 			)}
 		</div>
