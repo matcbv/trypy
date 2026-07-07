@@ -18,6 +18,7 @@ import { NavigationContext } from '../contexts/NavigationProvider/context';
 import navigationInitialState from '../contexts/NavigationProvider/initialState';
 import { removeNavigationSorage } from '../services/navigationStorage';
 import { removeProgressSorage } from '../services/progressStorage';
+import { logError } from '../utils/logger';
 
 type Providers = (typeof ProviderId)[keyof typeof ProviderId];
 
@@ -28,7 +29,7 @@ export function EditProfile() {
 	const [userPassword, setUserPassword] = useState('');
 	const [isVisible, setIsVisible] = useState(false);
 	const [provider, setProvider] = useState<Providers | null>(null);
-	const [deleteInputValue, setDeleteInputValue] = useState<string>('');
+	const [deleteCodeInputValue, setDeleteCodeInputValue] = useState<string>('');
 	const [deleteCode] = useState(() => idGenerator().generateID());
 	const [isDeleting, setIsDeleting] = useState(false);
 	const navigate = useNavigate();
@@ -50,7 +51,7 @@ export function EditProfile() {
 				await deleteAccount({ uid: authState.uid!, password: userPassword });
 			} else {
 				if (!provider) return;
-				if (deleteCode !== deleteInputValue) {
+				if (deleteCode !== deleteCodeInputValue) {
 					toast<ToastData>(ToastNotification, {
 						type: 'warning',
 						data: {
@@ -88,13 +89,7 @@ export function EditProfile() {
 					? 'Senha incorreta. Tente novamente.'
 					: 'Algo deu errado. Tente novamente.';
 
-			toast<ToastData>(ToastNotification, {
-				type: 'error',
-				data: {
-					type: 'error',
-					text: errorMessage,
-				},
-			});
+			logError(error, errorMessage);
 		}
 	};
 
@@ -127,9 +122,11 @@ export function EditProfile() {
 					</span>
 				</p>
 				<input
-					value={deleteInputValue}
+					value={deleteCodeInputValue}
 					placeholder="Código de exclusão"
-					onChange={(e) => setDeleteInputValue(e.target.value.toUpperCase())}
+					onChange={(e) =>
+						setDeleteCodeInputValue(e.target.value.toUpperCase())
+					}
 					className="border-main-purple/70 focus:border-main-purple w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10"
 					type="text"
 				/>
