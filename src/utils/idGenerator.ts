@@ -1,22 +1,14 @@
 export function idGenerator(): { generateID: () => string } {
-	let id = '';
-
-	function appendValue(value: number): void {
-		const str = String.fromCharCode(value);
-		id = id.concat(str);
-	}
+	const chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789';
 
 	function generateID(): string {
+		let id = '';
+
 		while (id.length < 8) {
-			const variant = Math.random();
-			if (parseFloat(variant.toFixed(1)) > 0.5) {
-				const numericPart = Math.ceil(variant * 9 + 48);
-				appendValue(numericPart);
-			} else {
-				const alfanumericPart = Math.ceil(variant * 25 + 65);
-				appendValue(alfanumericPart);
-			}
+			const index = Math.floor(Math.random() * chars.length);
+			id += chars[index];
 		}
+
 		return id;
 	}
 
