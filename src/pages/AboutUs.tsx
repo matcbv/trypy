@@ -12,7 +12,7 @@ const socialMediaMap = {
 		src: '/assets/images/icons/linkedin.png',
 		link: {
 			matheus: 'https://www.linkedin.com/in/matheus-cerqueira-baiao-victor',
-			daniel: 'www.linkedin.com/in/mdaniel-main',
+			daniel: 'https://www.linkedin.com/in/mdaniel-main',
 		},
 	},
 	Gmail: {

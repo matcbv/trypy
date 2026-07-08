@@ -7,10 +7,22 @@ const footerMap = {
 };
 
 const iconsMap = {
-	github: 'GitHub',
-	instagram: 'Instagram',
-	x: 'X',
-	youtube: 'YouTube',
+	Github: {
+		src: '/assets/images/icons/github.png',
+		link: 'https://github.com/matcbv/trypy',
+	},
+	Instagram: {
+		src: '/assets/images/icons/instagram.png',
+		link: '',
+	},
+	X: {
+		src: '/assets/images/icons/x.png',
+		link: '',
+	},
+	Youtube: {
+		src: '/assets/images/icons/youtube.png',
+		link: 'https://www.youtube.com/@trycode-dev',
+	},
 };
 
 export function Footer() {
@@ -29,12 +41,12 @@ export function Footer() {
 				<div className="flex flex-col gap-y-4">
 					<p>Conheça nossas redes sociais:</p>
 					<ul className="flex justify-around">
-						{Object.entries(iconsMap).map(([key, value]) => (
+						{Object.entries(iconsMap).map(([key, { link, src }]) => (
 							<li key={key}>
-								<a href="#" rel="noopener noreferrer" target="_blank">
+								<a href={link} rel="noopener noreferrer" target="_blank">
 									<img
-										src={`/assets/images/icons/${key}.png`}
-										alt={value}
+										src={src}
+										alt={key}
 										className="transition-transform duration-300 hover:scale-110"
 									/>
 								</a>

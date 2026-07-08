@@ -31,10 +31,15 @@ export function Home() {
 							e acompanhar novos conteúdos e atualizações.
 						</p>
 					</div>
-					<button className="border-main-purple group relative h-[70px] w-[280px] cursor-pointer rounded-md border text-lg font-bold transition-shadow hover:shadow-[0_0_20px_#ffffff24]">
+					<a
+						href="https://www.youtube.com/@trycode-dev"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="border-main-purple group relative flex h-[70px] w-[280px] cursor-pointer items-center justify-center rounded-md border text-lg font-bold transition-shadow hover:shadow-[0_0_20px_#ffffff24]"
+					>
 						<span className="absolute inset-0 rounded-md bg-linear-to-br from-[#00ff5998] to-[#8000ff88] opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
 						<p className="relative">Conheça nosso canal</p>
-					</button>
+					</a>
 				</div>
 				<img
 					className="h-[425px] w-[600px] rounded-md shadow-[0_0_15px_#00ff9960,0_0_30px_#7f00ff80]"
@@ -61,11 +66,11 @@ export function Home() {
 						value={studentName}
 						onChange={handleChange}
 						placeholder="Digite seu nome..."
-						className="border-main-green h-[60px] w-[320px] rounded-md border bg-white/5 px-4 text-xl placeholder-green-100/50 transition-shadow duration-300 placeholder:text-xl focus:shadow-[0_0_20px_var(--color-glow-green)]/20 focus:outline-none"
+						className="border-main-green h-[60px] w-[320px] rounded-md border bg-white/5 px-4 text-xl transition-shadow duration-300 placeholder:text-xl focus:shadow-[0_0_20px_var(--color-glow-green)]/20 focus:outline-none"
 					/>
 				</div>
-				<div className="relative shrink-0 overflow-hidden rounded-md shadow-[0_0_10px_var(--color-glow-green)]/30">
-					<span className="absolute top-[38%] left-15 text-5xl select-none">
+				<div className="relative shrink-0 rounded-md shadow-[0_0_10px_var(--color-glow-green)]/30">
+					<span className="absolute top-[38%] left-15 max-w-[500px] overflow-hidden text-5xl select-none">
 						{studentName || 'Aluno'}
 					</span>
 					<img
