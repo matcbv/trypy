@@ -1,15 +1,16 @@
-import { signOut } from 'firebase/auth';
-import { auth } from '../database/configs/firebase';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { ToastNotification } from '../components/Notifications';
-import { logError } from '../utils/logger';
-import type { ToastData } from '../types/toast';
-import { removeNavigationSorage } from '../services/navigationStorage';
-import { removeProgressSorage } from '../services/progressStorage';
+import { logError, logSuccess } from '../utils/logger';
+import { ProgressContext } from '../contexts/ProgressProvider/context';
+import { NavigationContext } from '../contexts/NavigationProvider/context';
+import { useSafeContext } from '../hooks/useSafeContext';
+import { AuthContext } from '../contexts/AuthProvider/context';
+import { logout } from '../database/auth/auth';
 
 export function DashboardNavbar() {
 	const navigate = useNavigate();
+	const { authDispatch } = useSafeContext(AuthContext);
+	const { setProgressState } = useSafeContext(ProgressContext);
+	const { setNavigationState } = useSafeContext(NavigationContext);
 
 	const objectsMap = [
 		{ slug: '', title: 'Visão geral', icon: 'user-overview' },
@@ -20,22 +21,13 @@ export function DashboardNavbar() {
 		{ slug: 'tips', title: 'Dicas salvas', icon: 'tip' },
 	];
 
-	const logout = async () => {
+	const logoutWrapper = async () => {
 		try {
-			await signOut(auth);
-			removeNavigationSorage();
-			removeProgressSorage();
+			await logout({ authDispatch, setProgressState, setNavigationState });
 			void navigate('/', { replace: true });
-
-			toast<ToastData>(ToastNotification, {
-				type: 'success',
-				data: {
-					type: 'success',
-					text: 'Você foi deslogado com sucesso!',
-				},
-			});
+			logSuccess('Você foi deslogado com sucesso!');
 		} catch (error) {
-			logError(error, 'Falha ao deslogar. Tente novamente.');
+			logError({ error, text: 'Falha ao deslogar. Tente novamente.' });
 		}
 	};
 
@@ -62,7 +54,7 @@ export function DashboardNavbar() {
 					<button
 						type="button"
 						className="flex w-full cursor-pointer justify-center bg-white/5 py-5 hover:bg-[radial-gradient(ellipse,transparent,#ff00001a)]"
-						onClick={() => void logout()}
+						onClick={() => void logoutWrapper()}
 					>
 						<div className="flex w-[137px] gap-x-3">
 							<img src="/assets/images/icons/logout.png" alt="Deslogar" />

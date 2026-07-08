@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { ProfileForm } from '../components/ProfileForm';
-import { deleteAccount } from '../database/auth/auth';
-import { toast } from 'react-toastify';
-import { ToastNotification } from '../components/Notifications';
 import { Link, useNavigate } from 'react-router-dom';
-import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
-import type { ToastData } from '../types/toast';
 import { FirebaseError } from 'firebase/app';
 import { auth } from '../database/configs/firebase';
-import { getIdTokenResult, ProviderId } from 'firebase/auth';
+import { deleteUser, getIdTokenResult, ProviderId } from 'firebase/auth';
 import { idGenerator } from '../utils/idGenerator';
-import progressInitialState from '../contexts/ProgressProvider/initialState';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
-import navigationInitialState from '../contexts/NavigationProvider/initialState';
-import { removeNavigationSorage } from '../services/navigationStorage';
-import { removeProgressSorage } from '../services/progressStorage';
-import { logError } from '../utils/logger';
+import { logError, logSuccess, logWarning } from '../utils/logger';
+import { deleteDoc } from 'firebase/firestore';
+import {
+	userDataRef,
+	userNavigationRef,
+	userProgressRef,
+} from '../database/refs/userRefs';
+import { logout } from '../database/auth/auth';
 
 type Providers = (typeof ProviderId)[keyof typeof ProviderId];
 
@@ -41,55 +39,57 @@ export function EditProfile() {
 		})();
 	}, []);
 
-	const deleteAccountWrapper = async () => {
+	const deleteAccount = async () => {
 		if (isDeleting) return;
 
 		try {
-			if (provider === ProviderId.PASSWORD) {
-				if (userPassword.length <= 0) return;
-				setIsDeleting(true);
-				await deleteAccount({ uid: authState.uid!, password: userPassword });
-			} else {
-				if (!provider) return;
-				if (deleteCode !== deleteCodeInputValue) {
-					toast<ToastData>(ToastNotification, {
-						type: 'warning',
-						data: {
-							type: 'warning',
-							text: 'Código de exclusão inválido. Tente novamente.',
-						},
-					});
-					return;
-				}
-
-				setIsDeleting(true);
-				await deleteAccount({ uid: authState.uid!, provider: provider });
+			const { currentUser } = auth;
+			if (!currentUser) {
+				throw new Error('Sessão expirada. Faça login e tente novamente.');
 			}
 
-			authDispatch({ type: authActionTypes.LOGOUT });
-			setProgressState(progressInitialState);
-			setNavigationState(navigationInitialState);
-			removeNavigationSorage();
-			removeProgressSorage();
+			if (provider === ProviderId.PASSWORD && userPassword.length <= 0) return;
+
+			if (deleteCode !== deleteCodeInputValue) {
+				logWarning('Código de exclusão inválido. Tente novamente.');
+				return;
+			}
+
+			setIsDeleting(true);
+
+			await deleteUser(currentUser);
+			await deleteDoc(userDataRef(authState.uid!));
+			await deleteDoc(userProgressRef(authState.uid!));
+			await deleteDoc(userNavigationRef(authState.uid!));
+			await logout({ authDispatch, setProgressState, setNavigationState });
 
 			void navigate('/', { replace: true });
-			toast<ToastData>(ToastNotification, {
-				type: 'success',
-				data: {
-					type: 'success',
-					text: 'Conta deletada com sucesso!',
-				},
-			});
+			logSuccess('Conta deletada com sucesso!');
 		} catch (error) {
 			setUserPassword('');
 
-			const errorMessage =
-				error instanceof FirebaseError &&
-				error.code === 'auth/invalid-credential'
-					? 'Senha incorreta. Tente novamente.'
-					: 'Algo deu errado. Tente novamente.';
+			const { code } = error as FirebaseError;
 
-			logError(error, errorMessage);
+			switch (code) {
+				case 'auth/invalid-credential': {
+					logWarning('Senha incorreta. Tente novamente.');
+					break;
+				}
+
+				case 'auth/requires-recent-login': {
+					await logout({ authDispatch, setProgressState, setNavigationState });
+					void navigate('/', { replace: true });
+					logWarning(
+						'Por motivos de segurança, faça login novamente para continuar.',
+					);
+					break;
+				}
+
+				default: {
+					logError({ error });
+					break;
+				}
+			}
 		}
 	};
 
@@ -156,7 +156,7 @@ export function EditProfile() {
 						<button
 							type="button"
 							className="form-btn w-[120px] cursor-pointer text-sm"
-							onClick={() => void deleteAccountWrapper()}
+							onClick={() => void deleteAccount()}
 							disabled={isDeleting}
 						>
 							{isDeleting ? (
