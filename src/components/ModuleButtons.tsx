@@ -1,6 +1,6 @@
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { getNextContent } from '../content/navigation/getNextContent';
-import { logError } from '../utils/logger';
+import { logError, logInfo, logSuccess } from '../utils/logger';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { useNavigate, useParams } from 'react-router-dom';
 import { setDoc, updateDoc } from 'firebase/firestore';
@@ -9,9 +9,6 @@ import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleData, SubtopicData, TopicData } from '../types/content';
 import type { ProgressState } from '../types/states';
 import { userNavigationRef, userProgressRef } from '../database/refs/userRefs';
-import { toast } from 'react-toastify';
-import type { ToastData } from '../types/toast';
-import { ToastNotification } from './Notifications';
 import { useEffect, useState, type MouseEvent } from 'react';
 import { TerminalContext } from '../contexts/TerminalProvider/context';
 
@@ -57,13 +54,9 @@ export function ModuleButtons({
 	const handleNext = async (e: MouseEvent) => {
 		if (isNextButtonLocked) {
 			e.preventDefault();
-			toast<ToastData>(ToastNotification, {
-				type: 'info',
-				data: {
-					type: 'info',
-					text: 'Conclua o exercício proposto para avançar ao próximo subtópico.',
-				},
-			});
+			logInfo(
+				'Conclua o exercício proposto para avançar ao próximo subtópico.',
+			);
 			return;
 		}
 
@@ -136,20 +129,16 @@ export function ModuleButtons({
 					},
 				}));
 			} else {
-				toast<ToastData>(ToastNotification, {
-					type: 'info',
-					data: {
-						type: 'info',
-						text: 'Finalize todos os subtópicos do tópico atual para concluí-lo.',
-					},
-				});
+				logInfo(
+					'Finalize todos os subtópicos do tópico atual para concluí-lo.',
+				);
 			}
 
 			setProgressState((prev) => ({ ...prev, ...data }));
 
 			if (authState.uid) await setDoc(userProgressRef(authState.uid), data);
 		} catch (error) {
-			logError(error);
+			logError({ error });
 		}
 	};
 
@@ -201,13 +190,7 @@ export function ModuleButtons({
 			.every((subtopic) => progressState.doneSubtopics.includes(subtopic.slug));
 
 		if (!isLastTopicDone) {
-			toast<ToastData>(ToastNotification, {
-				type: 'info',
-				data: {
-					type: 'info',
-					text: 'Finalize todos os tópicos para concluir o módulo.',
-				},
-			});
+			logInfo('Finalize todos os tópicos para concluir o módulo.');
 			return;
 		}
 
@@ -251,13 +234,7 @@ export function ModuleButtons({
 				await updateDoc(userNavigationRef(authState.uid), nextModuleValue);
 			}
 
-			toast<ToastData>(ToastNotification, {
-				type: 'success',
-				data: {
-					type: 'success',
-					text: 'Módulo finalizado com sucesso!',
-				},
-			});
+			logSuccess('Módulo finalizado com sucesso!');
 		}
 
 		setNavigationState((prev) => ({

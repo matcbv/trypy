@@ -37,10 +37,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			} catch (error) {
 				await signOut(auth);
 				void navigate('/', { replace: true });
-				logError(
+				logError({
 					error,
-					'Não foi possível renovar a sessão. Faça login novamente.',
-				);
+					text: 'Não foi possível renovar a sessão. Faça login novamente.',
+				});
 			} finally {
 				authDispatch({
 					type: actionTypes.SET_DATA,

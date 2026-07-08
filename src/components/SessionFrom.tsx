@@ -1,16 +1,13 @@
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
-import { toast } from 'react-toastify';
 import { signInWithGoogle } from '../database/auth/oAuth';
-import { ToastNotification } from './Notifications';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { validationRegex } from '../constants/validationRegex';
 import { signInWithCredentials } from '../database/auth/auth';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
-import { logError } from '../utils/logger';
+import { logError, logSuccess } from '../utils/logger';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
-import type { ToastData } from '../types/toast';
 import { LoadingPage } from '../pages/LoadingPage';
 import { signOut } from 'firebase/auth';
 import { auth } from '../database/configs/firebase';
@@ -52,13 +49,7 @@ export function SessionForm() {
 		const isDataValid = checkData();
 
 		if (!isDataValid) {
-			toast<ToastData>(ToastNotification, {
-				type: 'error',
-				data: {
-					type: 'error',
-					text: 'Credenciais inválidas!',
-				},
-			});
+			logError({ text: 'Credenciais inválidas!' });
 			return;
 		}
 
@@ -82,15 +73,9 @@ export function SessionForm() {
 
 			void navigate('/dashboard', { replace: true });
 
-			toast<ToastData>(ToastNotification, {
-				type: 'success',
-				data: {
-					type: 'success',
-					text: 'Login efetuado com sucesso!',
-				},
-			});
+			logSuccess('Login efetuado com sucesso!');
 		} catch (error) {
-			logError(error);
+			logError({ error });
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -111,16 +96,10 @@ export function SessionForm() {
 			setNavigationState(navigationData);
 
 			void navigate('/dashboard', { replace: true });
-			toast<ToastData>(ToastNotification, {
-				type: 'success',
-				data: {
-					type: 'success',
-					text: 'Login efetuado com sucesso!',
-				},
-			});
+			logSuccess('Login efetuado com sucesso!');
 		} catch (error) {
 			await signOut(auth);
-			logError(error);
+			logError({ error });
 		} finally {
 			setIsSubmitting(false);
 		}

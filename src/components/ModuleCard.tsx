@@ -3,10 +3,8 @@ import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleCardData } from '../types/content';
 import type { MouseEvent } from 'react';
-import { toast } from 'react-toastify';
-import type { ToastData } from '../types/toast';
-import { ToastNotification } from './Notifications';
 import { AuthContext } from '../contexts/AuthProvider/context';
+import { logInfo } from '../utils/logger';
 
 interface ModuleCardProps {
 	card: ModuleCardData;
@@ -30,24 +28,12 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 	const CheckModuleAccess = ({ event, moduleId }: CheckModuleAccessProps) => {
 		if (isModuleBlocked) {
 			event.preventDefault();
-			toast<ToastData>(ToastNotification, {
-				type: 'info',
-				data: {
-					type: 'info',
-					text: 'Complete o módulo anterior para liberar o acesso.',
-				},
-			});
+			logInfo('Complete o módulo anterior para liberar o acesso.');
 			return;
 		}
 		if (!authState.uid && moduleId !== initialModuleSlug) {
 			event.preventDefault();
-			toast<ToastData>(ToastNotification, {
-				type: 'info',
-				data: {
-					type: 'info',
-					text: 'Faça login ou crie uma conta para acessar o módulo.',
-				},
-			});
+			logInfo('Faça login ou crie uma conta para acessar o módulo.');
 			void navigate('/session');
 		}
 	};

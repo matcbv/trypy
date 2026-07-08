@@ -38,7 +38,7 @@ export function SubtopicDropdown({
 				},
 			}));
 		} catch (error) {
-			logError(error);
+			logError({ error });
 		}
 	};
 

@@ -2,12 +2,9 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useState, type ChangeEvent } from 'react';
 import { storage } from '../database/configs/firebase';
 import { AuthContext } from '../contexts/AuthProvider/context';
-import { toast } from 'react-toastify';
-import { ToastNotification } from './Notifications';
-import { logError } from '../utils/logger';
+import { logError, logSuccess } from '../utils/logger';
 import { updateDoc } from 'firebase/firestore';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
-import type { ToastData } from '../types/toast';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { userDataRef } from '../database/refs/userRefs';
 
@@ -35,15 +32,9 @@ export function PictureInput() {
 			});
 			await updateDoc(userDataRef(uid!), { picture: publicUrl });
 
-			toast<ToastData>(ToastNotification, {
-				type: 'success',
-				data: {
-					type: 'success',
-					text: 'Foto atualizada com sucesso!',
-				},
-			});
+			logSuccess('Foto atualizada com sucesso!');
 		} catch (error) {
-			logError(error, 'Falha ao atualizar a foto. Tente novamente.');
+			logError({ error, text: 'Falha ao atualizar a foto. Tente novamente.' });
 		} finally {
 			setIsUpdating(false);
 		}

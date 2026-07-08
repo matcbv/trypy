@@ -1,18 +1,15 @@
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { ToastNotification } from './Notifications';
 import { dateFormatter } from '../utils/dateFormatter';
 import { PasswordInput } from './PasswordInput';
 import { signUpWithCredentials } from '../database/auth/auth';
 import { validationRegex } from '../constants/validationRegex';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
-import { logError } from '../utils/logger';
+import { logError, logSuccess } from '../utils/logger';
 import { signInWithGoogle } from '../database/auth/oAuth';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
-import type { ToastData } from '../types/toast';
 import { idGenerator } from '../utils/idGenerator';
 import { LoadingPage } from '../pages/LoadingPage';
 import { signOut } from 'firebase/auth';
@@ -114,15 +111,9 @@ export function RegisterForm() {
 			setNavigationState((prev) => ({ ...prev, ...navigationData }));
 
 			void navigate('/dashboard', { replace: true });
-			toast<ToastData>(ToastNotification, {
-				type: 'success',
-				data: {
-					type: 'success',
-					text: 'Login efetuado com sucesso!',
-				},
-			});
+			logSuccess('Login efetuado com sucesso!');
 		} catch (error) {
-			logError(error);
+			logError({ error });
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -143,16 +134,10 @@ export function RegisterForm() {
 			setNavigationState(navigationData);
 
 			void navigate('/dashboard', { replace: true });
-			toast(ToastNotification, {
-				type: 'success',
-				data: {
-					type: 'success',
-					text: 'Login efetuado com sucesso!',
-				},
-			});
+			logSuccess('Login efetuado com sucesso!');
 		} catch (error) {
 			await signOut(auth);
-			logError(error);
+			logError({ error });
 		} finally {
 			setIsSubmitting(false);
 		}

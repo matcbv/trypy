@@ -11,7 +11,7 @@ export function getNavigationStorage() {
 			? (JSON.parse(storage) as NavigationState)
 			: navigationInitialState;
 	} catch (error) {
-		logError(error);
+		logError({ error });
 		return navigationInitialState;
 	}
 }
@@ -21,7 +21,7 @@ export function setNavigationStorage(data: NavigationState) {
 		const stringifiedData = JSON.stringify(data);
 		localStorage.setItem(storageKeys.NAVIGATION_STATE, stringifiedData);
 	} catch (error) {
-		logError(error);
+		logError({ error });
 	}
 }
 
@@ -29,6 +29,6 @@ export function removeNavigationSorage() {
 	try {
 		localStorage.removeItem(storageKeys.NAVIGATION_STATE);
 	} catch (error) {
-		logError(error);
+		logError({ error });
 	}
 }

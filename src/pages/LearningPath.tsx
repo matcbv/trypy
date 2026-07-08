@@ -33,10 +33,10 @@ export function LearningPath() {
 
 				setCardContent(() => content.map((card) => card.fields));
 			} catch (error) {
-				logError(
+				logError({
 					error,
-					'Não foi possível carregar o conteúdo dos cards. Tente novamente ou fale conosco.',
-				);
+					text: 'Não foi possível carregar o conteúdo dos cards. Tente novamente ou fale conosco.',
+				});
 			}
 		})();
 	}, []);
@@ -51,10 +51,10 @@ export function LearningPath() {
 				});
 				setInitialModuleSlug(content[0]!.fields.slug);
 			} catch (error) {
-				logError(
+				logError({
 					error,
-					'Não foi possível carregar o conteúdo dos módulos. Tente novamente ou fale conosco.',
-				);
+					text: 'Não foi possível carregar o conteúdo dos módulos. Tente novamente ou fale conosco.',
+				});
 			}
 		})();
 	}, [setInitialModuleSlug]);

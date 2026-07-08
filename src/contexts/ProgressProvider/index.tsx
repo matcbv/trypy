@@ -35,10 +35,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 				} catch (error) {
 					await signOut(auth);
 					void navigate('/', { replace: true });
-					logError(
+					logError({
 						error,
-						'Não foi possível carregar seu histórico de progresso. Tente novamente.',
-					);
+						text: 'Não foi possível carregar seu histórico de progresso. Tente novamente.',
+					});
 				}
 			} else {
 				try {
@@ -50,10 +50,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 					const initialProgressData = await fetchInitialProgress();
 					setProgressState(initialProgressData);
 				} catch (error) {
-					logError(
+					logError({
 						error,
-						'Não foi possível obter os dados iniciais de progresso. Tente novamente.',
-					);
+						text: 'Não foi possível obter os dados iniciais de progresso. Tente novamente.',
+					});
 				}
 			}
 		};

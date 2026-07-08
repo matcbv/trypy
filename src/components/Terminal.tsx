@@ -7,13 +7,10 @@ import { oneDark } from '@codemirror/theme-one-dark';
 import { LoadingPage } from '../pages/LoadingPage';
 import type { SubtopicData } from '../types/content';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
-import { toast } from 'react-toastify';
-import type { ToastData } from '../types/toast';
-import { ToastNotification } from './Notifications';
 import { updateDoc } from 'firebase/firestore';
 import { userDataRef, userProgressRef } from '../database/refs/userRefs';
 import { AuthContext } from '../contexts/AuthProvider/context';
-import { logError } from '../utils/logger';
+import { logError, logSuccess } from '../utils/logger';
 
 export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 	const { authState } = useSafeContext(AuthContext);
@@ -58,19 +55,12 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 					}
 
 					setTerminalState((prev) => ({ ...prev, solved: false }));
-
-					toast<ToastData>(ToastNotification, {
-						type: 'success',
-						data: {
-							type: 'success',
-							text: 'Exercício resolvido com sucesso!',
-						},
-					});
+					logSuccess('Exercício resolvido com sucesso!');
 				} catch (error) {
-					logError(
+					logError({
 						error,
-						'Não foi possível seguir com a conclusão do exercício. Tente novamente.',
-					);
+						text: 'Não foi possível seguir com a conclusão do exercício. Tente novamente.',
+					});
 				}
 			})();
 		}

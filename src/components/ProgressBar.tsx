@@ -20,10 +20,10 @@ export function ProgressBar() {
 					(progressState.doneSubtopics.length * 100) / subtopic.length;
 				setProgressPercentual(Number(percentual.toFixed(0)));
 			} catch (error) {
-				logError(
+				logError({
 					error,
-					'Não foi possível calcular seu progresso. Tente novamente ou fale conosco.',
-				);
+					text: 'Não foi possível calcular seu progresso. Tente novamente ou fale conosco.',
+				});
 			}
 		})();
 	}, [progressState.doneSubtopics]);

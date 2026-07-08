@@ -9,7 +9,7 @@ export function getProgressStorage() {
 		if (!storage) return progressInitialState;
 		return JSON.parse(storage) as ProgressState;
 	} catch (error) {
-		logError(error);
+		logError({ error });
 		return progressInitialState;
 	}
 }
@@ -19,7 +19,7 @@ export function setProgressStorage(data: ProgressState) {
 		const stringifiedData = JSON.stringify(data);
 		localStorage.setItem(storageKeys.PROGRESS_STATE, stringifiedData);
 	} catch (error) {
-		logError(error);
+		logError({ error });
 	}
 }
 
@@ -27,6 +27,6 @@ export function removeProgressSorage() {
 	try {
 		localStorage.removeItem(storageKeys.PROGRESS_STATE);
 	} catch (error) {
-		logError(error);
+		logError({ error });
 	}
 }

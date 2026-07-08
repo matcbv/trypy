@@ -9,12 +9,10 @@ import {
 	userProgressRef,
 } from '../refs/userRefs';
 import { fetchInitialProgress } from '../../content/services/fetchInitialProgress';
-import type { ToastData } from '../../types/toast';
-import { toast } from 'react-toastify';
-import { ToastNotification } from '../../components/Notifications';
 import type { UserNavigation } from '../../types/user';
 import { getNavigationStorage } from '../../services/navigationStorage';
 import { getProgressStorage } from '../../services/progressStorage';
+import { logError } from '../../utils/logger';
 
 // * Interface contendo as propriedades utilizadas da response oauth do Google.
 export interface OAuthUserPayload {
@@ -46,12 +44,8 @@ export const signInWithGoogle = async () => {
 		const navigationDoc = await getDoc(userNavigationRef(uid));
 
 		if (!progressDoc.exists() || !navigationDoc.exists()) {
-			toast<ToastData>(ToastNotification, {
-				type: 'error',
-				data: {
-					type: 'error',
-					text: 'Não foi possível realizar o login. Tente novamente ou fale conosco.',
-				},
+			logError({
+				text: 'Não foi possível realizar o login. Tente novamente ou fale conosco.',
 			});
 			throw new Error('Erro na requisição dos dados do usuário.');
 		}

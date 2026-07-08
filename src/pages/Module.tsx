@@ -67,10 +67,10 @@ export function Module() {
 
 				setModuleData(mapContent(content[0]));
 			} catch (error) {
-				logError(
+				logError({
 					error,
-					'Não foi possível carregar o conteúdo do módulo. Tente novamente ou fale conosco.',
-				);
+					text: 'Não foi possível carregar o conteúdo do módulo. Tente novamente ou fale conosco.',
+				});
 			}
 		})();
 	}, [params]);

@@ -43,7 +43,7 @@ export function TipPy({ tipFields }: { tipFields: TipData }) {
 			});
 			setFavorited((prev) => !prev);
 		} catch (error) {
-			logError(error);
+			logError({ error });
 		}
 	};
 

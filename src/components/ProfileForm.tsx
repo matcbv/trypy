@@ -1,15 +1,12 @@
-import { toast } from 'react-toastify';
-import { ToastNotification } from './Notifications';
 import { dateFormatter } from '../utils/dateFormatter';
 import { PictureInput } from './PictureInput';
-import { logError } from '../utils/logger';
+import { logError, logSuccess } from '../utils/logger';
 import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { updateDoc } from 'firebase/firestore';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { userDataRef } from '../database/refs/userRefs';
-import type { ToastData } from '../types/toast';
 import { validationRegex } from '../constants/validationRegex';
 
 const formMap = {
@@ -101,15 +98,12 @@ export function ProfileForm() {
 				payload: { data: formattedData },
 			});
 			await updateDoc(userDataRef(authState.uid!), formattedData);
-			toast<ToastData>(ToastNotification, {
-				type: 'success',
-				data: {
-					type: 'success',
-					text: 'Dados atualizados com sucesso!',
-				},
-			});
+			logSuccess('Dados atualizados com sucesso!');
 		} catch (error) {
-			logError(error, 'Falha ao atualizar os dados. Tente novamente.');
+			logError({
+				error,
+				text: 'Falha ao atualizar os dados. Tente novamente.',
+			});
 		}
 	};
 

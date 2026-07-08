@@ -32,10 +32,10 @@ export function Tips() {
 				);
 				setTips(tips);
 			} catch (error) {
-				logError(
+				logError({
 					error,
-					'Não foi possível carregar suas dicas salvas. Tente novamente ou fale conosco.',
-				);
+					text: 'Não foi possível carregar suas dicas salvas. Tente novamente ou fale conosco.',
+				});
 			}
 		})();
 	}, [authState.data?.savedTips]);

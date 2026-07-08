@@ -2,33 +2,41 @@ import axios from 'axios';
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
-	deleteUser,
-	reauthenticateWithCredential,
-	ProviderId,
-	EmailAuthProvider,
+	signOut,
 } from 'firebase/auth';
 import { auth } from '../configs/firebase';
-import { deleteDoc, getDoc, setDoc } from 'firebase/firestore';
+import { getDoc, setDoc } from 'firebase/firestore';
 import type { UserData, UserNavigation } from '../../types/user';
 import {
 	userDataRef,
 	userNavigationRef,
 	userProgressRef,
 } from '../refs/userRefs';
-import { toast } from 'react-toastify';
-import type { ToastData } from '../../types/toast';
-import { ToastNotification } from '../../components/Notifications';
 import { fetchInitialProgress } from '../../content/services/fetchInitialProgress';
-import { getNavigationStorage } from '../../services/navigationStorage';
-import { getProgressStorage } from '../../services/progressStorage';
+import {
+	getNavigationStorage,
+	removeNavigationSorage,
+} from '../../services/navigationStorage';
+import {
+	getProgressStorage,
+	removeProgressSorage,
+} from '../../services/progressStorage';
+import progressInitialState from '../../contexts/ProgressProvider/initialState';
+import authActionTypes from '../../contexts/AuthProvider/actionTypes';
+import navigationInitialState from '../../contexts/NavigationProvider/initialState';
+import type {
+	AuthContextType,
+	NavigationContextType,
+	ProgressContextType,
+} from '../../types/contexts';
+import { logError } from '../../utils/logger';
 
 type SignUpType = UserData & { password: string };
 
-type Providers = (typeof ProviderId)[keyof typeof ProviderId];
-interface DeleteOptions {
-	uid: string;
-	provider?: Providers;
-	password?: string;
+interface LogoutProps {
+	authDispatch: AuthContextType['authDispatch'];
+	setProgressState: ProgressContextType['setProgressState'];
+	setNavigationState: NavigationContextType['setNavigationState'];
 }
 
 export const signUpWithCredentials = async (userData: SignUpType) => {
@@ -97,12 +105,8 @@ export const signInWithCredentials = async (
 	const navigationDoc = await getDoc(userNavigationRef(uid));
 
 	if (!userDoc.exists() || !progressDoc.exists() || !navigationDoc.exists()) {
-		toast<ToastData>(ToastNotification, {
-			type: 'error',
-			data: {
-				type: 'error',
-				text: 'Não foi possível realizar o login. Tente novamente ou fale conosco.',
-			},
+		logError({
+			text: 'Não foi possível realizar o login. Tente novamente ou fale conosco.',
 		});
 		throw new Error('Erro na requisição dos dados do usuário.');
 	}
@@ -115,25 +119,15 @@ export const signInWithCredentials = async (
 	};
 };
 
-export const deleteAccount = async ({
-	uid,
-	provider,
-	password,
-}: DeleteOptions) => {
-	if (!auth.currentUser) {
-		throw new Error('Sessão expirada. Faça login e tente novamente.');
-	}
-
-	if (provider === ProviderId.PASSWORD) {
-		const credential = EmailAuthProvider.credential(
-			auth.currentUser.email!,
-			password!,
-		);
-		await reauthenticateWithCredential(auth.currentUser, credential);
-	}
-
-	await deleteUser(auth.currentUser);
-	await deleteDoc(userDataRef(uid));
-	await deleteDoc(userProgressRef(uid));
-	await deleteDoc(userNavigationRef(uid));
+export const logout = async ({
+	authDispatch,
+	setProgressState,
+	setNavigationState,
+}: LogoutProps) => {
+	await signOut(auth);
+	authDispatch({ type: authActionTypes.LOGOUT });
+	setProgressState(progressInitialState);
+	setNavigationState(navigationInitialState);
+	removeNavigationSorage();
+	removeProgressSorage();
 };

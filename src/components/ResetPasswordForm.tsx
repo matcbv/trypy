@@ -1,11 +1,8 @@
 import { useState, type SubmitEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { ToastNotification } from './Notifications';
-import { logError } from '../utils/logger';
+import { logError, logWarning } from '../utils/logger';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../database/configs/firebase';
-import type { ToastData } from '../types/toast';
 
 export function ResetPasswordForm() {
 	const [email, setEmail] = useState<string | null>(null);
@@ -15,13 +12,7 @@ export function ResetPasswordForm() {
 		e.preventDefault();
 
 		if (!email) {
-			toast<ToastData>(ToastNotification, {
-				type: 'error',
-				data: {
-					type: 'error',
-					text: 'Preencha o campo de e-mail!',
-				},
-			});
+			logWarning('Preencha o campo de e-mail!');
 			return;
 		}
 
@@ -32,7 +23,7 @@ export function ResetPasswordForm() {
 			};
 			await sendPasswordResetEmail(auth, email, actionCodeSettings);
 		} catch (error) {
-			logError(error);
+			logError({ error });
 		}
 	};
 

@@ -54,10 +54,10 @@ export function UserOverview() {
 					subtopic: subtopic[0]!.fields.title,
 				});
 			} catch (error) {
-				logError(
+				logError({
 					error,
-					'Não foi possível calcular seu progresso. Tente novamente ou fale conosco.',
-				);
+					text: 'Não foi possível calcular seu progresso. Tente novamente ou fale conosco.',
+				});
 			}
 		})();
 	}, [

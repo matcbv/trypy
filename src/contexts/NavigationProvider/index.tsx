@@ -34,10 +34,10 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 				} catch (error) {
 					await signOut(auth);
 					void navigate('/', { replace: true });
-					logError(
+					logError({
 						error,
-						'Não foi possível carregar seu histórico de navegação. Tente novamente.',
-					);
+						text: 'Não foi possível carregar seu histórico de navegação. Tente novamente.',
+					});
 				}
 			} else {
 				try {
@@ -50,10 +50,10 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 					};
 					setNavigationState(initialNavigationState);
 				} catch (error) {
-					logError(
+					logError({
 						error,
-						'Não foi possível obter os dados iniciais de navegação. Tente novamente.',
-					);
+						text: 'Não foi possível obter os dados iniciais de navegação. Tente novamente.',
+					});
 				}
 			}
 		})();
