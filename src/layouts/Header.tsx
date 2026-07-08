@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { HeaderList } from '../components/HeaderList';
 
 export function Header() {
-	const headerRef = useRef<HTMLElement | null>(null);
+	const headerRef = useRef<HTMLElement>(null);
 
 	useEffect(() => {
 		const header = headerRef.current;

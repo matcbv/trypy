@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 
 export function CodeBlock({ code }: { code: string }) {
-	const copyIcon = useRef<HTMLImageElement | null>(null);
+	const copyIcon = useRef<HTMLImageElement>(null);
 	const [isCopied, setIsCopied] = useState(false);
 
 	const copyText = async (text: string) => {
