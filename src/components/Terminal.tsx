@@ -76,6 +76,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 			error: null,
 			solved: false,
 		}));
+		setUserCode(subtopicData.starterCode!);
 	}, [subtopicData, setTerminalState]);
 
 	const statusIcon = () => {
