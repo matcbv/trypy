@@ -27,7 +27,7 @@ const iconsMap = {
 
 export function Footer() {
 	return (
-		<footer className="bg-main-black/90 relative flex flex-col gap-y-[10px] px-[30px] pt-[60px] pb-[20px]">
+		<footer className="bg-main-black relative flex flex-col gap-y-[10px] px-[30px] pt-[60px] pb-[20px]">
 			<div className="flex flex-col items-center gap-y-10">
 				<div>
 					<ul className="flex gap-x-10">
