@@ -1,8 +1,11 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import { highlightCode } from '../utils/highlightCode';
 
 export function CodeBlock({ code }: { code: string }) {
 	const copyIcon = useRef<HTMLImageElement>(null);
 	const [isCopied, setIsCopied] = useState(false);
+
+	const html = useMemo(() => highlightCode(code), [code]);
 
 	const copyText = async (text: string) => {
 		await navigator.clipboard.writeText(text);
@@ -14,10 +17,13 @@ export function CodeBlock({ code }: { code: string }) {
 
 	return (
 		<div
-			className="font-jetbrains group relative cursor-pointer rounded bg-[#13121b] p-3 px-6 text-sm shadow-[0_0_15px_#000000]/25"
+			className="font-jetbrains group relative cursor-pointer rounded text-sm shadow-[0_0_15px_#000000]/25"
 			onClick={() => void copyText(code)}
 		>
-			<code className="whitespace-pre-wrap">{code}</code>
+			<div
+				className="overflow-hidden rounded-lg"
+				dangerouslySetInnerHTML={{ __html: html }}
+			></div>
 			<img
 				ref={copyIcon}
 				src={`${isCopied ? '/assets/images/icons/success.png' : '/assets/images/icons/copy.png'}`}

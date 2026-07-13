@@ -1,11 +1,9 @@
-import { useState } from 'react';
-import { oneDark } from '@uiw/react-codemirror';
-import CodeMirror from '@uiw/react-codemirror';
-import { python } from '@codemirror/lang-python';
+import { useMemo, useState } from 'react';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { useNavigate } from 'react-router-dom';
 import { fetchContent } from '../content/services/fetchContent';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
+import { highlightCode } from '../utils/highlightCode';
 
 interface ResolutionCardProps {
 	slug: string;
@@ -18,6 +16,8 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 	const [isVisible, setIsVisible] = useState(false);
 	const { setNavigationState } = useSafeContext(NavigationContext);
 	const navigate = useNavigate();
+
+	const html = useMemo(() => highlightCode(code), [code]);
 
 	const copyText = async (text: string) => {
 		await navigator.clipboard.writeText(text);
@@ -101,15 +101,10 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 				className={`overflow-hidden transition-all duration-300 ${isVisible ? 'h-[200px] opacity-100' : 'h-4 opacity-0'}`}
 			>
 				{isVisible && (
-					<CodeMirror
-						value={code}
-						editable={false}
-						readOnly={true}
-						extensions={[python()]}
-						theme={oneDark}
-						height="200px"
-						className={`overflow-hidden rounded-b-md py-1 [&_.cm-scroller]:overflow-hidden`}
-					></CodeMirror>
+					<div
+						className="overflow-hidden rounded-lg"
+						dangerouslySetInnerHTML={{ __html: html }}
+					></div>
 				)}
 			</div>
 		</div>
