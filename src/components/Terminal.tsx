@@ -3,7 +3,7 @@ import { TerminalContext } from '../contexts/TerminalProvider/context';
 import { useEffect, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
-import { oneDark } from '@codemirror/theme-one-dark';
+import { catppuccinFrappe } from '@catppuccin/codemirror';
 import { LoadingPage } from '../pages/LoadingPage';
 import type { SubtopicData } from '../types/content';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
@@ -124,7 +124,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 						<CodeMirror
 							value={userCode}
 							extensions={[python()]}
-							theme={oneDark}
+							theme={catppuccinFrappe}
 							height="400px"
 							className="overflow-hidden rounded-t-md [&_.cm-scroller]:scrollbar-none"
 							onChange={(value) => setUserCode(value)}
@@ -132,7 +132,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 					)}
 				</div>
 
-				<div className="rounded-b-md bg-[#2a313d]">
+				<div className="rounded-b-md bg-[#303446]">
 					<div className="border-main-purple font-jetbrains flex items-center gap-x-2 border-b px-5 py-2 text-sm">
 						Saída:
 						{statusIcon()}
