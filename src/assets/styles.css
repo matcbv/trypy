@@ -19,3 +19,11 @@ input[type='password']::-ms-clear {
 .Toastify__progress-bar--bg {
 	background: transparent;
 }
+
+/* shiki */
+.shiki {
+	padding: 10px;
+	font-family: 'JetBrains Mono';
+	font-size: 15px;
+	line-height: 1.5;
+}
