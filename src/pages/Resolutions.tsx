@@ -15,7 +15,7 @@ export function Resolutions() {
 			{authState.data && Object.keys(authState.data.resolutions!).length > 0 ? (
 				Object.entries(authState.data.resolutions!).map(
 					([slug, { title, code }]) => (
-						<ResolutionCard slug={slug} title={title} code={code} />
+						<ResolutionCard key={slug} slug={slug} title={title} code={code} />
 					),
 				)
 			) : (
