@@ -17,7 +17,7 @@ export function CodeBlock({ code }: { code: string }) {
 
 	return (
 		<div
-			className="font-jetbrains group relative cursor-pointer rounded text-sm shadow-[0_0_15px_#000000]/25"
+			className="font-jetbrains group relative cursor-pointer rounded text-sm shadow-[0_0_10px_var(--color-main-purple)]/15"
 			onClick={() => void copyText(code)}
 		>
 			<div
