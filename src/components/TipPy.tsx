@@ -48,8 +48,8 @@ export function TipPy({ tipFields }: { tipFields: TipData }) {
 	};
 
 	return (
-		<div className="font-jetbrains mb-5 w-[600px] overflow-hidden rounded-lg bg-[#13121b] shadow-lg">
-			<div className="bg-main-bg flex items-center px-4 py-2">
+		<div className="font-jetbrains mb-5 w-[600px] overflow-hidden rounded-lg bg-[#181724] shadow-lg">
+			<div className="border-b-main-green flex items-center border-b px-4 py-2">
 				<div className="flex gap-2">
 					<span className="h-3 w-3 rounded-full bg-red-400/70"></span>
 					<span className="h-3 w-3 rounded-full bg-yellow-300/70"></span>
