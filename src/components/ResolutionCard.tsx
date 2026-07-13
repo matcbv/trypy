@@ -56,7 +56,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 	};
 
 	return (
-		<div key={slug} className="rounded-md bg-[#282c34]">
+		<div key={slug} className="rounded-md bg-[#303446]">
 			<div className="border-b-main-purple flex items-center justify-between border-b px-5 py-2">
 				<h1 className="font-jetbrains text-sm">{title}</h1>
 				<span className="flex gap-x-3">
