@@ -1,4 +1,4 @@
-export const dateFormatter = (value: string): string => {
+export function dateFormatter(value: string) {
 	let raw = value.replace(/\D/g, '');
 	raw = raw.length > 8 ? raw.slice(0, 8) : raw;
 
@@ -8,4 +8,4 @@ export const dateFormatter = (value: string): string => {
 		raw = `${raw.slice(0, 2)}/${raw.slice(2)}`;
 	}
 	return raw;
-};
+}
