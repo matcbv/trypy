@@ -57,6 +57,7 @@ export function PictureInput() {
 						<img
 							src={picturePreview}
 							className="size-full cursor-pointer object-cover"
+							referrerPolicy="no-referrer"
 						/>
 					)}
 				</div>
