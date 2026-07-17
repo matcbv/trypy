@@ -47,7 +47,7 @@ export function contentfulFormatter(content: Document) {
 				<h2 className="text-main-green text-2xl tracking-wide">{children}</h2>
 			),
 			[BLOCKS.HEADING_3]: (_, children) => (
-				<h3 className="text-lg tracking-wide">{children}</h3>
+				<h3 className="text-xl tracking-wide">{children}</h3>
 			),
 			[BLOCKS.HR]: () => <hr className="my-8" />,
 			[BLOCKS.PARAGRAPH]: (node, children) => {
