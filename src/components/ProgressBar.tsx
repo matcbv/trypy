@@ -12,13 +12,13 @@ export function ProgressBar() {
 	useEffect(() => {
 		void (async () => {
 			try {
-				const subtopic = await fetchContent({
+				const subtopics = await fetchContent({
 					contentType: 'subtopic',
 					include: 0,
 				});
 				const percentual =
-					(progressState.doneSubtopics.length * 100) / subtopic.length;
-				setProgressPercentual(Number(percentual.toFixed(0)));
+					(progressState.doneSubtopics.length * 100) / subtopics.length;
+				setProgressPercentual(Math.round(Number(percentual.toFixed(2))));
 			} catch (error) {
 				logError({
 					error,
