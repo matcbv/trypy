@@ -6,7 +6,13 @@ import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { FirebaseError } from 'firebase/app';
 import { auth } from '../database/configs/firebase';
-import { deleteUser, getIdTokenResult, ProviderId } from 'firebase/auth';
+import {
+	deleteUser,
+	EmailAuthProvider,
+	getIdTokenResult,
+	ProviderId,
+	reauthenticateWithCredential,
+} from 'firebase/auth';
 import { idGenerator } from '../utils/idGenerator';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { logError, logSuccess, logWarning } from '../utils/logger';
@@ -48,11 +54,19 @@ export function EditProfile() {
 				throw new Error('Sessão expirada. Faça login e tente novamente.');
 			}
 
-			if (provider === ProviderId.PASSWORD && userPassword.length <= 0) return;
+			if (provider === ProviderId.PASSWORD) {
+				if (userPassword.length <= 0) return;
 
-			if (deleteCode !== deleteCodeInputValue) {
-				logWarning('Código de exclusão inválido. Tente novamente.');
-				return;
+				const credential = EmailAuthProvider.credential(
+					authState.data!.email!,
+					userPassword,
+				);
+				await reauthenticateWithCredential(currentUser, credential);
+			} else {
+				if (deleteCode !== deleteCodeInputValue) {
+					logWarning('Código de exclusão inválido. Tente novamente.');
+					return;
+				}
 			}
 
 			setIsDeleting(true);
