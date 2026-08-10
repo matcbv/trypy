@@ -10,12 +10,36 @@ import type { RunCodeParams } from '../../types/contexts';
 const postMessageWrapper = (worker: Worker, message: WorkerRequest) =>
 	worker.postMessage(message);
 
-export function TerminalProvier() {
+export function TerminalProvider() {
 	const [terminalState, setTerminalState] =
 		useState<TerminalState>(initialState);
 	const workerRef = useRef<Worker | null>(null);
 	const expectedOutputRef = useRef<string | null>(null);
 	const outputBufferRef = useRef<string>('');
+
+	function isExerciseSolved(): { solved: boolean; errorMessage?: string } {
+		if (expectedOutputRef.current) {
+			if (
+				expectedOutputRef.current.trim().toLowerCase() !==
+				outputBufferRef.current.trim().toLowerCase()
+			) {
+				return {
+					solved: false,
+					errorMessage:
+						'A saída gerada não é a esperada. Verifique o resultado e tente novamente.',
+				};
+			}
+		} else {
+			if (outputBufferRef.current.trim().length <= 0) {
+				return {
+					solved: false,
+					errorMessage:
+						'Nenhuma saída foi gerada. Verifique se o resultado foi exibido corretamente.',
+				};
+			}
+		}
+		return { solved: true };
+	}
 
 	useEffect(() => {
 		const worker = createWorker();
@@ -40,16 +64,17 @@ export function TerminalProvier() {
 
 			switch (type) {
 				case 'status': {
-					let solved = false;
-
 					if (status === 'success') {
-						solved = expectedOutputRef.current
-							? expectedOutputRef.current.trim() ===
-								outputBufferRef.current.trim()
-							: true;
+						const { solved, errorMessage } = isExerciseSolved();
 
 						if (solved) {
 							setTerminalState((prev) => ({ ...prev, solved }));
+						} else {
+							setTerminalState((prev) => ({
+								...prev,
+								error: errorMessage!,
+								solved,
+							}));
 						}
 					}
 
