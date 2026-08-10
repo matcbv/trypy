@@ -22,7 +22,7 @@ import { AuthProvider } from '../contexts/AuthProvider';
 import { ProgressProvider } from '../contexts/ProgressProvider';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { ProtectedRoute } from './ProtectedRoute';
-import { TerminalProvier } from '../contexts/TerminalProvider';
+import { TerminalProvider } from '../contexts/TerminalProvider';
 import { AboutUs } from '../pages/AboutUs';
 import { BeAPartner } from '../pages/BeAPartner';
 import { ScrollToTop } from '../components/ScrollToTop';
@@ -56,7 +56,7 @@ export function AppRoutes() {
 										<Route path="resolutions" element={<Resolutions />} />
 										<Route path="tips" element={<Tips />} />
 									</Route>
-									<Route element={<TerminalProvier />}>
+									<Route element={<TerminalProvider />}>
 										<Route
 											path="/learning-path/:moduleId"
 											element={<Module />}
