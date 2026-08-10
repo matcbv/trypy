@@ -17,7 +17,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 	const { progressState, setProgressState } = useSafeContext(ProgressContext);
 	const { terminalState, setTerminalState, runCode, stopCodeExecution } =
 		useSafeContext(TerminalContext);
-	const [userCode, setUserCode] = useState<string>(subtopicData.starterCode!);
+	const [userCode, setUserCode] = useState<string>('');
 
 	const solved =
 		terminalState.solved ||
@@ -41,13 +41,14 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 						doneSubtopics,
 					}));
 
-					const resolutions = {
-						...authState.data?.resolutions,
-						[subtopicData.slug]: {
+					const resolutions = [
+						...authState.data!.resolutions!,
+						{
+							slug: subtopicData.slug,
 							title: subtopicData.title,
 							code: userCode,
 						},
-					};
+					];
 
 					if (authState.uid) {
 						await updateDoc(userDataRef(authState.uid), { resolutions });
@@ -76,7 +77,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 			error: null,
 			solved: false,
 		}));
-		setUserCode(subtopicData.starterCode!);
+		setUserCode(subtopicData.starterCode || '');
 	}, [subtopicData, setTerminalState]);
 
 	const statusIcon = () => {

@@ -81,7 +81,7 @@ export const signInWithGoogle = async () => {
 		createdAt: new Date(),
 		supporter: false,
 		savedTips: [],
-		resolutions: {},
+		resolutions: [],
 	});
 	await setDoc(userProgressRef(uid), initialProgressData);
 	await setDoc(userNavigationRef(uid), initialNavigationState);
