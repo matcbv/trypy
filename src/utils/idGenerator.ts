@@ -4,7 +4,7 @@ export function idGenerator(): { generateID: () => string } {
 	function generateID(): string {
 		let id = '';
 
-		while (id.length < 8) {
+		while (id.length < 6) {
 			const index = Math.floor(Math.random() * chars.length);
 			id += chars[index];
 		}
