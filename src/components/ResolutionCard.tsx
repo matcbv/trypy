@@ -57,7 +57,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 
 	return (
 		<div key={slug} className="rounded-md bg-[#303446]">
-			<div className="border-b-main-purple flex items-center justify-between border-b px-5 py-2">
+			<div className="border-b-main-purple flex items-center justify-between border-b p-[10px]">
 				<h1 className="font-jetbrains text-sm">{title}</h1>
 				<span className="flex gap-x-3">
 					<img
@@ -98,7 +98,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 				</span>
 			</div>
 			<div
-				className={`overflow-hidden transition-all duration-300 ${isVisible ? 'h-[200px] opacity-100' : 'h-4 opacity-0'}`}
+				className={`scrollbar-none overflow-scroll transition-all duration-300 ${isVisible ? 'h-[200px] opacity-100' : 'h-4 opacity-0'}`}
 			>
 				{isVisible && (
 					<div

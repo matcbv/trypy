@@ -13,11 +13,11 @@ export function Resolutions() {
 				Exercícios resolvidos
 			</h1>
 			{authState.data && Object.keys(authState.data.resolutions!).length > 0 ? (
-				Object.entries(authState.data.resolutions!).map(
-					([slug, { title, code }]) => (
+				<div className="flex flex-col gap-y-5">
+					{authState.data.resolutions!.map(({ slug, title, code }) => (
 						<ResolutionCard key={slug} slug={slug} title={title} code={code} />
-					),
-				)
+					))}
+				</div>
 			) : (
 				<div className="flex flex-col items-center justify-center gap-y-5 opacity-60">
 					<div className="rounded-full bg-[radial-gradient(circle,_#594486,_transparent_70%)]">
