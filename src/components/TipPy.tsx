@@ -1,55 +1,26 @@
-import { useEffect, useState, type MouseEvent } from 'react';
+import { useRef, useState } from 'react';
 import { contentfulFormatter } from '../content/formatters/contentfulFormatter';
-import { updateDoc } from 'firebase/firestore';
-import { AuthContext } from '../contexts/AuthProvider/context';
-import { logError } from '../utils/logger';
-import authActionTypes from '../contexts/AuthProvider/actionTypes';
-import { useSafeContext } from '../hooks/useSafeContext';
-import { userDataRef } from '../database/refs/userRefs';
 import type { TipData } from '../types/content';
 
 export function TipPy({ tipFields }: { tipFields: TipData }) {
-	const { authState, authDispatch } = useSafeContext(AuthContext);
-	const [favorited, setFavorited] = useState(false);
+	const tip = useRef<HTMLDivElement>(null);
+	const copyIcon = useRef<HTMLImageElement>(null);
+	const [isCopied, setIsCopied] = useState(false);
 
-	useEffect(() => {
-		const savedTips = authState.data?.savedTips;
-		if (savedTips) setFavorited(savedTips.includes(tipFields.slug));
-	}, [authState.data?.savedTips, tipFields.slug]);
-
-	const toggleImage = (
-		e: MouseEvent<HTMLImageElement>,
-		isHovering: boolean,
-	) => {
-		if (!favorited) {
-			e.currentTarget.src = `/assets/images/icons/${isHovering ? 'favorited' : 'favorite'}.png`;
-		}
-	};
-
-	const toggleFavorite = async () => {
-		if (!authState.data || !authState.uid) return;
-
-		try {
-			let savedTips = authState.data.savedTips || [];
-			if (savedTips.includes(tipFields.slug)) {
-				savedTips = savedTips.filter((tip) => tip !== tipFields.slug);
-			} else {
-				savedTips = [...savedTips, tipFields.slug];
-			}
-			await updateDoc(userDataRef(authState.uid), { savedTips });
-			authDispatch({
-				type: authActionTypes.SET_DATA,
-				payload: { data: { savedTips } },
-			});
-			setFavorited((prev) => !prev);
-		} catch (error) {
-			logError({ error });
-		}
+	const copyText = async (text: string) => {
+		await navigator.clipboard.writeText(text);
+		setIsCopied((prev) => !prev);
+		setTimeout(() => {
+			setIsCopied(false);
+		}, 2000);
 	};
 
 	return (
-		<div className="font-jetbrains mb-5 w-[600px] overflow-hidden rounded-lg bg-[#181724] shadow-lg">
-			<div className="border-b-main-green flex items-center border-b px-4 py-2">
+		<div
+			ref={tip}
+			className="font-jetbrains group mb-5 w-[600px] overflow-hidden rounded-lg bg-[#181724] shadow-lg"
+		>
+			<div className="flex items-center border-b border-b-(--theme-color) px-4 py-2">
 				<div className="flex gap-2">
 					<span className="h-3 w-3 rounded-full bg-red-400/70"></span>
 					<span className="h-3 w-3 rounded-full bg-yellow-300/70"></span>
@@ -58,13 +29,11 @@ export function TipPy({ tipFields }: { tipFields: TipData }) {
 				<span className="ml-4 text-sm">{tipFields.title}</span>
 				<div className="group ml-auto flex">
 					<img
-						src={`/assets/images/icons/${favorited ? 'favorited' : 'favorite'}.png`}
-						alt="Favoritar"
-						className="cursor-pointer"
-						draggable={false}
-						onClick={() => void toggleFavorite()}
-						onMouseEnter={(e) => toggleImage(e, true)}
-						onMouseLeave={(e) => toggleImage(e, false)}
+						ref={copyIcon}
+						src={`${isCopied ? '/assets/images/icons/success.png' : '/assets/images/icons/copy.png'}`}
+						alt="Copiar código"
+						className="w-5 scale-0 cursor-pointer transition-transform group-hover:scale-100"
+						onClick={() => void copyText(tip.current!.innerText)}
 					/>
 				</div>
 			</div>

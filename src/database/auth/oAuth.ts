@@ -80,7 +80,6 @@ export const signInWithGoogle = async () => {
 		birthDate: null,
 		createdAt: new Date(),
 		supporter: false,
-		savedTips: [],
 		resolutions: [],
 	});
 	await setDoc(userProgressRef(uid), initialProgressData);

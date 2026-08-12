@@ -18,7 +18,6 @@ export function DashboardNavbar() {
 		{ slug: 'support-us', title: 'Apoie-nos', icon: 'support-us' },
 		{ slug: 'certifications', title: 'Certificações', icon: 'certificate' },
 		{ slug: 'resolutions', title: 'Resoluções', icon: 'resolution' },
-		{ slug: 'tips', title: 'Dicas salvas', icon: 'tip' },
 	];
 
 	const logoutWrapper = async () => {

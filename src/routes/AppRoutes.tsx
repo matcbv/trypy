@@ -10,7 +10,6 @@ import { Dashboard } from '../pages/Dashboard';
 import { EditProfile } from '../pages/EditProfile';
 import { Certifications } from '../pages/Certifications';
 import { Resolutions } from '../pages/Resolutions';
-import { Tips } from '../pages/Tips';
 import { Module } from '../pages/Module';
 import { Support } from '../pages/Support';
 import { ResetPassword } from '../pages/ResetPassword';
@@ -54,7 +53,6 @@ export function AppRoutes() {
 										<Route path="support-us" element={<SupportUs />} />
 										<Route path="certifications" element={<Certifications />} />
 										<Route path="resolutions" element={<Resolutions />} />
-										<Route path="tips" element={<Tips />} />
 									</Route>
 									<Route element={<TerminalProvider />}>
 										<Route

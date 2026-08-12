@@ -97,7 +97,6 @@ export function RegisterForm() {
 				picture: null,
 				createdAt: new Date(),
 				supporter: false,
-				savedTips: [],
 				resolutions: [],
 			});
 

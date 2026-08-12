@@ -9,7 +9,6 @@ export interface UserData {
 	picture: string | null;
 	createdAt: Date;
 	supporter: boolean;
-	savedTips: string[];
 	resolutions: { slug: string; title: string; code: string }[];
 }
 
