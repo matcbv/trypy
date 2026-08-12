@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { ModuleSideBar } from '../components/ModuleSideBar';
 import { useEffect, useRef, useState } from 'react';
 import { fetchContent } from '../content/services/fetchContent';
@@ -14,6 +14,7 @@ import { LoadingPage } from './LoadingPage';
 import { updateDoc } from 'firebase/firestore';
 import { userNavigationRef } from '../database/refs/userRefs';
 import { AuthContext } from '../contexts/AuthProvider/context';
+import { themeStyles, type Themes } from '../constants/themeStyle';
 
 export function Module() {
 	const { authState } = useSafeContext(AuthContext);
@@ -27,6 +28,8 @@ export function Module() {
 	const [offset, setOffset] = useState(20);
 	const footerRef = useRef<HTMLElement>(null);
 	const params = useParams<{ moduleId: string }>();
+	const location = useLocation();
+	const { theme } = location.state as { theme: Themes };
 
 	// * useEffect para aparição e posicionamento do botão de scroll para o topo.
 	useEffect(() => {
@@ -64,7 +67,6 @@ export function Module() {
 				if (!content[0]) {
 					throw new Error(`Não foi possível obter o módulo ${moduleId}`);
 				}
-
 				setModuleData(mapContent(content[0]));
 			} catch (error) {
 				logError({
@@ -120,8 +122,16 @@ export function Module() {
 			) : (
 				<>
 					<ModuleSideBar topics={topics} moduleOrder={moduleData.order} />
-					<div className="w-[1200px] rounded-lg bg-[#0d0a14] p-10 shadow-[0_0_20px_#ffffff]/5">
-						<h1 className="text-main-green mb-5 text-3xl tracking-wide">
+					<div
+						className="w-[1200px] rounded-lg bg-[#0d0a14] p-10 shadow-[0_0_20px_#ffffff]/5"
+						style={
+							{
+								'--theme-color': `var(${themeStyles[theme].color})`,
+								'--highlight-theme-color': `var(${themeStyles[theme].highlight})`,
+							} as React.CSSProperties
+						}
+					>
+						<h1 className={`mb-5 text-3xl tracking-wide text-(--theme-color)!`}>
 							{subtopicData?.title}
 						</h1>
 						<div className="mb-10 flex flex-col gap-y-5">

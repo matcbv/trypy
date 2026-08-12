@@ -44,7 +44,7 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 			className="relative size-[460px] overflow-hidden rounded-md bg-[url('/assets/images/batthern.png')] shadow-[0_0_30px_#000000]/50"
 		>
 			<div className="flex size-full flex-col bg-[#0f0d16dc]">
-				<h2 className="flex gap-x-3 rounded-t-md border-b border-(--card-color) p-5">
+				<h2 className="flex gap-x-3 rounded-t-md border-b border-(--theme-color) p-5">
 					{card.title}
 					{progressState.doneModules.includes(card.moduleId) && (
 						<img src="/assets/images/icons/done.png" alt="Concluído" />
@@ -55,7 +55,7 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 						<p className="mb-6 leading-6">{card.description}</p>
 						<div>
 							<p className="mb-4">Tópicos desse módulo:</p>
-							<ul className="ml-4 flex list-disc flex-col items-start gap-y-2 marker:text-(--card-color)">
+							<ul className="ml-4 flex list-disc flex-col items-start gap-y-2 marker:text-(--theme-color)">
 								{card.topicsList?.map((topic) => (
 									<li className="bg-black/30 p-1" key={topic}>
 										{topic}
@@ -66,8 +66,8 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 					</div>
 					<Link
 						to={`/learning-path/${card.moduleId}`}
-						state={{ initialModuleSlug }}
-						className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${!isModuleBlocked && 'hover:bg-(--slide-button-color) hover:shadow-[0_0_10px_var(--slide-button-color)]'}`}
+						state={{ initialModuleSlug, theme: card.theme }}
+						className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${!isModuleBlocked && 'hover:bg-(--theme-color)/70 hover:shadow-[0_0_10px_var(--shadow-theme-color)]'}`}
 						onClick={(e) =>
 							CheckModuleAccess({ event: e, moduleId: card.moduleId })
 						}

@@ -39,12 +39,16 @@ export function contentfulFormatter(content: Document) {
 				}
 			},
 			[BLOCKS.UL_LIST]: (_, children) => (
-				<ul className="marker:text-main-green ml-5 flex list-disc flex-col gap-y-2">
+				<ul
+					className={`ml-5 flex list-disc flex-col gap-y-2 marker:text-(--theme-color)`}
+				>
 					{children}
 				</ul>
 			),
 			[BLOCKS.HEADING_2]: (_, children) => (
-				<h2 className="text-main-green text-2xl tracking-wide">{children}</h2>
+				<h2 className={`text-2xl tracking-wide text-(--theme-color)`}>
+					{children}
+				</h2>
 			),
 			[BLOCKS.HEADING_3]: (_, children) => (
 				<h3 className="text-xl tracking-wide">{children}</h3>
@@ -81,7 +85,7 @@ export function contentfulFormatter(content: Document) {
 		},
 		renderMark: {
 			[MARKS.BOLD]: (text) => (
-				<span className="text-highlight-green">{text}</span>
+				<span className="text-(--highlight-theme-color)">{text}</span>
 			),
 		},
 	});

@@ -4,24 +4,14 @@ import { ModuleCard } from '../components/ModuleCard';
 import type { ModuleCardData } from '../types/content';
 import { logError } from '../utils/logger';
 import { LoadingPage } from './LoadingPage';
-
-type Themes = 'green' | 'purple';
-
-interface CardStyleProps {
-	cardColor: string;
-	slideButtonColor: string;
-}
-
-const cardStyles: Record<Themes, CardStyleProps> = {
-	green: { cardColor: '--color-main-green', slideButtonColor: '#20663b' },
-	purple: { cardColor: '--color-main-purple', slideButtonColor: '#402d66' },
-};
+import { themeStyles, type Themes } from '../constants/themeStyle';
 
 export function LearningPath() {
 	const [cardContent, setCardContent] = useState<ModuleCardData[]>([]);
 	const [initialModuleSlug, setInitialModuleSlug] = useState<string | null>(
 		null,
 	);
+	cardContent.map((card) => console.log(card));
 
 	useEffect(() => {
 		void (async () => {
@@ -70,15 +60,15 @@ export function LearningPath() {
 						className="relative"
 						style={
 							{
-								'--card-color': `var(${cardStyles[card.theme as Themes].cardColor})`,
-								'--slide-button-color': `${cardStyles[card.theme as Themes].slideButtonColor}`,
+								'--theme-color': `var(${themeStyles[card.theme as Themes].color})`,
+								'--shadow-theme-color': `var(${themeStyles[card.theme as Themes].shadow})`,
 							} as CSSProperties
 						}
 					>
 						<ModuleCard card={card} initialModuleSlug={initialModuleSlug!} />
 						<svg className="absolute right-1/2 h-[230px] w-[5px]">
 							<polyline
-								className="fill-none stroke-(--card-color) stroke-5"
+								className="fill-none stroke-(--theme-color) stroke-5"
 								points="0,0 0,230"
 								strokeDasharray="15"
 							/>
