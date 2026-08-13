@@ -27,10 +27,10 @@ const iconsMap = {
 
 export function Footer() {
 	return (
-		<footer className="bg-main-black relative flex flex-col gap-y-[10px] px-[30px] pt-[60px] pb-[20px]">
+		<footer className="bg-main-black relative flex flex-col gap-y-10 px-[30px] pt-[60px] pb-[20px]">
 			<div className="flex flex-col items-center gap-y-10">
 				<div>
-					<ul className="flex gap-x-10">
+					<ul className="flex gap-x-7 sm:gap-x-10">
 						{Object.entries(footerMap).map(([key, value]) => (
 							<Link to={`/${key}`} className="footer-links" key={key}>
 								{value}
@@ -39,7 +39,7 @@ export function Footer() {
 					</ul>
 				</div>
 				<div className="flex flex-col gap-y-4">
-					<p>Conheça nossas redes sociais:</p>
+					<p className="text-sm sm:text-base">Conheça nossas redes sociais:</p>
 					<ul className="flex justify-around">
 						{Object.entries(iconsMap).map(([key, { link, src }]) => (
 							<li key={key}>
@@ -55,36 +55,38 @@ export function Footer() {
 					</ul>
 				</div>
 			</div>
-			<div className="flex items-end justify-between text-sm">
-				<p>© 2026 TryCode Technologies Ltda. Todos os direitos reservados.</p>
-				<div>
-					<p className="mb-2">Atribuições</p>
-					<ul className="ml-0.5 flex flex-col gap-0.5">
-						<li>
-							Ícones fornecidos por{' '}
-							<a
-								href="https://icons8.com.br"
-								rel="noopener noreferrer"
-								target="_blank"
-								className="hover:text-main-green underline transition-colors duration-300"
-							>
-								Icons8
-							</a>
-							.
-						</li>
-						<li>
-							Algumas ilustrações foram fornecidos pela{' '}
-							<a
-								href="https://www.magnific.com"
-								rel="noopener noreferrer"
-								target="_blank"
-								className="hover:text-main-purple underline transition-colors duration-300"
-							>
-								Magnific
-							</a>
-							.
-						</li>
-					</ul>
+			<div className="flex justify-center text-xs sm:block sm:text-sm">
+				<div className="flex flex-col-reverse gap-x-10 gap-y-5 sm:flex-row sm:items-end sm:justify-between">
+					<p>© 2026 TryCode Technologies Ltda. Todos os direitos reservados.</p>
+					<div>
+						<p className="mb-2">Atribuições</p>
+						<ul className="ml-0.5 flex flex-col gap-0.5">
+							<li>
+								Ícones fornecidos por{' '}
+								<a
+									href="https://icons8.com.br"
+									rel="noopener noreferrer"
+									target="_blank"
+									className="hover:text-main-green underline transition-colors duration-300"
+								>
+									Icons8
+								</a>
+								.
+							</li>
+							<li>
+								Algumas ilustrações foram fornecidos pela{' '}
+								<a
+									href="https://www.magnific.com"
+									rel="noopener noreferrer"
+									target="_blank"
+									className="hover:text-main-purple underline transition-colors duration-300"
+								>
+									Magnific
+								</a>
+								.
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</footer>
