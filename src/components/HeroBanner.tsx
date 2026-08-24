@@ -33,7 +33,7 @@ export function HeroBanner() {
 	}, []);
 
 	return (
-		<div className="relative flex h-[650px] w-full items-center justify-between overflow-hidden px-50">
+		<div className="px-hero-x relative flex w-full items-center justify-between overflow-hidden py-[180px]">
 			<div
 				className="absolute inset-0 z-10"
 				onMouseMove={(e) =>
@@ -46,13 +46,13 @@ export function HeroBanner() {
 					backgroundImage: `radial-gradient(circle 1200px at ${pointerPosition.x}px ${pointerPosition.y}px, color-mix(in srgb, var(--color-main-purple) 7%, transparent) 0%, transparent 70%)`,
 				}}
 			></div>
-			<div className="flex w-fit flex-col items-start gap-y-7">
-				<h1 className="font-jetbrains text-main-green text-9xl">try</h1>
-				<p className="font-jetbrains text-xl">
+			<div className="flex flex-col items-start gap-y-7">
+				<h1 className="font-jetbrains text-main-green text-hero-title">try</h1>
+				<p className="font-jetbrains text-hero-subtitle">
 					A melhor maneira de aprender é praticando!
 				</p>
 				<Link
-					className="border-main-green hover:bg-main-green z-20 flex h-[70px] w-[200px] cursor-pointer items-center justify-center rounded-md border-2 text-xl text-white transition-colors duration-300 hover:border-black hover:text-black"
+					className="border-main-green lg:hover:bg-main-green text-hero-subtitle px-section-btn-x py-section-btn-y hover: z-20 cursor-pointer rounded-md border-2 bg-white/5 text-white transition-all duration-300 lg:hover:border-black lg:hover:text-black"
 					to="/learning-path"
 				>
 					Vamos lá!
