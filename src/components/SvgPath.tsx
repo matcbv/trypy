@@ -1,6 +1,9 @@
 export function SvgPath() {
 	return (
-		<svg width="460" height="460" className="rounded-[60px]">
+		<svg
+			viewBox="0 0 460 460"
+			className="w-section-svg rounded-[60px] lg:self-center"
+		>
 			<path
 				id="question-line"
 				d="
@@ -19,7 +22,7 @@ export function SvgPath() {
 					M 330 210
 					C 450 210,
 					450 390,
-					300 370
+					300 375
 				"
 				className="stroke-main-purple fill-none"
 			/>
@@ -82,7 +85,7 @@ export function SvgPath() {
 				cx="230"
 				cy="370"
 				r="70"
-				className="stroke-main-combination fill-white/5 stroke-2 drop-shadow-[0_0_10px_var(--color-main-combination)]"
+				className="stroke-main-cyan fill-white/5 stroke-2 drop-shadow-[0_0_10px_var(--color-main-cyan)]"
 			/>
 
 			<image
