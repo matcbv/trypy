@@ -7,6 +7,7 @@ export type ModuleSkeleton = EntrySkeletonType<
 		title: EntryFieldTypes.Symbol;
 		topics: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TopicSkeleton>>;
 		slug: EntryFieldTypes.Symbol;
+		theme: EntryFieldTypes.Symbol;
 		order: EntryFieldTypes.Integer;
 	},
 	'module'

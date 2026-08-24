@@ -1,9 +1,11 @@
 import type { Document } from '@contentful/rich-text-types';
+import type { Themes } from '../constants/themeStyle';
 
 export interface ModuleData {
 	title: string;
 	topics: TopicData[];
 	slug: string;
+	theme: Themes;
 	order: number;
 }
 
@@ -32,7 +34,7 @@ export interface ModuleCardData {
 	title: string;
 	description: string;
 	topicsList: string[];
-	theme: string;
+	theme: Themes;
 	moduleId: string;
 	order: number;
 }
