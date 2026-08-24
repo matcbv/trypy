@@ -1,4 +1,4 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ModuleSideBar } from '../components/ModuleSideBar';
 import { useEffect, useRef, useState } from 'react';
 import { fetchContent } from '../content/services/fetchContent';
@@ -14,7 +14,7 @@ import { LoadingPage } from './LoadingPage';
 import { updateDoc } from 'firebase/firestore';
 import { userNavigationRef } from '../database/refs/userRefs';
 import { AuthContext } from '../contexts/AuthProvider/context';
-import { themeStyles, type Themes } from '../constants/themeStyle';
+import { themeStyles } from '../constants/themeStyle';
 
 export function Module() {
 	const { authState } = useSafeContext(AuthContext);
@@ -28,8 +28,6 @@ export function Module() {
 	const [offset, setOffset] = useState(20);
 	const footerRef = useRef<HTMLElement>(null);
 	const params = useParams<{ moduleId: string }>();
-	const location = useLocation();
-	const { theme } = location.state as { theme: Themes };
 
 	// * useEffect para aparição e posicionamento do botão de scroll para o topo.
 	useEffect(() => {
@@ -116,22 +114,24 @@ export function Module() {
 	}, [subtopicData]);
 
 	return (
-		<div className="relative flex min-h-screen justify-center gap-x-10 px-[50px] py-[120px]">
+		<div className="relative mx-[10px] my-[120px] flex min-h-screen justify-center lg:mx-[50px] lg:gap-x-[40px]">
 			{!moduleData || !topicData || !subtopicData ? (
 				<LoadingPage />
 			) : (
 				<>
 					<ModuleSideBar topics={topics} moduleOrder={moduleData.order} />
 					<div
-						className="w-[1200px] rounded-lg bg-[#0d0a14] p-10 shadow-[0_0_20px_#ffffff]/5"
+						className="max-w-[1200px] flex-1 rounded-lg bg-[#0d0a14] p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-[40px]"
 						style={
 							{
-								'--theme-color': `var(${themeStyles[theme].color})`,
-								'--highlight-theme-color': `var(${themeStyles[theme].highlight})`,
+								'--theme-color': `var(${themeStyles[moduleData.theme].color})`,
+								'--highlight-theme-color': `var(${themeStyles[moduleData.theme].highlight})`,
 							} as React.CSSProperties
 						}
 					>
-						<h1 className={`mb-5 text-3xl tracking-wide text-(--theme-color)!`}>
+						<h1
+							className={`text-content-h1 mb-5 tracking-wide text-(--theme-color)!`}
+						>
 							{subtopicData?.title}
 						</h1>
 						<div className="mb-10 flex flex-col gap-y-5">

@@ -2,19 +2,23 @@ import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { TopicData } from '../types/content';
-import type { RefObject } from 'react';
+import type { Dispatch, RefObject } from 'react';
 import { logError } from '../utils/logger';
 
 interface DropdownProps {
 	topic: TopicData;
 	dropdownsContainer: RefObject<Array<HTMLDivElement | null>>;
 	moduleOrder: number;
+	setIsSidebarOpen: Dispatch<React.SetStateAction<boolean>>;
+	isDesktop: boolean;
 }
 
 export function SubtopicDropdown({
 	topic,
 	dropdownsContainer,
 	moduleOrder,
+	setIsSidebarOpen,
+	isDesktop,
 }: DropdownProps) {
 	const { progressState } = useSafeContext(ProgressContext);
 	const { setNavigationState } = useSafeContext(NavigationContext);
@@ -27,9 +31,6 @@ export function SubtopicDropdown({
 			) {
 				return;
 			}
-
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-
 			setNavigationState((prev) => ({
 				...prev,
 				[moduleOrder]: {
@@ -37,6 +38,10 @@ export function SubtopicDropdown({
 					currentSubtopic: slug,
 				},
 			}));
+
+			if (!isDesktop) setIsSidebarOpen(false);
+
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		} catch (error) {
 			logError({ error });
 		}
@@ -45,7 +50,7 @@ export function SubtopicDropdown({
 	return (
 		<div
 			id={topic.slug}
-			className="h-0 bg-[#0d0a14] px-4 text-[0.85rem] opacity-0 transition-all duration-300"
+			className="h-0 bg-[#0d0a14] px-4 text-[0.8rem] opacity-0 transition-all duration-300"
 			ref={(el) => {
 				dropdownsContainer.current.push(el);
 			}}

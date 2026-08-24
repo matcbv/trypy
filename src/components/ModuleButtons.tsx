@@ -51,7 +51,7 @@ export function ModuleButtons({
 		);
 	}, [moduleData, navigationState]);
 
-	const handleNext = async (e: MouseEvent) => {
+	const handleNext = async (e: MouseEvent<HTMLButtonElement>) => {
 		if (isNextButtonLocked) {
 			e.preventDefault();
 			logInfo(
@@ -167,7 +167,9 @@ export function ModuleButtons({
 			(topic) => topic.order === topicData.order - 1,
 		);
 
-		const previousSubtopics = previousTopic!.subtopics.map((subtic) => subtic);
+		const previousSubtopics = previousTopic!.subtopics.map(
+			(subtopic) => subtopic,
+		);
 
 		const newSubtopic = previousSubtopics.find(
 			(subtopic) => subtopic.order === previousSubtopics.length,
@@ -249,7 +251,7 @@ export function ModuleButtons({
 	};
 
 	return (
-		<div className="flex justify-end gap-x-10">
+		<div className="flex justify-end gap-x-[25px]">
 			<button
 				type="button"
 				className="module-btn group"
@@ -258,7 +260,7 @@ export function ModuleButtons({
 				<img
 					src={`/assets/images/icons/left_arrow.png`}
 					alt="Voltar"
-					className="transition-transform duration-300 group-hover:-translate-x-2"
+					className="lg:transition-transform lg:duration-300 lg:group-hover:-translate-x-2"
 				/>
 				Voltar
 			</button>
@@ -272,7 +274,7 @@ export function ModuleButtons({
 					<img
 						src={`/assets/images/icons/done.png`}
 						alt="Concluir"
-						className="transition-transform duration-300 group-hover:scale-110"
+						className="lg:transition-transform lg:duration-300 lg:group-hover:scale-110"
 					/>
 				</button>
 			) : (
@@ -285,7 +287,7 @@ export function ModuleButtons({
 					<img
 						src={`/assets/images/icons/right_arrow.png`}
 						alt="Avançar"
-						className="transition-transform duration-300 group-hover:translate-x-2"
+						className="lg:transition-transform lg:duration-300 lg:group-hover:translate-x-2"
 					/>
 				</button>
 			)}
