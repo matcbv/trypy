@@ -27,3 +27,4 @@ dist-ssr
 .env
 src/content/contentfulClient.js
 *.tsbuildinfo
+.mkcert
