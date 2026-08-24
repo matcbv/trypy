@@ -11,7 +11,6 @@ export function LearningPath() {
 	const [initialModuleSlug, setInitialModuleSlug] = useState<string | null>(
 		null,
 	);
-	cardContent.map((card) => console.log(card));
 
 	useEffect(() => {
 		void (async () => {
@@ -21,7 +20,12 @@ export function LearningPath() {
 					include: 0,
 				});
 
-				setCardContent(() => content.map((card) => card.fields));
+				setCardContent(() =>
+					content.map((card) => ({
+						...card.fields,
+						theme: card.fields.theme as Themes,
+					})),
+				);
 			} catch (error) {
 				logError({
 					error,
@@ -52,7 +56,7 @@ export function LearningPath() {
 	return cardContent.length <= 0 && !initialModuleSlug ? (
 		<LoadingPage />
 	) : (
-		<div className="font-jetbrains flex min-h-screen justify-center px-20 py-[120px]">
+		<div className="font-jetbrains mx-[10px] my-[120px] flex min-h-screen justify-center sm:mx-0">
 			<div className="flex flex-col items-center justify-center gap-y-[230px]">
 				{cardContent.map((card) => (
 					<div
@@ -60,8 +64,8 @@ export function LearningPath() {
 						className="relative"
 						style={
 							{
-								'--theme-color': `var(${themeStyles[card.theme as Themes].color})`,
-								'--shadow-theme-color': `var(${themeStyles[card.theme as Themes].shadow})`,
+								'--theme-color': `var(${themeStyles[card.theme].color})`,
+								'--shadow-theme-color': `var(${themeStyles[card.theme].shadow})`,
 							} as CSSProperties
 						}
 					>

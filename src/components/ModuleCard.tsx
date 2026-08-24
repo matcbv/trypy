@@ -41,17 +41,17 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 	return (
 		<div
 			key={card.title}
-			className="relative size-[460px] overflow-hidden rounded-md bg-[url('/assets/images/batthern.png')] shadow-[0_0_30px_#000000]/50"
+			className="relative flex min-h-[460px] max-w-[460px] overflow-hidden rounded-md bg-[url('/assets/images/batthern.png')] shadow-[0_0_30px_#000000]/50"
 		>
-			<div className="flex size-full flex-col bg-[#0f0d16dc]">
+			<div className="flex flex-col bg-[#0f0d16dc]">
 				<h2 className="flex gap-x-3 rounded-t-md border-b border-(--theme-color) p-5">
 					{card.title}
 					{progressState.doneModules.includes(card.moduleId) && (
 						<img src="/assets/images/icons/done.png" alt="Concluído" />
 					)}
 				</h2>
-				<div className="flex flex-1 flex-col justify-between">
-					<div className="p-5 text-sm">
+				<div className="flex flex-1 flex-col justify-between text-sm">
+					<div className="p-5">
 						<p className="mb-6 leading-6">{card.description}</p>
 						<div>
 							<p className="mb-4">Tópicos desse módulo:</p>
@@ -66,7 +66,7 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 					</div>
 					<Link
 						to={`/learning-path/${card.moduleId}`}
-						state={{ initialModuleSlug, theme: card.theme }}
+						state={{ initialModuleSlug }}
 						className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${!isModuleBlocked && 'hover:bg-(--theme-color)/70 hover:shadow-[0_0_10px_var(--shadow-theme-color)]'}`}
 						onClick={(e) =>
 							CheckModuleAccess({ event: e, moduleId: card.moduleId })
