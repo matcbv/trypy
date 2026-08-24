@@ -9,35 +9,45 @@ const contactsMap = {
 		title: 'WhatsApp',
 		value: '(24) 98100-2374',
 	},
-};
+} as const;
+
+const optionsMap = [
+	'Erro no site',
+	'Problemas ao gerar o certificado',
+	'Outro',
+];
 
 export function Support() {
-	const [isCopied, setIsCopied] = useState(false);
+	const [isCopied, setIsCopied] = useState({
+		gmail: false,
+		whatsapp: false,
+	});
 
-	const copyText = async (text: string) => {
+	const copyText = async (key: keyof typeof contactsMap, text: string) => {
 		await navigator.clipboard.writeText(text);
-		setIsCopied((prev) => !prev);
+		setIsCopied((prev) => ({ ...prev, [key]: true }));
 		setTimeout(() => {
-			setIsCopied(false);
+			setIsCopied((prev) => ({ ...prev, [key]: false }));
 		}, 2000);
 	};
 
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<div className="relative my-20">
-				<div className="mb-12">
-					<h1 className="text-main-purple mb-10 text-4xl">Contate-nos</h1>
-					<form className="flex gap-x-12">
-						<div className="border-l-main-purple flex flex-col justify-around border-l pl-4">
+			<div className="relative mx-[20px] my-[120px] max-w-[400px] lg:max-w-[800px]">
+				<div className="mb-10">
+					<h1 className="text-main-purple text-title-5xl mb-10">Contate-nos</h1>
+					<form className="border-l-main-purple grid grid-cols-1 gap-x-10 gap-y-5 border-l pl-4 lg:max-h-[280px] lg:grid-cols-2 lg:grid-rows-2">
+						<div className="col-start-1 row-start-1 flex flex-col justify-around gap-y-4">
 							<div className="flex flex-col gap-y-1">
 								<label htmlFor="subject" className="text-sm">
 									Assunto:
 								</label>
 								<select name="subject" id="subject" className="support-fields">
-									<option value="">Erro no site</option>
-									<option value="">Problemas ao gerar o certificado</option>
-									<option value="">Conta perdida</option>
-									<option value="">Outro</option>
+									{optionsMap.map((option) => (
+										<option value={option} className="bg-black text-sm">
+											{option}
+										</option>
+									))}
 								</select>
 							</div>
 							<div className="flex flex-col gap-y-1">
@@ -62,39 +72,43 @@ export function Support() {
 									className="support-fields"
 								/>
 							</div>
-							<input
-								type="submit"
-								value="Enviar"
-								className="border-main-purple cursor-pointer rounded-md border bg-[#7955c2]/20 py-1 text-sm transition-all duration-300 hover:bg-[#7955c2]/70 hover:shadow-[0_0_15px_#7955c270]"
-							/>
 						</div>
-						<div className="flex flex-col gap-y-2">
+						<input
+							type="submit"
+							value="Enviar"
+							className="border-main-purple order-2 w-[150px] cursor-pointer self-end rounded-md border bg-[#7955c2]/20 py-2 text-sm transition-all duration-300 hover:shadow-[0_0_15px_#7955c270] lg:order-1 lg:col-start-1 lg:row-start-2 lg:hover:bg-[#7955c2]/70"
+						/>
+						<div className="order-1 flex flex-col gap-y-2 lg:order-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
 							<label htmlFor="description" className="text-sm">
 								Descrição:
 							</label>
 							<textarea
 								name="description"
 								id="description"
-								rows={10}
-								cols={40}
-								className="support-fields resize-none"
+								rows={5}
+								className="support-fields h-full resize-none"
 							></textarea>
 						</div>
 					</form>
 				</div>
-				<div className="flex max-w-[825px] flex-col gap-y-5">
+				<div className="flex flex-col gap-y-5">
 					<div className="flex flex-col gap-y-3">
 						<h2 className="text-main-green text-2xl">
 							Outras formas de contato
 						</h2>
-						<p className="leading-6">
+						<p>
 							Fique a vontade também para nos contatar diretamente via e-mail ou
 							suporte do WhatsApp. Para um atendimento mais ágil, dê preferencia
 							ao contato via formulário.
 						</p>
 					</div>
 					<div className="flex flex-col gap-y-5">
-						{Object.entries(contactsMap).map(([key, { title, value }]) => (
+						{(
+							Object.entries(contactsMap) as [
+								keyof typeof contactsMap,
+								{ title: string; value: string },
+							][]
+						).map(([key, { title, value }]) => (
 							<div key={key} className="flex flex-col items-start gap-y-5">
 								<div>
 									<p className="mb-2 flex gap-x-2">
@@ -108,19 +122,24 @@ export function Support() {
 									<p
 										className="group flex cursor-pointer items-center gap-x-2 transition-colors"
 										onMouseLeave={() =>
-											setTimeout(() => setIsCopied(false), 100)
+											setTimeout(
+												() => setIsCopied((prev) => ({ ...prev, key: false })),
+												100,
+											)
 										}
 									>
-										<span className="hover:text-main-green">{value}</span>
+										<span className="lg:hover:text-main-green">{value}</span>
 										<img
 											src={
-												isCopied
+												isCopied[key]
 													? '/assets/images/icons/success.png'
 													: '/assets/images/icons/copy.png'
 											}
 											alt="Copiar"
-											className="w-5 origin-left scale-0 cursor-pointer transition-transform group-hover:scale-100"
-											onClick={() => void copyText(value)}
+											className="w-5 origin-left cursor-pointer transition-transform lg:scale-0 lg:group-hover:scale-100"
+											onClick={() => void copyText(key, value)}
+											role="button"
+											tabIndex={0}
 										/>
 									</p>
 								</div>
