@@ -28,8 +28,11 @@ export function ResetPasswordForm() {
 	};
 
 	return (
-		<form className="mb-8 w-[350px]" onSubmit={(e) => void handleSubmit(e)}>
-			<div className="flex flex-col gap-y-8 text-sm">
+		<form
+			className="mb-[25px] max-w-[350px]"
+			onSubmit={(e) => void handleSubmit(e)}
+		>
+			<div className="flex flex-col gap-y-[25px] text-sm">
 				<div className="border-b-main-green relative flex w-full items-end border-b-2">
 					<label htmlFor="" className="font-jetbrains w-20">
 						E-mail
@@ -40,14 +43,14 @@ export function ResetPasswordForm() {
 						onChange={(e) => setEmail(e.target.value)}
 					/>
 				</div>
-				<div className="flex gap-x-8">
-					<button type="submit" className="form-btn w-[150px]">
+				<div className="flex gap-x-[25px]">
+					<button type="submit" className="form-btn">
 						Continuar
 					</button>
 					<button
 						type="button"
 						onClick={() => void navigate(-1)}
-						className="form-btn w-[120px]"
+						className="form-btn"
 					>
 						Voltar
 					</button>
