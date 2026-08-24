@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
-import { SessionForm } from '../components/SessionFrom';
+import { SessionForm } from '../components/SessionForm';
 
 export function Session() {
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<div className="to-main-bg relative my-20 rounded-lg bg-linear-to-br from-[#12612f] via-[#240051] shadow-[0_0_20px_#ffffff]/10">
-				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer.png")] opacity-15 backdrop-blur-3xl'></div>
-				<div className="relative flex h-[500px] w-[500px] flex-col justify-center p-10">
-					<h1 className="mb-10 text-3xl font-bold tracking-wider">
+			<div className="to-main-bg relative mx-[10px] my-[120px] flex min-h-[500px] w-full max-w-[400px] rounded-lg bg-linear-to-br from-[#12612f] via-[#240051] shadow-[0_0_20px_#ffffff]/10 transition-[max-width] duration-500 md:max-w-[500px]">
+				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer.png")] opacity-20'></div>
+				<div className="relative flex w-full flex-col justify-center p-10">
+					<h1 className="mb-10 text-2xl font-bold tracking-wide">
 						Iniciar sessão
 					</h1>
 					<SessionForm />
@@ -21,7 +21,7 @@ export function Session() {
 						<h2 className="mb-3 text-lg font-bold tracking-wider">
 							Ainda não possui conta?
 						</h2>
-						<Link to={'/register'} className="form-btn w-[150px]">
+						<Link to={'/register'} className="form-btn">
 							Cadastre-se
 						</Link>
 					</div>
