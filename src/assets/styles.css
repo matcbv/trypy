@@ -1,10 +1,40 @@
-input[type='password']::-webkit-textfield-decoration-container {
-	display: none !important;
-}
-
+/* inputs */
 input[type='password']::-ms-reveal,
 input[type='password']::-ms-clear {
 	display: none !important;
+}
+
+/* scrollbar */
+*::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: var(--color-indigo-900);
+	border-radius: 5px;
+}
+
+*::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+
+*::-webkit-scrollbar-corner {
+	background-color: transparent;
+}
+
+.codeScrollbar::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+
+.codeScrollbar::-webkit-scrollbar-thumb {
+	background-color: var(--color-gray-400);
+	border-radius: 2.5px;
+}
+
+.codeScrollbar::-webkit-scrollbar-track {
+	background-color: transparent;
 }
 
 /* react-toastify */

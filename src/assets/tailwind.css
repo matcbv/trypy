@@ -4,9 +4,9 @@
 	/* Cores */
 	--color-main-bg: #080014;
 	--color-main-green: #00a63e;
+	--color-glow-green: #00ff5f;
 	--color-main-purple: #7a55c2;
 	--color-main-cyan: #34a8ad;
-	--color-main-black: #000000f2;
 	--color-main-red: #f24854;
 	--color-highlight-green: #b5fbbe;
 	--color-highlight-purple: #c5a7ff;
@@ -14,7 +14,21 @@
 	--color-shadow-green: #20663b;
 	--color-shadow-purple: #402d66;
 	--color-shadow-cyan: #1e585b;
-	--color-glow-green: #00ff5f;
+
+	/* Espaçamentos */
+	--spacing-hero-x: clamp(2.5rem, -1.413rem + 17.3913vw, 12.5rem);
+	--spacing-section-btn-x: clamp(1.5rem, 0.6196rem + 3.913vw, 3.75rem);
+	--spacing-section-btn-y: clamp(0.625rem, 0.3804rem + 1.087vw, 1.25rem);
+
+	/* Tamanhos */
+	--width-section-img: clamp(17.5rem, 9.6739rem + 34.7826vw, 37.5rem);
+	--width-account-img: clamp(12.5rem, 10.3261rem + 17.3913vw, 18.75rem);
+	--width-about-logo: clamp(11.25rem, 5.8696rem + 23.913vw, 25rem);
+	--width-section-svg: clamp(15rem, 9.6196rem + 23.913vw, 28.75rem);
+	--width-blob-1: clamp(25rem, 15.2174rem + 43.4783vw, 50rem);
+	--height-blob-1: clamp(12.5rem, 7.6087rem + 21.7391vw, 25rem);
+	--width-blob-2: clamp(18.75rem, 11.413rem + 32.6087vw, 37.5rem);
+	--height-blob-2: clamp(9.375rem, 5.7065rem + 16.3043vw, 18.75rem);
 
 	/* Backgrounds */
 	--background-image-trycode: linear-gradient(
@@ -29,6 +43,52 @@
 	--font-jetbrains: 'JetBrains Mono', monospace;
 	--font-ubuntu: 'Ubuntu', sans-serif;
 	--font-space-grotesk: 'Space Grotesk', sans-serif;
+
+	/* Tamanhos de fonte */
+	--text-content-h1: clamp(1.5rem, 1.3533rem + 0.6522vw, 1.875rem);
+	--text-content-h1--line-height: 1.2;
+
+	--text-content-h2: clamp(1.25rem, 1.1522rem + 0.4348vw, 1.5rem);
+	--text-content-h2--line-height: 1.3;
+
+	--text-content-h3: clamp(1.125rem, 1.0761rem + 0.2174vw, 1.25rem);
+	--text-content-h3--line-height: 1.4;
+
+	--text-content-p: clamp(0.9375rem, 0.913rem + 0.1087vw, 1rem);
+	--text-content-p--line-height: 1.6;
+
+	--text-hero-title: clamp(3rem, 1.0435rem + 8.6957vw, 8rem);
+	--text-hero-title--line-height: 1;
+
+	--text-hero-subtitle: clamp(0.875rem, 0.7283rem + 0.6522vw, 1.25rem);
+	--text-hero-subtitle--line-height: 1.4;
+
+	--text-title-5xl: clamp(1.625rem, 1.1848rem + 1.9565vw, 2.75rem);
+	--text-title-5xl--line-height: 1;
+
+	--text-title-4xl: clamp(1.5rem, 1.2065rem + 1.3043vw, 2.25rem);
+	--text-title-4xl--line-height: 1;
+
+	--text-title-3xl: clamp(1.25rem, 1.0054rem + 1.087vw, 1.875rem);
+	--text-title-3xl--line-height: 1.2;
+
+	--text-title-xl: clamp(1.125rem, 0.9022rem + 0.4348vw, 1.25rem);
+	--text-title-xl--line-height: 1.3;
+
+	--text-section-xl: clamp(1rem, 0.9022rem + 0.4348vw, 1.25rem);
+	--text-section-xl--line-height: 1.5;
+
+	--text-section-lg: clamp(0.9375rem, 0.8641rem + 0.3261vw, 1.125rem);
+	--text-section-lg--line-height: 1.6;
+
+	--text-section-base: clamp(0.875rem, 0.8261rem + 0.2174vw, 1rem);
+	--text-section-base--line-height: 1.5;
+
+	--text-section-btn: clamp(0.9375rem, 0.8641rem + 0.3261vw, 1.125rem);
+	--text-section-btn--line-height: 1.6;
+
+	--text-student-name: clamp(1.1667rem, 0.6449rem + 2.3188vw, 2.5rem);
+	--text-student-name--line-height: 1;
 
 	/* Animações */
 	--animate-swing: swing 3s ease-in-out infinite;
@@ -63,18 +123,6 @@
 	body {
 		@apply font-ubuntu bg-main-bg text-gray-200;
 	}
-
-	::-webkit-scrollbar {
-		width: 10px;
-	}
-
-	::-webkit-scrollbar-thumb {
-		background-color: var(--color-indigo-950);
-	}
-
-	::-webkit-scrollbar-track {
-		background-color: transparent;
-	}
 }
 
 @layer utilities {
@@ -86,18 +134,22 @@
 	}
 
 	.footer-links {
-		@apply border-l-main-green hover:text-main-green cursor-pointer border-l-2 pl-2 transition-colors duration-300;
+		@apply border-l-main-green hover:text-main-green cursor-pointer border-l-2 pl-2 text-sm transition-colors duration-300 sm:text-base;
 	}
 
 	.form-btn {
-		@apply flex h-[38px] cursor-pointer items-center justify-center rounded-md border border-white/50 bg-white/10 text-center font-sans transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff]/10;
+		@apply cursor-pointer rounded-md border border-white/50 bg-white/10 px-5 py-2 text-center font-sans transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff]/10;
 	}
 
 	.module-btn {
-		@apply flex w-[150px] cursor-pointer items-center justify-center gap-x-2 rounded-md border-2 border-(--theme-color) bg-(--theme-color)/10 py-2 text-sm text-white transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff]/5;
+		@apply flex w-[120px] cursor-pointer items-center justify-center gap-x-2 rounded-md border-2 border-(--theme-color) bg-(--theme-color)/10 py-2 text-sm text-white transition-[width,box-shadow] duration-300 lg:w-[150px] lg:hover:shadow-[0_0_15px_#ffffff]/5;
 	}
 
 	.support-fields {
 		@apply rounded-md bg-black/50 p-2 transition-shadow focus:border-none focus:shadow-[0_0_15px_#ffffff]/5 focus:outline-none;
+	}
+
+	.guide-cards {
+		@apply flex min-h-[250px] max-w-[360px] flex-col gap-y-[20px] rounded-md bg-black/40 p-[25px] shadow-[0_0_30px_black]/40 transition-[scale] duration-300 hover:scale-105;
 	}
 }
