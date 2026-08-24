@@ -46,12 +46,12 @@ export function contentfulFormatter(content: Document) {
 				</ul>
 			),
 			[BLOCKS.HEADING_2]: (_, children) => (
-				<h2 className={`text-2xl tracking-wide text-(--theme-color)`}>
+				<h2 className={`text-content-h2 tracking-wide text-(--theme-color)`}>
 					{children}
 				</h2>
 			),
 			[BLOCKS.HEADING_3]: (_, children) => (
-				<h3 className="text-xl tracking-wide">{children}</h3>
+				<h3 className="text-content-h3 tracking-wide">{children}</h3>
 			),
 			[BLOCKS.HR]: () => <hr className="my-8" />,
 			[BLOCKS.PARAGRAPH]: (node, children) => {
@@ -66,7 +66,7 @@ export function contentfulFormatter(content: Document) {
 					return <CodeBlock code={text.value} />;
 				}
 
-				return <p className="leading-6">{children}</p>;
+				return <p className="text-content-p">{children}</p>;
 			},
 			[BLOCKS.EMBEDDED_ASSET]: (node) => {
 				const asset = node as ResolvedEntryAsset;
