@@ -27,17 +27,17 @@ const iconsMap = {
 
 export function Footer() {
 	return (
-		<footer className="bg-main-black relative flex flex-col gap-y-10 px-[30px] pt-[60px] pb-[20px]">
+		<footer className="relative flex flex-col gap-y-10 bg-black p-[20px] pt-[60px]">
 			<div className="flex flex-col items-center gap-y-10">
-				<div>
-					<ul className="flex gap-x-7 sm:gap-x-10">
-						{Object.entries(footerMap).map(([key, value]) => (
-							<Link to={`/${key}`} className="footer-links" key={key}>
+				<ul className="flex flex-wrap justify-center gap-x-7 gap-y-2 sm:gap-x-10">
+					{Object.entries(footerMap).map(([key, value]) => (
+						<li key={key}>
+							<Link to={`/${key}`} className="footer-links">
 								{value}
 							</Link>
-						))}
-					</ul>
-				</div>
+						</li>
+					))}
+				</ul>
 				<div className="flex flex-col gap-y-4">
 					<p className="text-sm sm:text-base">Conheça nossas redes sociais:</p>
 					<ul className="flex justify-around">
