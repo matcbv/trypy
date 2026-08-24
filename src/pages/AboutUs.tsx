@@ -35,21 +35,21 @@ export function AboutUs() {
 	const [iconHovered, setIconHovered] = useState('');
 
 	return (
-		<main>
-			<section className="group my-[160px] flex items-center justify-center gap-x-20">
+		<div className="mx-[20px] flex flex-col items-center">
+			<section className="group my-[120px] flex flex-col-reverse items-start gap-x-15 gap-y-10 lg:flex-row lg:items-center">
 				<img
 					src="/assets/images/trycode-logo.png"
 					alt="TryCode"
-					className="w-[350px]"
+					className="w-about-logo"
 				/>
-				<div className="w-[600px]">
-					<h1 className="mb-5 text-4xl font-bold tracking-wide">
+				<div className="max-w-[600px]">
+					<h1 className="text-title-4xl mb-5 font-bold tracking-wide">
 						Conheça a{' '}
 						<span className="bg-trycode bg-size-[200%_100%] bg-clip-text bg-left text-transparent transition-[background-position] duration-500 ease-in-out group-hover:bg-right">
 							TryCode
 						</span>
 					</h1>
-					<div className="flex flex-col gap-y-5 text-lg leading-relaxed">
+					<div className="text-section-lg flex flex-col gap-y-5">
 						<p>
 							A TryCode Technologies Ltda. é uma startup focada na educação em
 							tecnologia. Criamos cursos e plataformas destinadas a quem quer
@@ -74,13 +74,13 @@ export function AboutUs() {
 				</div>
 			</section>
 			<span className="block h-[2px] bg-white/50 bg-linear-to-r"></span>
-			<section className="flex justify-center">
-				<div className="my-[160px] flex flex-col">
-					<h1 className="mb-[100px] text-4xl font-bold">
-						Conheça nossa equipe
-					</h1>
-					<div className="flex h-[250px] items-center justify-center gap-x-12">
-						<div className="flex h-full w-[150px] flex-col justify-between">
+			<section className="mt-[40px] mb-[120px] flex flex-col justify-center">
+				<h1 className="text-title-4xl mb-[40px] font-bold lg:mb-[80px]">
+					Conheça nossa equipe
+				</h1>
+				<div className="flex flex-col">
+					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-[40px] gap-y-[20px] lg:flex-row lg:gap-y-0">
+						<div className="flex max-w-[150px] flex-col justify-between gap-y-[10px] self-center lg:gap-y-0 lg:self-stretch">
 							<div>
 								<img
 									src="/assets/images/matheus.png"
@@ -104,12 +104,12 @@ export function AboutUs() {
 								))}
 							</div>
 						</div>
-						<div className="flex h-full w-[600px] flex-col justify-between">
+						<div className="flex max-w-[600px] flex-col justify-between gap-y-[20px] lg:gap-y-0">
 							<div>
-								<h2 className="text-main-green mb-4 text-3xl font-bold">
+								<h2 className="text-main-green text-title-3xl mb-4 font-bold">
 									Matheus Cerqueira
 								</h2>
-								<p className="text-lg leading-7">
+								<p className="text-section-lg">
 									Lorem ipsum dolor sit amet consectetur adipisicing elit. Non
 									consequuntur maiores quidem facilis blanditiis pariatur eos!
 									Aliquid ratione repudiandae iure, amet, eligendi commodi atque
@@ -133,9 +133,9 @@ export function AboutUs() {
 							</a>
 						</div>
 					</div>
-					<span className="from-main-green to-main-purple my-[80px] block h-[2px] w-[1000px] bg-linear-to-r"></span>
-					<div className="flex h-[250px] flex-row-reverse items-center justify-center gap-x-12">
-						<div className="flex h-full w-[150px] flex-col justify-between">
+					<span className="from-main-green to-main-purple my-[80px] block h-[2px] max-w-[1000px] bg-linear-to-r"></span>
+					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-[40px] gap-y-[20px] lg:flex-row-reverse lg:gap-y-0">
+						<div className="flex max-w-[150px] flex-col justify-between gap-y-[10px] self-center lg:gap-y-0 lg:self-stretch">
 							<div>
 								<img
 									src="/assets/images/daniel.png"
@@ -159,12 +159,12 @@ export function AboutUs() {
 								))}
 							</div>
 						</div>
-						<div className="flex h-full w-[600px] flex-col justify-between">
+						<div className="flex max-w-[600px] flex-col justify-between gap-y-[20px] lg:gap-y-0">
 							<div>
-								<h2 className="text-main-purple mb-4 text-3xl font-bold">
+								<h2 className="text-main-purple text-title-3xl mb-4 font-bold">
 									Daniel Ferrari
 								</h2>
-								<p className="text-lg leading-7">
+								<p className="text-section-lg leading-7">
 									Lorem ipsum dolor sit amet consectetur adipisicing elit.
 									Obcaecati eius ipsum adipisci rem distinctio perferendis
 									quaerat a, nesciunt aperiam quas delectus facere voluptatum
@@ -190,6 +190,6 @@ export function AboutUs() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	);
 }
