@@ -9,7 +9,7 @@ export function ToastNotification({ data }: ToastContentProps<ToastData>) {
 				alt={data.type}
 				className="w-[25px]"
 			/>
-			<p className="font-jetbrains text-sm leading-6 font-bold text-white">
+			<p className="font-jetbrains text-xs leading-6 font-bold text-white sm:text-sm">
 				{data.text}
 			</p>
 		</div>
