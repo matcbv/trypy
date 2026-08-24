@@ -138,7 +138,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 						Saída:
 						{statusIcon()}
 					</div>
-					<div className="h-[200px] scrollbar-none overflow-scroll px-5 py-2">
+					<div className="codeScrollbar h-[200px] overflow-scroll px-5 py-2">
 						<code className="text-sm whitespace-pre-wrap">
 							{terminalState.error || terminalState.output}
 						</code>
