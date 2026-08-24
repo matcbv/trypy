@@ -29,7 +29,7 @@ export function ProgressBar() {
 	}, [progressState.doneSubtopics]);
 
 	return (
-		<svg className="h-[200px] w-[200px] rounded-full shadow-[0_0_15px_#ffffff]/10">
+		<svg className="h-[200px] w-[200px] shrink-0 rounded-full shadow-[0_0_15px_#ffffff]/10">
 			<circle
 				cx={100}
 				cy={100}

@@ -42,7 +42,7 @@ export function PictureInput() {
 
 	return (
 		<div className="mb-10">
-			<h2 className="mb-5 text-lg">Foto de perfil</h2>
+			<h2 className="mb-[15px] text-lg">Foto de perfil</h2>
 			<label htmlFor="picture" className="group relative">
 				<div className="h-[120px] w-[120px] overflow-hidden rounded-full">
 					{isUpdating ? (
@@ -62,7 +62,7 @@ export function PictureInput() {
 					)}
 				</div>
 
-				<div className="absolute -right-3 bottom-0 scale-0 transition-transform group-hover:scale-100">
+				<div className="absolute -right-4 bottom-0 transition-transform lg:scale-0 lg:group-hover:scale-100">
 					<img
 						src="/assets/images/icons/edit.png"
 						alt="Editar imagem"

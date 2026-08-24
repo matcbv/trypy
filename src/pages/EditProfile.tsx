@@ -109,12 +109,12 @@ export function EditProfile() {
 
 	const deleteField =
 		provider === ProviderId.PASSWORD ? (
-			<div className="relative flex w-[300px] items-center">
+			<div className="relative flex w-full max-w-[300px] items-center">
 				<input
 					value={userPassword}
 					placeholder="Sua senha"
 					onChange={(e) => setUserPassword(e.target.value)}
-					className="border-main-purple/60 focus:border-main-purple w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10"
+					className="border-main-purple/60 focus:border-main-purple w-full max-w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10"
 					type={isVisible ? 'text' : 'password'}
 				/>
 				<img
@@ -127,9 +127,9 @@ export function EditProfile() {
 		) : (
 			<>
 				<p className="text-sm">
-					Digite o código gerado para concluir a exclusão da conta:{' '}
+					Digite o código gerado a seguir para concluir a exclusão da conta:{' '}
 					<span
-						className="font-bold text-red-300 select-none"
+						className="font-bold tracking-wide text-red-300 select-none"
 						onCopy={(e) => e.preventDefault()}
 					>
 						{deleteCode}
@@ -149,12 +149,12 @@ export function EditProfile() {
 
 	return (
 		<div>
-			<h1 className="mb-10 text-3xl font-bold tracking-wide">Meus dados</h1>
+			<h1 className="mb-10 text-2xl font-bold tracking-wide">Meus dados</h1>
 			<div className="flex flex-col gap-y-10">
 				<ProfileForm />
-				<div>
-					<h3 className="mb-4">Esqueceu sua senha?</h3>
-					<Link to="/reset-password" className="form-btn w-[120px] text-sm">
+				<div className="flex flex-col items-start gap-y-[15px]">
+					<h3>Esqueceu sua senha?</h3>
+					<Link to="/reset-password" className="form-btn text-sm">
 						Alterar senha
 					</Link>
 				</div>
@@ -165,11 +165,11 @@ export function EditProfile() {
 						<span className="font-bold text-red-300">irreversível</span>. Não é
 						possível recuperar a conta após sua exclusão.
 					</p>
-					<div className="flex flex-col gap-y-3">
+					<div className="flex flex-col items-start gap-y-3">
 						{deleteField}
 						<button
 							type="button"
-							className="form-btn w-[120px] cursor-pointer text-sm"
+							className="form-btn cursor-pointer text-sm"
 							onClick={() => void deleteAccount()}
 							disabled={isDeleting}
 						>

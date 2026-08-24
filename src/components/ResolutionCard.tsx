@@ -57,9 +57,9 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 
 	return (
 		<div key={slug} className="rounded-md bg-[#303446]">
-			<div className="border-b-main-purple flex items-center justify-between border-b p-[10px]">
-				<h1 className="font-jetbrains text-sm">{title}</h1>
-				<span className="flex gap-x-3">
+			<div className="border-b-main-purple flex items-center justify-between gap-x-[20px] border-b p-[10px]">
+				<h1 className="font-jetbrains text-xs">{title}</h1>
+				<span className="flex shrink-0 gap-x-3">
 					<img
 						src="/assets/images/icons/redirect.png"
 						alt="Visitar exercício"
@@ -98,11 +98,11 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 				</span>
 			</div>
 			<div
-				className={`scrollbar-none overflow-scroll transition-all duration-300 ${isVisible ? 'h-[200px] opacity-100' : 'h-4 opacity-0'}`}
+				className={`transition-[height, opacity] codeScrollbar overflow-y-scroll duration-300 ${isVisible ? 'h-[200px] opacity-100' : 'h-4 opacity-0'}`}
 			>
 				{isVisible && (
 					<div
-						className="overflow-hidden rounded-lg"
+						className="codeScrollbar overflow-x-scroll rounded-lg"
 						dangerouslySetInnerHTML={{ __html: html }}
 					></div>
 				)}

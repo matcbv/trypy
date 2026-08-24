@@ -75,13 +75,13 @@ export function UserOverview() {
 	};
 
 	return (
-		<div className="flex flex-col gap-y-12">
+		<div className="flex flex-col gap-y-[40px]">
 			<div>
-				<h1 className="mb-8 text-3xl font-bold">
+				<h1 className="mb-8 text-2xl font-bold">
 					Olá, {authState.data?.name}!
 				</h1>
-				<h2 className="mb-2 text-xl">Dados da conta:</h2>
-				<div className="flex w-1/2 flex-col gap-y-2 rounded-md bg-black/40 p-4 shadow-[0_0_20px_#000000]/50">
+				<h2 className="mb-2 text-lg">Dados da conta:</h2>
+				<div className="flex flex-col gap-y-2 rounded-md bg-black/40 p-[15px] shadow-[0_0_20px_#000000]/50 sm:max-w-[300px]">
 					<p className="flex gap-x-2">
 						ID de usuário:
 						<span
@@ -112,23 +112,23 @@ export function UserOverview() {
 				</div>
 			</div>
 			<div>
-				<h2 className="mb-2 text-2xl tracking-wide">Progresso da trilha</h2>
-				<div className="flex items-center gap-x-10 rounded-md bg-black/40 p-8 shadow-[0_0_20px_#000000]/50">
+				<h2 className="mb-2 text-lg tracking-wide">Progresso da trilha</h2>
+				<div className="flex flex-col items-center justify-center gap-y-[25px] rounded-md bg-black/40 p-[25px] shadow-[0_0_20px_#000000]/50 sm:flex-row sm:gap-x-[25px] sm:gap-y-0">
 					<ProgressBar />
 					<div className="flex flex-col gap-y-5">
-						<p className="flex flex-col gap-y-1">
+						<p className="flex flex-col">
 							Módulo atual:{' '}
 							<span className="cursor-pointer font-bold text-[#29bd5f]">
 								{titles.module || <SkeletonLoader height={24} width={270} />}
 							</span>
 						</p>
-						<p className="flex flex-col gap-y-1">
+						<p className="flex flex-col">
 							Tópico atual:{' '}
 							<span className="cursor-pointer font-bold text-[#29bd5f]">
 								{titles.topic || <SkeletonLoader height={24} width={270} />}
 							</span>
 						</p>
-						<p className="flex flex-col gap-y-1">
+						<p className="flex flex-col">
 							Subtópico atual:{' '}
 							<span className="cursor-pointer font-bold text-[#29bd5f]">
 								{titles.subtopic || <SkeletonLoader height={24} width={270} />}
@@ -138,10 +138,10 @@ export function UserOverview() {
 				</div>
 			</div>
 			<div>
-				<h2 className="mb-2 text-2xl">Conquistas</h2>
+				<h2 className="mb-2 text-lg">Conquistas</h2>
 				<div className="flex items-center gap-x-2 rounded-md bg-black/40 p-8 shadow-[0_0_20px_#000000]/50">
 					<img src="/assets/images/icons/loading.png" alt="Carregando" />
-					<p className="text-xl">Em produção...</p>
+					<p className="text-lg">Em produção...</p>
 				</div>
 			</div>
 		</div>
