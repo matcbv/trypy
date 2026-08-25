@@ -141,7 +141,7 @@ export function EditProfile() {
 					onChange={(e) =>
 						setDeleteCodeInputValue(e.target.value.toUpperCase())
 					}
-					className="border-main-purple/70 focus:border-main-purple w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10"
+					className="border-main-purple/70 focus:border-main-purple w-full max-w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10"
 					type="text"
 				/>
 			</>
