@@ -159,7 +159,7 @@ export function EditProfile() {
 					</Link>
 				</div>
 				<div className="flex flex-col gap-y-3">
-					<h3>Deletar conta</h3>
+					<h3 className="text-lg">Deletar conta</h3>
 					<p className="text-sm">
 						Essa ação é{' '}
 						<span className="font-bold text-red-300">irreversível</span>. Não é
