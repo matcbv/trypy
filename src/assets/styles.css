@@ -34,7 +34,7 @@ input[type='password']::-ms-clear {
 }
 
 .codeScrollbar::-webkit-scrollbar-track {
-	background-color: transparent;
+	background-color: #303446;
 }
 
 /* react-toastify */

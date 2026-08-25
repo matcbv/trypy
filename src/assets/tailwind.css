@@ -150,6 +150,6 @@
 	}
 
 	.guide-cards {
-		@apply flex min-h-[250px] max-w-[360px] flex-col gap-y-[20px] rounded-md bg-black/40 p-[25px] shadow-[0_0_30px_black]/40 transition-[scale] duration-300 hover:scale-105;
+		@apply flex min-h-[250px] max-w-[360px] flex-col gap-y-[20px] rounded-md bg-black/40 p-[25px] shadow-[0_0_30px_black]/40 lg:transition-[scale] lg:duration-300 lg:hover:scale-105;
 	}
 }
