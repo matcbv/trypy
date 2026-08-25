@@ -98,11 +98,11 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 				</span>
 			</div>
 			<div
-				className={`transition-[height, opacity] codeScrollbar overflow-y-scroll duration-300 ${isVisible ? 'h-[200px] opacity-100' : 'h-4 opacity-0'}`}
+				className={`transition-[height, opacity] codeScrollbar overflow-y-scroll duration-300 ${isVisible ? 'h-[200px] opacity-100' : 'h-[15px] opacity-0'}`}
 			>
 				{isVisible && (
 					<div
-						className="codeScrollbar overflow-x-scroll rounded-lg"
+						className="codeScrollbar h-full overflow-x-scroll rounded-lg"
 						dangerouslySetInnerHTML={{ __html: html }}
 					></div>
 				)}

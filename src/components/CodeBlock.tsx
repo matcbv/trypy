@@ -23,9 +23,9 @@ export function CodeBlock({ code }: { code: string }) {
 	};
 
 	return (
-		<div className="font-jetbrains group relative rounded text-sm shadow-[0_0_10px_var(--color-main-purple)]/15">
+		<div className="group codeScrollbar relative overflow-x-auto rounded-lg shadow-[0_0_10px_var(--color-main-purple)]/15">
 			<div
-				className="overflow-hidden rounded-lg"
+				className="text-content-p w-fit min-w-full"
 				dangerouslySetInnerHTML={{ __html: html }}
 			></div>
 			<img
