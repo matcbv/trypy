@@ -6,7 +6,7 @@ export function Dashboard() {
 		<div className="flex w-full items-center justify-center">
 			<div className="relative my-[120px] flex w-full justify-center">
 				<DashboardNavbar />
-				<div className="min-h-screen w-[min(600px,100%)] rounded-md bg-[#241f49]/80 p-10 shadow-[0_0_20px_#ffffff]/10 lg:rounded-tl-none">
+				<div className="min-h-screen w-[min(600px,100%)] rounded-md bg-[#231e57] p-10 shadow-[0_0_20px_#ffffff]/10 lg:rounded-tl-none">
 					<Outlet />
 				</div>
 			</div>
