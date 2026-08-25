@@ -25,8 +25,12 @@ export function Module() {
 	const [subtopics, setSubtopics] = useState<SubtopicData[]>([]);
 	const [subtopicData, setSubtopicData] = useState<SubtopicData | null>(null);
 	const [scrollY, setScrollY] = useState(0);
-	const [offset, setOffset] = useState(20);
+	const [topButtonOffset, setTopButtonOffset] = useState(0);
+	const [sidebarButtonOffset, setSidebarButtonOffset] = useState(
+		window.innerHeight / 2,
+	);
 	const footerRef = useRef<HTMLElement>(null);
+	const moduleRef = useRef<HTMLDivElement>(null);
 	const params = useParams<{ moduleId: string }>();
 
 	// * useEffect para aparição e posicionamento do botão de scroll para o topo.
@@ -36,12 +40,20 @@ export function Module() {
 		const handleScroll = () => {
 			setScrollY(window.scrollY);
 
-			if (!footerRef.current) return;
+			if (!footerRef.current || !moduleRef.current) return;
 
+			// * Calculando a distância do botão de volar ao topo:
 			const footerTop = footerRef.current.getBoundingClientRect().top;
-			const overlap = window.innerHeight - footerTop;
-			// Setando o maior valor entre o intervalo citado. Ao descer a tela, o valor irá se aproximar cada vez mais de 20, parando nele.
-			setOffset(Math.max(20, overlap + 20));
+			const footerOverlap = window.innerHeight - footerTop;
+			// * Setando o maior valor entre o intervalo citado. Ao descer a tela, o footer ficará cada vez mais próximo da tela, diminuindo o valor de footerTop e aumentando o valor de overlap. Dessa forma, irá sempre acompanhar o tamanho do footer, somado de 20px.
+			setTopButtonOffset(Math.max(20, footerOverlap + 20));
+
+			// * Calculando a distância do botão de mostrar a sidebar:
+			const moduleRect = moduleRef.current.getBoundingClientRect();
+			const moduleBottom = moduleRect.top + moduleRect.height;
+			// * No caso abaixo, iremos obter o valor mínimo entre a metade da tela e o final do módulo. Quanto a tela se aproximar do final do módulo, seu valor começará e ficar menor que a metade da tela, parando nesse ponto.
+			const moduleOverlap = Math.min(window.innerHeight / 2, moduleBottom - 50);
+			setSidebarButtonOffset(moduleOverlap);
 		};
 		window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -119,9 +131,14 @@ export function Module() {
 				<LoadingPage />
 			) : (
 				<>
-					<ModuleSideBar topics={topics} moduleOrder={moduleData.order} />
+					<ModuleSideBar
+						topics={topics}
+						moduleOrder={moduleData.order}
+						sidebarButtonOffset={sidebarButtonOffset}
+					/>
 					<div
-						className="max-w-[1200px] flex-1 rounded-lg bg-[#0d0a14] p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-[40px]"
+						ref={moduleRef}
+						className="max-w-[1200px] min-w-0 flex-1 rounded-lg bg-[#0d0a14] p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-[40px]"
 						style={
 							{
 								'--theme-color': `var(${themeStyles[moduleData.theme].color})`,
@@ -140,7 +157,7 @@ export function Module() {
 							{subtopicData?.videoLink && (
 								<div className="flex justify-center">
 									<iframe
-										className="h-[360px] w-[640px] rounded-md shadow-[0_0_30px_#ffffff0f]"
+										className="max-h-[360px] max-w-[640px] rounded-md shadow-[0_0_30px_#ffffff0f]"
 										src={subtopicData?.videoLink}
 										title={subtopicData?.title}
 										frameBorder="0"
@@ -164,9 +181,9 @@ export function Module() {
 					</div>
 					{scrollY > 0 && (
 						<span
-							className={`bg-main-green fixed right-[10px] z-10 flex size-[30px] shrink-0 cursor-pointer items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] transition-shadow transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_var(--color-glow-green)]/50`}
+							className="bg-main-green fixed right-[10px] z-10 flex size-[30px] shrink-0 cursor-pointer items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] transition-shadow transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_var(--color-glow-green)]/50"
 							onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-							style={{ bottom: `${offset}px` }}
+							style={{ bottom: `${topButtonOffset}px` }}
 						>
 							<img src="/assets/images/icons/arrow-up.png" alt="Ir ao topo" />
 						</span>

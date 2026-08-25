@@ -7,9 +7,14 @@ import type { TopicData } from '../types/content';
 interface SidebarProps {
 	topics: TopicData[];
 	moduleOrder: number;
+	sidebarButtonOffset: number;
 }
 
-export function ModuleSideBar({ topics, moduleOrder }: SidebarProps) {
+export function ModuleSideBar({
+	topics,
+	moduleOrder,
+	sidebarButtonOffset,
+}: SidebarProps) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 	const { progressState } = useSafeContext(ProgressContext);
@@ -68,6 +73,7 @@ export function ModuleSideBar({ topics, moduleOrder }: SidebarProps) {
 		return { src: '/assets/images/icons/locked.png', alt: 'Bloqueado' };
 	};
 
+	// * useEffect responsável por exibir ou esconder a sidebar de acordo com o tamanho da viewport.
 	useEffect(() => {
 		const mediaQuery = window.matchMedia('(min-width: 1024px)');
 
@@ -82,6 +88,7 @@ export function ModuleSideBar({ topics, moduleOrder }: SidebarProps) {
 		return () => mediaQuery.removeEventListener('change', handleChange);
 	}, []);
 
+	// * useEffect responsável por fechar a sidebar ao clicar fora dela.
 	useEffect(() => {
 		if (isDesktop) return;
 
@@ -148,7 +155,8 @@ export function ModuleSideBar({ topics, moduleOrder }: SidebarProps) {
 				src="/assets/images/icons/show-sidebar.png"
 				alt="Exibir barra de navegação"
 				ref={sidebarIconRef}
-				className={`absolute ${isSidebarOpen ? 'left-[290px] rotate-180' : '-left-[10px]'} transition-[rotate, left] top-1/2 z-20 w-[35px] -translate-y-1/2 cursor-pointer self-center duration-500 lg:hidden`}
+				className={`fixed ${isSidebarOpen ? 'left-[300px] rotate-180' : '-left-[10px]'} z-20 w-[40px] -translate-y-1/2 cursor-pointer transition-[rotate,left] duration-500 lg:hidden`}
+				style={{ top: `${sidebarButtonOffset}px` }}
 				onClick={() => setIsSidebarOpen((prev) => !prev)}
 				role="button"
 				tabIndex={0}
