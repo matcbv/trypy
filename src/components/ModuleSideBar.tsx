@@ -111,7 +111,7 @@ export function ModuleSideBar({
 		<>
 			<div
 				ref={sidebarRef}
-				className={`${isSidebarOpen ? 'visible left-0' : 'invisible -left-[300px]'} absolute z-20 h-full w-[300px] shrink-0 rounded-lg bg-[#272149]/90 p-[15px] shadow-[0_0_20px_#ffffff]/5 transition-[left,visibility] duration-500 lg:relative lg:h-auto lg:bg-white/5`}
+				className={`${isSidebarOpen ? 'visible left-0' : 'invisible -left-[300px]'} absolute z-20 h-full w-[300px] shrink-0 rounded-lg bg-white/5 p-[15px] shadow-[0_0_20px_#ffffff]/5 backdrop-blur-lg transition-[left,visibility] duration-500 lg:relative lg:h-auto`}
 			>
 				<div className="sticky top-[80px] flex flex-col gap-y-[15px]">
 					{topics?.map((topic) => (
@@ -120,8 +120,8 @@ export function ModuleSideBar({
 							className="flex cursor-pointer flex-col overflow-hidden rounded-lg bg-[#0d0a14]/80"
 							onClick={() => handleClick(topic.slug)}
 						>
-							<div className="flex h-[75px] w-full items-center justify-between gap-x-2 rounded-lg border border-black px-3">
-								<div className="flex items-center gap-x-3">
+							<div className="flex h-[75px] w-full items-center justify-between gap-x-2 rounded-lg px-[12px]">
+								<div className="flex items-center gap-x-[12px]">
 									<img {...iconData(topic)} className="w-5" draggable={false} />
 									<p className="font-jetbrains text-[0.85rem] leading-6">
 										{topic.title}
