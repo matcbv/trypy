@@ -17,8 +17,8 @@ export function Session() {
 					>
 						Redefinir senha
 					</Link>
-					<div>
-						<h2 className="mb-3 text-lg font-bold tracking-wider">
+					<div className="flex flex-col items-start gap-y-[10px]">
+						<h2 className="text-lg font-bold tracking-wider">
 							Ainda não possui conta?
 						</h2>
 						<Link to={'/register'} className="form-btn">
