@@ -9,11 +9,11 @@ import './assets/tailwind.css';
 import './assets/styles.css';
 
 const toastThemes = {
-	success: 'sm:shadow-[0_0_15px_var(--color-glow-green)]/40',
-	error: 'sm:shadow-[0_0_15px_#f24854]/40',
-	warning: 'sm:shadow-[0_0_15px_#f7b972]/40',
-	info: 'sm:shadow-[0_0_15px_#5c87a7]/40',
-	default: 'sm:shadow-[0_0_15px_#ffffff]/40',
+	success: 'sm:shadow-[0_0_5px_var(--color-glow-green)]',
+	error: 'sm:shadow-[0_0_5px_#f24854]',
+	warning: 'sm:shadow-[0_0_5px_#f7b972]',
+	info: 'sm:shadow-[0_0_5px_#5c87a7]',
+	default: 'sm:shadow-[0_0_5px_#ffffff]',
 };
 
 function App() {
@@ -24,12 +24,12 @@ function App() {
 				closeButton={false}
 				icon={false}
 				autoClose={3000}
-				pauseOnHover={false}
+				pauseOnHover={true}
 				pauseOnFocusLoss={false}
 				toastClassName={(context) =>
-					`${toastThemes[context?.type || 'default']} relative mb-4 w-full max-w-[400px] rounded-xl bg-[#131117] p-[25px]`
+					`${toastThemes[context?.type || 'default']} mt-0 sm:mt-[70px] relative sm:mb-4 w-full max-w-[400px] sm:rounded-xl bg-[#131117] p-[25px] overflow-hidden`
 				}
-				className="mt-20"
+				className="[--toastify-toast-bd-radius:0] sm:[--toastify-toast-bd-radius:12px]"
 			/>
 		</>
 	);
