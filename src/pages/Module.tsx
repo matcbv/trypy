@@ -157,17 +157,16 @@ export function Module() {
 							{subtopicData?.videoLink && (
 								<div className="flex justify-center">
 									<iframe
-										className="max-h-[360px] max-w-[640px] rounded-md shadow-[0_0_30px_#ffffff0f]"
+										className="aspect-video w-full max-w-[720px] rounded-md shadow-[0_0_30px_#ffffff0f]"
 										src={subtopicData?.videoLink}
 										title={subtopicData?.title}
-										frameBorder="0"
 										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 										referrerPolicy="strict-origin-when-cross-origin"
 										allowFullScreen
 									></iframe>
 								</div>
 							)}
-							{subtopicData?.isExercise && (
+							{subtopicData?.subtopicType === 'exercise' && (
 								<Terminal subtopicData={subtopicData} />
 							)}
 						</div>
@@ -181,7 +180,7 @@ export function Module() {
 					</div>
 					{scrollY > 0 && (
 						<span
-							className="bg-main-green fixed right-[10px] z-10 flex size-[30px] shrink-0 cursor-pointer items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] transition-shadow transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_0_10px_var(--color-glow-green)]/50"
+							className="bg-main-green lg:transition-[transform, shadow] fixed right-[5px] z-10 flex size-[30px] shrink-0 cursor-pointer items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] lg:right-[10px] lg:duration-300 lg:hover:-translate-y-1 lg:hover:shadow-[0_0_10px_var(--color-glow-green)]/50"
 							onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
 							style={{ bottom: `${topButtonOffset}px` }}
 						>
