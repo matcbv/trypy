@@ -130,19 +130,19 @@
 
 @layer components {
 	.register-form-btn {
-		@apply from-main-green/40 to-main-purple/40 h-[50px] w-[200px] cursor-pointer rounded-md border bg-linear-to-br text-white transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff]/15;
+		@apply from-main-green/40 to-main-purple/40 h-[50px] w-[200px] cursor-pointer rounded-md border bg-linear-to-br text-white lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/15;
 	}
 
 	.footer-links {
-		@apply border-l-main-green hover:text-main-green cursor-pointer border-l-2 pl-2 text-sm transition-colors duration-300 sm:text-base;
+		@apply border-l-main-green lg:hover:text-main-green cursor-pointer border-l-2 pl-2 text-sm sm:text-base lg:transition-colors lg:duration-300;
 	}
 
 	.form-btn {
-		@apply cursor-pointer rounded-md border border-white/50 bg-white/10 px-5 py-2 text-center font-sans transition-shadow duration-300 hover:shadow-[0_0_15px_#ffffff]/10;
+		@apply cursor-pointer rounded-md border border-white/50 bg-white/10 px-[20px] py-[10px] text-center lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/10;
 	}
 
 	.module-btn {
-		@apply flex w-[120px] cursor-pointer items-center justify-center gap-x-2 rounded-md border-2 border-(--theme-color) bg-(--theme-color)/10 py-2 text-sm text-white transition-[width,box-shadow] duration-300 lg:w-[150px] lg:hover:shadow-[0_0_15px_#ffffff]/5;
+		@apply flex w-[120px] cursor-pointer items-center justify-center gap-x-2 rounded-md border-2 border-(--theme-color) bg-(--theme-color)/10 py-2 text-sm text-white lg:w-[150px] lg:transition-[width,box-shadow] lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/5;
 	}
 
 	.support-fields {
