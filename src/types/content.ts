@@ -1,6 +1,8 @@
 import type { Document } from '@contentful/rich-text-types';
 import type { Themes } from '../constants/themeStyle';
 
+export type SubtopicTypes = 'lesson' | 'exercise' | 'resolution' | 'conclusion';
+
 export interface ModuleData {
 	title: string;
 	topics: TopicData[];
@@ -23,7 +25,7 @@ export interface SubtopicData {
 	videoLink: string | null;
 	slug: string;
 	order: number;
-	isExercise: boolean;
+	subtopicType: SubtopicTypes;
 	solutionCode: string | null;
 	testCode: string | null;
 	starterCode: string | null;

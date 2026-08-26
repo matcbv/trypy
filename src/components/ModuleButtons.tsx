@@ -9,7 +9,7 @@ import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleData, SubtopicData, TopicData } from '../types/content';
 import type { ProgressState } from '../types/states';
 import { userNavigationRef, userProgressRef } from '../database/refs/userRefs';
-import { useEffect, useState, type MouseEvent } from 'react';
+import { type MouseEvent } from 'react';
 import { TerminalContext } from '../contexts/TerminalProvider/context';
 
 interface ModuleButtonsProps {
@@ -34,22 +34,11 @@ export function ModuleButtons({
 	const { terminalState } = useSafeContext(TerminalContext);
 	const params = useParams<{ moduleId: string }>();
 	const navigate = useNavigate();
-	const [isLastSubtopic, setIsLastSubtopic] = useState(false);
 
 	const isNextButtonLocked =
-		subtopicData.isExercise &&
+		subtopicData.subtopicType === 'exercise' &&
 		!progressState.doneSubtopics.includes(subtopicData.slug) &&
 		!terminalState.solved;
-
-	// * useEffect responsável por verificar se o subtópico acessado é o último do módulo.
-	useEffect(() => {
-		if (!moduleData) return;
-
-		const lastSubtopic = moduleData.topics.at(-1)!.subtopics.at(-1)!;
-		setIsLastSubtopic(
-			navigationState[moduleData.order]?.currentSubtopic === lastSubtopic.slug,
-		);
-	}, [moduleData, navigationState]);
 
 	const handleNext = async (e: MouseEvent<HTMLButtonElement>) => {
 		if (isNextButtonLocked) {
@@ -187,12 +176,12 @@ export function ModuleButtons({
 	const finishModule = async () => {
 		if (!params.moduleId) return;
 
-		const isLastTopicDone = subtopics
-			.filter((subtopic) => subtopic.order !== subtopics.length)
+		const isConclusionUnlocked = subtopics
+			.filter((subtopic) => subtopic.subtopicType !== 'conclusion')
 			.every((subtopic) => progressState.doneSubtopics.includes(subtopic.slug));
 
-		if (!isLastTopicDone) {
-			logInfo('Finalize todos os tópicos para concluir o módulo.');
+		if (!isConclusionUnlocked) {
+			logInfo('Finalize todos os subtópicos para concluir o módulo.');
 			return;
 		}
 
@@ -264,7 +253,7 @@ export function ModuleButtons({
 				/>
 				Voltar
 			</button>
-			{isLastSubtopic ? (
+			{subtopicData.subtopicType === 'conclusion' ? (
 				<button
 					type="button"
 					className={`module-btn group`}

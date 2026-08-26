@@ -1,9 +1,9 @@
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
-import type { TopicData } from '../types/content';
+import type { SubtopicData, TopicData } from '../types/content';
 import type { Dispatch, RefObject } from 'react';
-import { logError } from '../utils/logger';
+import { logError, logInfo } from '../utils/logger';
 
 interface DropdownProps {
 	topic: TopicData;
@@ -23,19 +23,23 @@ export function SubtopicDropdown({
 	const { progressState } = useSafeContext(ProgressContext);
 	const { setNavigationState } = useSafeContext(NavigationContext);
 
-	const changeSubtopic = (slug: string) => {
+	const changeSubtopic = (currentSubtopic: SubtopicData) => {
 		try {
-			if (
-				!progressState.doneTopics.includes(topic.slug) &&
-				progressState.inProgressTopic !== topic.slug
-			) {
-				return;
+			if (currentSubtopic.subtopicType === 'resolution') {
+				const topicExercise = topic.subtopics.find(
+					(subtopic) => subtopic.subtopicType === 'exercise',
+				);
+
+				if (!progressState.doneSubtopics.includes(topicExercise!.slug)) {
+					logInfo('Conclua o exercício para acessar sua resolução');
+					return;
+				}
 			}
 			setNavigationState((prev) => ({
 				...prev,
 				[moduleOrder]: {
 					currentTopic: topic.slug,
-					currentSubtopic: slug,
+					currentSubtopic: currentSubtopic.slug,
 				},
 			}));
 
@@ -74,7 +78,7 @@ export function SubtopicDropdown({
 					)}
 					<p
 						className="hover:cursor-pointer"
-						onClick={() => void changeSubtopic(subtopic?.slug)}
+						onClick={() => void changeSubtopic(subtopic)}
 					>
 						{subtopic?.title}
 					</p>

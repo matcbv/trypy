@@ -33,7 +33,7 @@ export type SubtopicSkeleton = EntrySkeletonType<
 		videoLink: EntryFieldTypes.Symbol | undefined;
 		slug: EntryFieldTypes.Symbol;
 		order: EntryFieldTypes.Integer;
-		isExercise: EntryFieldTypes.Boolean;
+		subtopicType: EntryFieldTypes.Symbol;
 		solutionCode: EntryFieldTypes.Text | undefined;
 		testCode: EntryFieldTypes.Text | undefined;
 		starterCode: EntryFieldTypes.Text | undefined;

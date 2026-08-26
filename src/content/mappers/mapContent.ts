@@ -1,5 +1,10 @@
 import type { ResolvedEntry } from '../../types/richText';
-import type { ModuleData, SubtopicData, TopicData } from '../../types/content';
+import type {
+	ModuleData,
+	SubtopicData,
+	SubtopicTypes,
+	TopicData,
+} from '../../types/content';
 import type { ModuleSkeleton } from '../../types/skeletons';
 import type { Themes } from '../../constants/themeStyle';
 
@@ -13,6 +18,7 @@ export function mapContent(
 		const subtopics: SubtopicData[] = rawTopic!.fields.subtopics.map(
 			(rawSubtopic) => ({
 				...rawSubtopic!.fields,
+				subtopicType: rawSubtopic!.fields.subtopicType as SubtopicTypes,
 				videoDescription: rawSubtopic!.fields.videoDescription ?? null,
 				videoLink: rawSubtopic!.fields.videoLink ?? null,
 				solutionCode: rawSubtopic!.fields.solutionCode ?? null,
