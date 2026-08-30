@@ -125,69 +125,64 @@ export function Module() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [subtopicData]);
 
-	return (
+	return !moduleData || !topicData || !subtopicData ? (
+		<LoadingPage />
+	) : (
 		<div className="relative mx-[10px] my-[120px] flex min-h-screen justify-center lg:mx-[50px] lg:gap-x-[40px]">
-			{!moduleData || !topicData || !subtopicData ? (
-				<LoadingPage />
-			) : (
-				<>
-					<ModuleSideBar
-						topics={topics}
-						moduleOrder={moduleData.order}
-						sidebarButtonOffset={sidebarButtonOffset}
-					/>
-					<div
-						ref={moduleRef}
-						className="max-w-[1200px] min-w-0 flex-1 rounded-lg bg-[#0d0a14] p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-[40px]"
-						style={
-							{
-								'--theme-color': `var(${themeStyles[moduleData.theme].color})`,
-								'--highlight-theme-color': `var(${themeStyles[moduleData.theme].highlight})`,
-							} as React.CSSProperties
-						}
-					>
-						<h1
-							className={`text-content-h1 mb-5 tracking-wide text-(--theme-color)!`}
-						>
-							{subtopicData?.title}
-						</h1>
-						<div className="mb-10 flex flex-col gap-y-5">
-							{subtopicData?.content &&
-								contentfulFormatter(subtopicData.content)}
-							{subtopicData?.videoLink && (
-								<div className="flex justify-center">
-									<iframe
-										className="aspect-video w-full max-w-[720px] rounded-md shadow-[0_0_30px_#ffffff0f]"
-										src={subtopicData?.videoLink}
-										title={subtopicData?.title}
-										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-										referrerPolicy="strict-origin-when-cross-origin"
-										allowFullScreen
-									></iframe>
-								</div>
-							)}
-							{subtopicData?.subtopicType === 'exercise' && (
-								<Terminal subtopicData={subtopicData} />
-							)}
+			<ModuleSideBar
+				topics={topics}
+				moduleOrder={moduleData.order}
+				sidebarButtonOffset={sidebarButtonOffset}
+			/>
+			<div
+				ref={moduleRef}
+				className="max-w-[1200px] min-w-0 flex-1 rounded-lg bg-[#0d0a14] p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-[40px]"
+				style={
+					{
+						'--theme-color': `var(${themeStyles[moduleData.theme].color})`,
+						'--highlight-theme-color': `var(${themeStyles[moduleData.theme].highlight})`,
+					} as React.CSSProperties
+				}
+			>
+				<h1
+					className={`text-content-h1 mb-5 tracking-wide text-(--theme-color)!`}
+				>
+					{subtopicData?.title}
+				</h1>
+				<div className="mb-10 flex flex-col gap-y-5">
+					{subtopicData?.content && contentfulFormatter(subtopicData.content)}
+					{subtopicData?.videoLink && (
+						<div className="flex justify-center">
+							<iframe
+								className="aspect-video w-full max-w-[720px] rounded-md shadow-[0_0_30px_#ffffff0f]"
+								src={subtopicData?.videoLink}
+								title={subtopicData?.title}
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+								referrerPolicy="strict-origin-when-cross-origin"
+								allowFullScreen
+							></iframe>
 						</div>
-						<ModuleButtons
-							topics={topics}
-							subtopics={subtopics}
-							moduleData={moduleData}
-							topicData={topicData}
-							subtopicData={subtopicData}
-						/>
-					</div>
-					{scrollY > 0 && (
-						<span
-							className="bg-main-green lg:transition-[transform, shadow] fixed right-[5px] z-10 flex size-[30px] shrink-0 cursor-pointer items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] lg:right-[10px] lg:duration-300 lg:hover:-translate-y-1 lg:hover:shadow-[0_0_10px_var(--color-glow-green)]/50"
-							onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-							style={{ bottom: `${topButtonOffset}px` }}
-						>
-							<img src="/assets/images/icons/arrow-up.png" alt="Ir ao topo" />
-						</span>
 					)}
-				</>
+					{subtopicData?.subtopicType === 'exercise' && (
+						<Terminal subtopicData={subtopicData} />
+					)}
+				</div>
+				<ModuleButtons
+					topics={topics}
+					subtopics={subtopics}
+					moduleData={moduleData}
+					topicData={topicData}
+					subtopicData={subtopicData}
+				/>
+			</div>
+			{scrollY > 0 && (
+				<span
+					className="bg-main-green lg:transition-[transform, shadow] fixed right-[5px] z-10 flex size-[30px] shrink-0 cursor-pointer items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] lg:right-[10px] lg:duration-300 lg:hover:-translate-y-1 lg:hover:shadow-[0_0_10px_var(--color-glow-green)]/50"
+					onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+					style={{ bottom: `${topButtonOffset}px` }}
+				>
+					<img src="/assets/images/icons/arrow-up.png" alt="Ir ao topo" />
+				</span>
 			)}
 		</div>
 	);
