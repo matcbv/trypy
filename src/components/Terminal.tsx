@@ -105,9 +105,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 	return (
 		<div className="flex flex-col gap-y-5">
 			<div className="flex">
-				<p className="text-highlight-green mr-2 text-lg tracking-wide">
-					Status do exercício:
-				</p>
+				<p className="mr-2 text-lg tracking-wide">Status do exercício:</p>
 				<span className="flex items-center gap-x-1 font-bold">
 					{solved ? 'Finalizado' : 'Em progresso...'}
 					<img
