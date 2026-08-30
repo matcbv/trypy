@@ -45,6 +45,13 @@ export function contentfulFormatter(content: Document) {
 					{children}
 				</ul>
 			),
+			[BLOCKS.OL_LIST]: (_, children) => (
+				<ol
+					className={`ml-5 flex list-decimal flex-col gap-y-2 marker:text-(--theme-color)`}
+				>
+					{children}
+				</ol>
+			),
 			[BLOCKS.HEADING_2]: (_, children) => (
 				<h2 className={`text-content-h2 tracking-wide text-(--theme-color)`}>
 					{children}
