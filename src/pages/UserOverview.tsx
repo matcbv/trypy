@@ -11,6 +11,7 @@ import { Timestamp } from 'firebase/firestore';
 export function UserOverview() {
 	const { authState } = useSafeContext(AuthContext);
 	const { progressState } = useSafeContext(ProgressContext);
+	const [progressPercentual, setProgressPercentual] = useState(0);
 	const [titles, setTitles] = useState({
 		module: '',
 		topic: '',
@@ -31,27 +32,35 @@ export function UserOverview() {
 	useEffect(() => {
 		void (async () => {
 			try {
-				const [module, topic, subtopic] = await Promise.all([
-					fetchContent({
-						contentType: 'module',
-						include: 0,
-						slug: progressState.inProgressModule,
-					}),
-					fetchContent({
-						contentType: 'topic',
-						include: 0,
-						slug: progressState.inProgressTopic,
-					}),
-					fetchContent({
-						contentType: 'subtopic',
-						include: 0,
-						slug: progressState.inProgressSubtopic,
-					}),
-				]);
+				const modules = await fetchContent({
+					contentType: 'module',
+					include: 2,
+				});
+
+				const module = modules.find(
+					(module) => module.fields.slug === progressState.inProgressModule,
+				);
+				const topic = module!.fields.topics.find(
+					(topic) => topic!.fields.slug === progressState.inProgressTopic,
+				);
+				const subtopic = topic!.fields.subtopics.find(
+					(subtopic) =>
+						subtopic!.fields.slug === progressState.inProgressSubtopic,
+				);
+
+				const subtopicsLength = modules.flatMap((module) =>
+					module.fields.topics.flatMap((topic) => topic?.fields.subtopics),
+				).length;
+
+				const percentual =
+					(progressState.doneSubtopics.length * 100) / subtopicsLength;
+
+				setProgressPercentual(Math.round(Number(percentual.toFixed(2))));
+
 				setTitles({
-					module: module[0]!.fields.title,
-					topic: topic[0]!.fields.title,
-					subtopic: subtopic[0]!.fields.title,
+					module: module!.fields.title,
+					topic: topic!.fields.title,
+					subtopic: subtopic!.fields.title,
 				});
 			} catch (error) {
 				logError({
@@ -64,6 +73,7 @@ export function UserOverview() {
 		progressState.inProgressModule,
 		progressState.inProgressTopic,
 		progressState.inProgressSubtopic,
+		progressState.doneSubtopics.length,
 	]);
 
 	const copyText = async (text: string) => {
@@ -114,7 +124,7 @@ export function UserOverview() {
 			<div>
 				<h2 className="mb-2 text-lg tracking-wide">Progresso da trilha</h2>
 				<div className="flex flex-col items-center justify-center gap-y-[25px] rounded-md bg-black/40 p-[25px] shadow-[0_0_20px_#000000]/50 sm:flex-row sm:gap-x-[25px] sm:gap-y-0">
-					<ProgressBar />
+					<ProgressBar progressPercentual={progressPercentual} />
 					<div className="flex flex-col gap-y-5">
 						<p className="flex flex-col">
 							Módulo atual:{' '}

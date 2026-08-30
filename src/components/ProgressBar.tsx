@@ -1,32 +1,10 @@
-import { useEffect, useState } from 'react';
-import { fetchContent } from '../content/services/fetchContent';
-import { ProgressContext } from '../contexts/ProgressProvider/context';
-import { useSafeContext } from '../hooks/useSafeContext';
-import { logError } from '../utils/logger';
-
-export function ProgressBar() {
-	const [progressPercentual, setProgressPercentual] = useState(0);
-	const { progressState } = useSafeContext(ProgressContext);
+export function ProgressBar({
+	progressPercentual,
+}: {
+	progressPercentual: number;
+}) {
+	console.log(progressPercentual);
 	const perimeter = 2 * Math.PI * 80;
-
-	useEffect(() => {
-		void (async () => {
-			try {
-				const subtopics = await fetchContent({
-					contentType: 'subtopic',
-					include: 0,
-				});
-				const percentual =
-					(progressState.doneSubtopics.length * 100) / subtopics.length;
-				setProgressPercentual(Math.round(Number(percentual.toFixed(2))));
-			} catch (error) {
-				logError({
-					error,
-					text: 'Não foi possível calcular seu progresso. Tente novamente ou fale conosco.',
-				});
-			}
-		})();
-	}, [progressState.doneSubtopics]);
 
 	return (
 		<svg className="h-[200px] w-[200px] shrink-0 rounded-full shadow-[0_0_15px_#ffffff]/10">
