@@ -27,9 +27,9 @@ function App() {
 				pauseOnHover={true}
 				pauseOnFocusLoss={false}
 				toastClassName={(context) =>
-					`${toastThemes[context?.type || 'default']} mt-0 sm:mt-[70px] relative sm:mb-4 w-full max-w-[400px] sm:rounded-xl bg-[#131117] p-[25px] overflow-hidden`
+					`${toastThemes[context?.type || 'default']}  relative sm:mb-4 w-full max-w-[400px] sm:rounded-xl bg-[#131117] p-[25px] overflow-hidden`
 				}
-				className="[--toastify-toast-bd-radius:0] sm:[--toastify-toast-bd-radius:12px]"
+				className="mt-0 [--toastify-toast-bd-radius:0] sm:mt-[70px] sm:[--toastify-toast-bd-radius:12px]"
 			/>
 		</>
 	);
