@@ -8,7 +8,8 @@
 		"build": "vite build",
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"check": "npx prettier --check ."
+		"type-check": "tsc -b --noEmit",
+		"pretty-check": "npx prettier --check ."
 	},
 	"dependencies": {
 		"@catppuccin/codemirror": "^1.0.3",
@@ -17,9 +18,9 @@
 		"@contentful/rich-text-react-renderer": "^16.1.0",
 		"@tailwindcss/vite": "^4.1.8",
 		"@uiw/react-codemirror": "^4.25.10",
-		"axios": "^1.10.0",
 		"contentful": "^11.7.15",
 		"firebase": "^11.10.0",
+		"idb": "^8.0.3",
 		"pyodide": "^314.0.0",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
@@ -46,5 +47,10 @@
 		"typescript-eslint": "^8.59.2",
 		"vite": "^6.3.5",
 		"vite-plugin-mkcert": "^2.1.0"
+	},
+	"allowScripts": {
+		"@firebase/util@1.12.1": true,
+		"esbuild@0.25.12": true,
+		"protobufjs@7.6.6": true
 	}
 }
