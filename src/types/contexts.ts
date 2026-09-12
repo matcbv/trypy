@@ -1,19 +1,28 @@
 import type { Dispatch, SetStateAction } from 'react';
-import type authActionTypes from '../contexts/AuthProvider/actionTypes';
 import type {
 	AuthState,
 	NavigationState,
 	ProgressState,
 	TerminalState,
 } from './states';
-import type { UserData } from './user';
+import type { ModuleCardData, ModuleData } from './content';
+import type { ErrorContentType } from '../contexts/ContentfulContentProvider';
 
 export interface AuthContextType {
 	authState: AuthState;
-	authDispatch: Dispatch<{
-		type: keyof typeof authActionTypes;
-		payload?: Partial<Omit<AuthState, 'data'>> & { data?: Partial<UserData> };
-	}>;
+	setAuthState: Dispatch<SetStateAction<AuthState>>;
+}
+
+export interface ContentfulContentContextType {
+	modules: ModuleData[] | null;
+	moduleCards: ModuleCardData[] | null;
+	isLoading: {
+		modules: boolean;
+		moduleCards: boolean;
+	};
+	errorData: ErrorContentType;
+	refreshModules: () => Promise<void>;
+	refreshModuleCards: () => Promise<void>;
 }
 
 export interface ProgressContextType {
@@ -22,8 +31,8 @@ export interface ProgressContextType {
 }
 
 export interface NavigationContextType {
-	navigationState: NavigationState;
-	setNavigationState: Dispatch<SetStateAction<NavigationState>>;
+	navigationState: NavigationState | null;
+	setNavigationState: Dispatch<SetStateAction<NavigationState | null>>;
 }
 
 export interface RunCodeParams {
