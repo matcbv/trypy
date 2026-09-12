@@ -2,7 +2,7 @@ import type { UserData } from './user';
 
 export interface AuthState {
 	uid: string | null;
-	data: Partial<UserData> | null;
+	data: UserData | null;
 	loading: boolean;
 }
 

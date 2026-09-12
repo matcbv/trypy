@@ -1,9 +1,8 @@
-import { dateFormatter } from '../utils/dateFormatter';
+import { dateFormatter } from '../utils/formatter';
 import { PictureInput } from './PictureInput';
 import { logError, logSuccess } from '../utils/logger';
 import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
-import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { updateDoc } from 'firebase/firestore';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { userDataRef } from '../database/refs/userRefs';
@@ -17,7 +16,7 @@ const formMap = {
 };
 
 export function ProfileForm() {
-	const { authState, authDispatch } = useSafeContext(AuthContext);
+	const { authState, setAuthState } = useSafeContext(AuthContext);
 	const [placeholders, setPlaceholders] = useState(formMap);
 	const [currentData, setCurrentData] = useState({
 		email: '',
@@ -93,9 +92,12 @@ export function ProfileForm() {
 		) as typeof currentData;
 
 		try {
-			authDispatch({
-				type: authActionTypes.SET_DATA,
-				payload: { data: formattedData },
+			setAuthState((prev) => {
+				if (!prev.data) return prev;
+				return {
+					...prev,
+					data: { ...prev.data, ...formattedData },
+				};
 			});
 			await updateDoc(userDataRef(authState.uid!), formattedData);
 			logSuccess('Dados atualizados com sucesso!');

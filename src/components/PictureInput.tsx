@@ -4,12 +4,11 @@ import { storage } from '../database/configs/firebase';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { logError, logSuccess } from '../utils/logger';
 import { updateDoc } from 'firebase/firestore';
-import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { userDataRef } from '../database/refs/userRefs';
 
 export function PictureInput() {
-	const { authState, authDispatch } = useSafeContext(AuthContext);
+	const { authState, setAuthState } = useSafeContext(AuthContext);
 	const [isUpdating, setIsUpdating] = useState(false);
 	const picturePreview =
 		authState.data?.picture || '/assets/images/profile-picture.png';
@@ -25,10 +24,12 @@ export function PictureInput() {
 			const storageRef = ref(storage, `pictures/${uid}`);
 			await uploadBytes(storageRef, file);
 			const publicUrl = await getDownloadURL(storageRef);
-
-			authDispatch({
-				type: authActionTypes.SET_DATA,
-				payload: { data: { picture: publicUrl } },
+			setAuthState((prev) => {
+				if (!prev.data) return prev;
+				return {
+					...prev,
+					data: { ...prev.data, picture: publicUrl },
+				};
 			});
 			await updateDoc(userDataRef(uid!), { picture: publicUrl });
 
@@ -56,7 +57,7 @@ export function PictureInput() {
 					) : (
 						<img
 							src={picturePreview}
-							className="size-full cursor-pointer object-cover"
+							className="size-full object-cover lg:cursor-pointer"
 							referrerPolicy="no-referrer"
 						/>
 					)}
@@ -64,9 +65,11 @@ export function PictureInput() {
 
 				<div className="absolute -right-4 bottom-0 transition-transform lg:scale-0 lg:group-hover:scale-100">
 					<img
-						src="/assets/images/icons/edit.png"
+						src="/assets/images/icons/edit-image.png"
 						alt="Editar imagem"
-						className="cursor-pointer opacity-80"
+						tabIndex={0}
+						role="button"
+						className="lg:cursor-pointer"
 					/>
 					<input
 						type="file"

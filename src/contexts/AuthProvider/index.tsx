@@ -1,38 +1,32 @@
 import { auth } from '../../database/configs/firebase';
-import { useEffect, useReducer, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import initialState from './initialState';
-import reducer from './reducer';
 import { AuthContext } from './context';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
-import actionTypes from './actionTypes';
 import { getDoc } from 'firebase/firestore';
 import { userDataRef } from '../../database/refs/userRefs';
 import { logError } from '../../utils/logger';
 import { useNavigate } from 'react-router-dom';
+import type { AuthState } from '../../types/states';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-	const [authState, authDispatch] = useReducer(reducer, initialState);
+	const [authState, setAuthState] = useState<AuthState>(initialState);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const handleAuthState = async (user: User | null) => {
-			authDispatch({
-				type: actionTypes.SET_DATA,
-				payload: { loading: true },
-			});
+			setAuthState((prev) => ({ ...prev, loading: true }));
 			try {
 				if (user) {
 					const userData = await getDoc(userDataRef(user.uid));
 					if (!userData.exists()) return;
-					authDispatch({
-						type: actionTypes.SET_DATA,
-						payload: {
-							uid: user.uid,
-							data: userData.data(),
-						},
-					});
+					setAuthState((prev) => ({
+						...prev,
+						uid: user.uid,
+						data: userData.data(),
+					}));
 				} else {
-					authDispatch({ type: actionTypes.LOGOUT });
+					setAuthState(initialState);
 				}
 			} catch (error) {
 				await signOut(auth);
@@ -42,10 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 					text: 'Não foi possível renovar a sessão. Faça login novamente.',
 				});
 			} finally {
-				authDispatch({
-					type: actionTypes.SET_DATA,
-					payload: { loading: false },
-				});
+				setAuthState((prev) => ({ ...prev, loading: false }));
 			}
 		};
 
@@ -58,6 +49,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	}, [navigate]);
 
 	return (
-		<AuthContext value={{ authState, authDispatch }}>{children}</AuthContext>
+		<AuthContext value={{ authState, setAuthState }}>{children}</AuthContext>
 	);
 }

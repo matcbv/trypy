@@ -5,17 +5,18 @@ import { AuthContext } from '../contexts/AuthProvider/context';
 import { validationRegex } from '../constants/validationRegex';
 import { signInWithCredentials } from '../database/auth/auth';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
-import { logError, logSuccess } from '../utils/logger';
-import authActionTypes from '../contexts/AuthProvider/actionTypes';
+import { logError, logSuccess, logWarning } from '../utils/logger';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { LoadingPage } from '../pages/LoadingPage';
 import { signOut } from 'firebase/auth';
 import { auth } from '../database/configs/firebase';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
+import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
 
 export function SessionForm() {
 	const navigate = useNavigate();
-	const { authDispatch } = useSafeContext(AuthContext);
+	const { setAuthState } = useSafeContext(AuthContext);
+	const { modules } = useSafeContext(ContentfulContentContext);
 	const { setProgressState } = useSafeContext(ProgressContext);
 	const { setNavigationState } = useSafeContext(NavigationContext);
 	const [isVisible, setIsVisible] = useState(false);
@@ -49,7 +50,7 @@ export function SessionForm() {
 		const isDataValid = checkData();
 
 		if (!isDataValid) {
-			logError({ text: 'Credenciais inválidas!' });
+			logWarning('Credenciais inválidas!');
 			return;
 		}
 
@@ -63,11 +64,7 @@ export function SessionForm() {
 
 			const { uid, userData, progressData, navigationData } = res;
 
-			authDispatch({
-				type: authActionTypes.SET_DATA,
-				payload: { uid, data: userData },
-			});
-
+			setAuthState((prev) => ({ ...prev, uid: uid, data: userData }));
 			setProgressState((prev) => ({ ...prev, ...progressData }));
 			setNavigationState(navigationData);
 
@@ -85,13 +82,14 @@ export function SessionForm() {
 		setIsSubmitting(true);
 
 		try {
-			const res = await signInWithGoogle();
-			const { uid, providerData, progressData, navigationData } = res;
+			const res = await signInWithGoogle({ modules });
+			const { uid, userData, progressData, navigationData } = res;
 
-			authDispatch({
-				type: authActionTypes.SET_DATA,
-				payload: { uid, data: providerData },
-			});
+			setAuthState((prev) => ({
+				...prev,
+				uid: uid,
+				data: prev.data && { ...prev.data, ...userData },
+			}));
 			setProgressState((prev) => ({ ...prev, ...progressData }));
 			setNavigationState(navigationData);
 
