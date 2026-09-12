@@ -1,84 +1,67 @@
-import axios from 'axios';
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
-	signOut,
 } from 'firebase/auth';
-import { auth } from '../configs/firebase';
-import { getDoc, setDoc } from 'firebase/firestore';
-import type { UserData, UserNavigation } from '../../types/user';
+import { auth, db } from '../configs/firebase';
+import { getDoc, writeBatch } from 'firebase/firestore';
+import type { UserData } from '../../types/user';
 import {
 	userDataRef,
 	userNavigationRef,
 	userProgressRef,
 } from '../refs/userRefs';
-import { fetchInitialProgress } from '../../content/services/fetchInitialProgress';
-import {
-	getNavigationStorage,
-	removeNavigationSorage,
-} from '../../services/navigationStorage';
-import {
-	getProgressStorage,
-	removeProgressSorage,
-} from '../../services/progressStorage';
-import progressInitialState from '../../contexts/ProgressProvider/initialState';
-import authActionTypes from '../../contexts/AuthProvider/actionTypes';
-import navigationInitialState from '../../contexts/NavigationProvider/initialState';
-import type {
-	AuthContextType,
-	NavigationContextType,
-	ProgressContextType,
-} from '../../types/contexts';
-import { logError } from '../../utils/logger';
+import { getNavigationStorage } from '../../services/navigationStorage';
+import { getProgressStorage } from '../../services/progressStorage';
+import { isProgressInitialized } from '../../utils/progress';
+import { fetchInitialContent } from '../../content/services/fetchInitialContent';
+import type { ModuleData } from '../../types/content';
 
 type SignUpType = UserData & { password: string };
 
-interface LogoutProps {
-	authDispatch: AuthContextType['authDispatch'];
-	setProgressState: ProgressContextType['setProgressState'];
-	setNavigationState: NavigationContextType['setNavigationState'];
+interface signUpWithCredentialsProps {
+	userData: SignUpType;
+	modules: ModuleData[] | null;
 }
 
-export const signUpWithCredentials = async (userData: SignUpType) => {
+export const signUpWithCredentials = async ({
+	userData,
+	modules,
+}: signUpWithCredentialsProps) => {
 	const { password, ...persistedData } = userData;
 	const credential = await createUserWithEmailAndPassword(
 		auth,
 		persistedData.email,
 		password,
 	);
-	const idToken = await credential.user.getIdToken();
-	const res = await axios.post<{ uid: string }>(
-		`${import.meta.env.VITE_API_URL}/auth/verify-token`,
-		null,
-		{
-			headers: {
-				Authorization: `Bearer ${idToken}`,
-			},
-		},
-	);
-	const { uid } = res.data;
+	const { uid } = credential.user;
 
-	const progressStorage = getProgressStorage();
-	const initialProgressData = progressStorage || (await fetchInitialProgress());
+	let finalProgress = getProgressStorage();
+	if (!isProgressInitialized(finalProgress)) {
+		if (!modules) {
+			throw new Error(
+				'Conteúdo inicial ainda não carregado. Tente novamente em instantes.',
+			);
+		}
+		finalProgress = fetchInitialContent(modules);
+	}
 	const navigationStorage = getNavigationStorage();
-	const initialNavigationState: UserNavigation =
-		Object.keys(navigationStorage).length > 0
-			? navigationStorage
-			: {
-					1: {
-						currentTopic: initialProgressData.inProgressTopic,
-						currentSubtopic: initialProgressData.inProgressSubtopic,
-					},
-				};
+	const initialNavigationState = navigationStorage || {
+		1: {
+			currentTopic: finalProgress.inProgressTopic,
+			currentSubtopic: finalProgress.inProgressSubtopic,
+		},
+	};
 
-	await setDoc(userDataRef(uid), persistedData);
-	await setDoc(userProgressRef(uid), initialProgressData);
-	await setDoc(userNavigationRef(uid), initialNavigationState);
+	const batch = writeBatch(db);
+	batch.set(userDataRef(uid), persistedData);
+	batch.set(userProgressRef(uid), finalProgress);
+	batch.set(userNavigationRef(uid), initialNavigationState);
+	await batch.commit();
 
 	return {
 		uid,
 		userData: persistedData,
-		progressData: initialProgressData,
+		progressData: finalProgress,
 		navigationData: initialNavigationState,
 	};
 };
@@ -87,28 +70,20 @@ export const signInWithCredentials = async (
 	email: string,
 	password: string,
 ) => {
-	const { user } = await signInWithEmailAndPassword(auth, email, password);
-	const idToken = await user.getIdToken();
-	const res = await axios.post<{ uid: string }>(
-		`${import.meta.env.VITE_API_URL}/auth/verify-token`,
-		null,
-		{
-			headers: {
-				Authorization: `Bearer ${idToken}`,
-			},
-		},
-	);
+	const credential = await signInWithEmailAndPassword(auth, email, password);
 
-	const { uid } = res.data;
-	const userDoc = await getDoc(userDataRef(uid));
-	const progressDoc = await getDoc(userProgressRef(uid));
-	const navigationDoc = await getDoc(userNavigationRef(uid));
+	const { uid } = credential.user;
+
+	const [userDoc, progressDoc, navigationDoc] = await Promise.all([
+		getDoc(userDataRef(uid)),
+		getDoc(userProgressRef(uid)),
+		getDoc(userNavigationRef(uid)),
+	]);
 
 	if (!userDoc.exists() || !progressDoc.exists() || !navigationDoc.exists()) {
-		logError({
-			text: 'Não foi possível realizar o login. Tente novamente ou fale conosco.',
-		});
-		throw new Error('Erro na requisição dos dados do usuário.');
+		throw new Error(
+			'Não foi possível acessar sua conta no momento. Entre em contato conosco para regularizar a situação.',
+		);
 	}
 
 	return {
@@ -117,17 +92,4 @@ export const signInWithCredentials = async (
 		progressData: progressDoc.data(),
 		navigationData: navigationDoc.data(),
 	};
-};
-
-export const logout = async ({
-	authDispatch,
-	setProgressState,
-	setNavigationState,
-}: LogoutProps) => {
-	await signOut(auth);
-	authDispatch({ type: authActionTypes.LOGOUT });
-	setProgressState(progressInitialState);
-	setNavigationState(navigationInitialState);
-	removeNavigationSorage();
-	removeProgressSorage();
 };
