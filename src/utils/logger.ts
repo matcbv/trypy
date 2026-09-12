@@ -5,24 +5,32 @@ import { FirebaseError } from 'firebase/app';
 import type { ToastData } from '../types/toast';
 
 interface LogErrorProps {
-	error?: unknown;
+	error: unknown;
 	text?: string;
 }
 
 // * Função aplicando type predicate para checagem do código de erro recebido.
-function isKnownError(
+export function isKnownError(
 	error: unknown,
 ): error is FirebaseError & { code: keyof typeof errorMessages } {
 	// * Caso a afirmação abaixo retorne um boolean true, error será tratado como um FirebaseError (tipo exposto pelo Firebase contendo propriedades extras para o erro, como a propriedade code), onde a propriedade code é uma chave conhecida do objeto errorMessages.
 	return error instanceof FirebaseError && error.code in errorMessages;
 }
 
-export const logError = ({ error, text }: LogErrorProps) => {
-	if (import.meta.env.DEV && error instanceof FirebaseError) {
+export const logDev = (error: unknown) => {
+	if (!import.meta.env.DEV) return;
+
+	if (error instanceof FirebaseError) {
 		console.error(
 			`Error code: ${error.code};\n Message: ${error.message};\n Stack: ${error.stack}`,
 		);
+	} else {
+		console.error(error);
 	}
+};
+
+export const logError = ({ error, text }: LogErrorProps) => {
+	logDev(error);
 
 	toast<ToastData>(ToastNotification, {
 		type: 'error',
@@ -31,7 +39,7 @@ export const logError = ({ error, text }: LogErrorProps) => {
 			text:
 				text ||
 				(isKnownError(error) && errorMessages[error.code]) ||
-				errorMessages.default,
+				'Algo deu errado. Tente novamente.',
 		},
 	});
 };
