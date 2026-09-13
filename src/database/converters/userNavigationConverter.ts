@@ -3,14 +3,15 @@ import {
 	type WithFieldValue,
 	QueryDocumentSnapshot,
 } from 'firebase/firestore';
-import type { UserNavigation } from '../../types/user';
+import type { NavigationState } from '../../types/states';
 
-export const userNavigationConverter: FirestoreDataConverter<UserNavigation> = {
-	toFirestore(userData: WithFieldValue<UserNavigation>) {
-		return userData;
-	},
+export const userNavigationConverter: FirestoreDataConverter<NavigationState> =
+	{
+		toFirestore(userNavigation: WithFieldValue<NavigationState>) {
+			return userNavigation;
+		},
 
-	fromFirestore(snapshot: QueryDocumentSnapshot) {
-		return snapshot.data();
-	},
-};
+		fromFirestore(snapshot: QueryDocumentSnapshot) {
+			return snapshot.data();
+		},
+	};
