@@ -2,8 +2,11 @@ import {
 	type FirestoreDataConverter,
 	type WithFieldValue,
 	QueryDocumentSnapshot,
+	Timestamp,
 } from 'firebase/firestore';
 import type { UserData } from '../../types/user';
+
+type FirestoreUserData = Omit<UserData, 'createdAt'> & { createdAt: Timestamp };
 
 export const userDataConverter: FirestoreDataConverter<UserData> = {
 	toFirestore(userData: WithFieldValue<UserData>) {
@@ -11,6 +14,11 @@ export const userDataConverter: FirestoreDataConverter<UserData> = {
 	},
 
 	fromFirestore(snapshot: QueryDocumentSnapshot) {
-		return snapshot.data() as UserData;
+		const data = snapshot.data() as FirestoreUserData;
+
+		return {
+			...data,
+			createdAt: data.createdAt.toDate(),
+		};
 	},
 };
