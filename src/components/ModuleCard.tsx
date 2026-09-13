@@ -5,6 +5,7 @@ import type { ModuleCardData } from '../types/content';
 import type { MouseEvent } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { logInfo } from '../utils/logger';
+import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
 
 interface ModuleCardProps {
 	card: ModuleCardData;
@@ -20,10 +21,12 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 	const navigate = useNavigate();
 	const { progressState } = useSafeContext(ProgressContext);
 	const { authState } = useSafeContext(AuthContext);
+	const { modules } = useSafeContext(ContentfulContentContext);
 
 	const isModuleBlocked =
 		!progressState.doneModules.includes(card.moduleId) &&
-		progressState.inProgressModule !== card.moduleId;
+		progressState.inProgressModule !== card.moduleId &&
+		modules?.[0]!.slug !== card.moduleId;
 
 	const CheckModuleAccess = ({ event, moduleId }: CheckModuleAccessProps) => {
 		if (isModuleBlocked) {
