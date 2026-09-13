@@ -1,41 +1,34 @@
 import type { ResolvedEntry } from '../../types/richText';
-import type {
-	ModuleData,
-	SubtopicData,
-	SubtopicTypes,
-	TopicData,
-} from '../../types/content';
+import type { ModuleData, SubtopicTypes } from '../../types/content';
 import type { ModuleSkeleton } from '../../types/skeletons';
 import type { Themes } from '../../constants/themeStyle';
 
 // * Função responsável por converter o tipo das entries do Contentful para o tipo a ser trabalhado no projeto.
 export function mapContent(
-	rawContent: ResolvedEntry<ModuleSkeleton>,
-): ModuleData {
-	const content = rawContent.fields;
+	rawContent: ResolvedEntry<ModuleSkeleton>[],
+): ModuleData[] {
+	const modules = rawContent.map((module) => {
+		const topics = module.fields.topics.map((topic) => {
+			const subtopics = topic!.fields.subtopics.map((subtopic) => ({
+				...subtopic!.fields,
+				subtopicType: subtopic!.fields.subtopicType as SubtopicTypes,
+			}));
+			return {
+				title: topic!.fields.title,
+				slug: topic!.fields.slug,
+				order: topic!.fields.order,
+				subtopics: subtopics,
+			};
+		});
 
-	const topics: TopicData[] = content.topics.map((rawTopic) => {
-		const subtopics: SubtopicData[] = rawTopic!.fields.subtopics.map(
-			(rawSubtopic) => ({
-				...rawSubtopic!.fields,
-				subtopicType: rawSubtopic!.fields.subtopicType as SubtopicTypes,
-				videoDescription: rawSubtopic!.fields.videoDescription ?? null,
-				videoLink: rawSubtopic!.fields.videoLink ?? null,
-				solutionCode: rawSubtopic!.fields.solutionCode ?? null,
-				testCode: rawSubtopic!.fields.testCode ?? null,
-				starterCode: rawSubtopic!.fields.starterCode ?? null,
-				expectedOutput: rawSubtopic!.fields.expectedOutput ?? null,
-			}),
-		);
-
-		return { ...rawTopic!.fields, subtopics };
+		return {
+			slug: module.fields.slug,
+			title: module.fields.title,
+			order: module.fields.order,
+			theme: module.fields.theme as Themes,
+			topics: topics,
+		};
 	});
 
-	return {
-		title: content.title,
-		topics: topics,
-		slug: content.slug,
-		theme: content.theme as Themes,
-		order: content.order,
-	};
+	return modules;
 }
