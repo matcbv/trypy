@@ -11,19 +11,3 @@ export interface UserData {
 	supporter: boolean;
 	resolutions: { slug: string; title: string; code: string }[];
 }
-
-export interface UserProgress {
-	inProgressModule: string;
-	inProgressTopic: string;
-	inProgressSubtopic: string;
-	doneModules: string[];
-	doneTopics: string[];
-	doneSubtopics: string[];
-}
-
-interface NavigationItem {
-	currentTopic: string;
-	currentSubtopic: string;
-}
-
-export type UserNavigation = Record<number, NavigationItem>;

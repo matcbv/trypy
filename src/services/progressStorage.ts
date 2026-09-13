@@ -1,7 +1,7 @@
 import { storageKeys } from '../constants/storageKeys';
 import progressInitialState from '../contexts/ProgressProvider/initialState';
 import type { ProgressState } from '../types/states';
-import { logError } from '../utils/logger';
+import { logDev } from '../utils/logger';
 
 export function getProgressStorage() {
 	try {
@@ -9,7 +9,7 @@ export function getProgressStorage() {
 		if (!storage) return progressInitialState;
 		return JSON.parse(storage) as ProgressState;
 	} catch (error) {
-		logError({ error });
+		logDev(error);
 		return progressInitialState;
 	}
 }
@@ -19,14 +19,14 @@ export function setProgressStorage(data: ProgressState) {
 		const stringifiedData = JSON.stringify(data);
 		localStorage.setItem(storageKeys.PROGRESS_STATE, stringifiedData);
 	} catch (error) {
-		logError({ error });
+		logDev(error);
 	}
 }
 
-export function removeProgressSorage() {
+export function removeProgressStorage() {
 	try {
 		localStorage.removeItem(storageKeys.PROGRESS_STATE);
 	} catch (error) {
-		logError({ error });
+		logDev(error);
 	}
 }

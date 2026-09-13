@@ -3,14 +3,14 @@ import {
 	type WithFieldValue,
 	QueryDocumentSnapshot,
 } from 'firebase/firestore';
-import type { UserProgress } from '../../types/user';
+import type { ProgressState } from '../../types/states';
 
-export const userProgressConverter: FirestoreDataConverter<UserProgress> = {
-	toFirestore(userProgress: WithFieldValue<UserProgress>) {
+export const userProgressConverter: FirestoreDataConverter<ProgressState> = {
+	toFirestore(userProgress: WithFieldValue<ProgressState>) {
 		return userProgress;
 	},
 
 	fromFirestore(snapshot: QueryDocumentSnapshot) {
-		return snapshot.data() as UserProgress;
+		return snapshot.data() as ProgressState;
 	},
 };
