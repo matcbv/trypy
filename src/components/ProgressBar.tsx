@@ -3,7 +3,6 @@ export function ProgressBar({
 }: {
 	progressPercentual: number;
 }) {
-	console.log(progressPercentual);
 	const perimeter = 2 * Math.PI * 80;
 
 	return (
