@@ -3,7 +3,7 @@ import type * as SkeletonTypes from '../../types/skeletons';
 
 // * Interface responsável por definir a query para requisições no Contentful.
 interface ContentfulQuery<K> {
-	// * O tipo genérico recebido será uma das chaves de SkeletonMap.
+	// * O tipo genérico recebido será a chave utilizada em SkeletonMap.
 	contentType: K;
 	include: number;
 	order?: number;
