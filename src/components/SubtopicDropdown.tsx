@@ -50,7 +50,7 @@ export function SubtopicDropdown({
 	return (
 		<div
 			id={topic.slug}
-			className="h-0 bg-[#0d0a14] px-4 text-[0.8rem] opacity-0 transition-all duration-300"
+			className="bg-module-background h-0 px-[16px] text-[0.8rem] opacity-0 transition-all duration-300"
 			ref={(el) => {
 				dropdownsContainer.current.push(el);
 			}}

@@ -39,7 +39,7 @@ export function Home() {
 				<div className="flex flex-col gap-y-[60px]">
 					<div className="flex max-w-[600px] flex-col gap-y-10">
 						<div>
-							<h2 className="text-glow-purple text-title-5xl mb-5">
+							<h2 className="text-main-purple text-title-5xl mb-[20px]">
 								Aprendizado Guiado
 							</h2>
 							<p className="text-section-xl">
@@ -81,7 +81,7 @@ export function Home() {
 							onMouseMove={handleMouseMove}
 							onMouseLeave={(e) => (e.currentTarget.style.transform = '')}
 						>
-							<h2 className="text-section-lg border-b-glow-purple border-b pb-[10px]">
+							<h2 className="text-section-lg border-b-main-purple border-b pb-[10px]">
 								Material didático
 							</h2>
 							<p className="text-section-base">
@@ -158,7 +158,7 @@ export function Home() {
 				<div className="flex flex-col gap-y-10 lg:flex-row lg:gap-x-[60px] lg:gap-y-0">
 					<div className="flex max-w-[600px] flex-col gap-y-10">
 						<div>
-							<h2 className="text-glow-purple text-title-5xl mb-5">
+							<h2 className="text-main-purple text-title-5xl mb-[20px]">
 								Video-aulas integradas
 							</h2>
 							<p className="text-section-xl">
@@ -175,7 +175,7 @@ export function Home() {
 							rel="noopener noreferrer"
 							className="border-main-purple group px-section-btn-x py-section-btn-y text-section-xl-btn relative flex items-center gap-x-[10px] self-start rounded-md border bg-white/5 font-bold lg:transition-shadow lg:hover:shadow-[0_0_20px_#ffffff24]"
 						>
-							<span className="absolute inset-0 -z-10 hidden rounded-md bg-linear-to-br from-[#00ff5998] to-[#8000ff88] opacity-0 transition-opacity duration-300 group-hover:opacity-100 lg:inline"></span>
+							<span className="from-main-green/80 to-main-purple/80 absolute inset-0 -z-10 hidden rounded-md bg-linear-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-100 lg:inline"></span>
 							<img
 								src="/assets/images/icons/minimalist-youtube.png"
 								alt="YouTube"

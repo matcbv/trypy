@@ -46,8 +46,8 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 			key={card.title}
 			className="relative flex min-h-[460px] max-w-[460px] overflow-hidden rounded-md bg-[url('/assets/images/batthern-background.png')] shadow-[0_0_30px_#000000]/50"
 		>
-			<div className="flex flex-col bg-[#0f0d16dc]">
-				<h2 className="flex gap-x-3 rounded-t-md border-b border-(--theme-color) p-5">
+			<div className="bg-module-background/80 flex flex-col">
+				<h2 className="flex gap-x-[12px] rounded-t-md border-b border-(--theme-color) p-[20px]">
 					{card.title}
 					{progressState.doneModules.includes(card.moduleId) && (
 						<img src="/assets/images/icons/done.png" alt="Concluído" />

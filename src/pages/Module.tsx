@@ -101,7 +101,7 @@ export function Module() {
 				/>
 				<div
 					ref={moduleRef}
-					className="max-w-[1200px] min-w-0 flex-1 rounded-lg bg-[#0d0a14] p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-[40px]"
+					className="bg-module-background max-w-[1200px] min-w-0 flex-1 rounded-lg p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-[40px]"
 					style={
 						{
 							'--theme-color': `var(${themeStyles[currentModule!.theme].color})`,
@@ -110,7 +110,7 @@ export function Module() {
 					}
 				>
 					<h1
-						className={`text-content-h1 mb-5 tracking-wide text-(--theme-color)!`}
+						className={`text-content-h1 mb-[20px] tracking-wide text-(--theme-color)`}
 					>
 						{currentSubtopic?.title}
 					</h1>

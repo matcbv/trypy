@@ -134,8 +134,8 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 					)}
 				</div>
 
-				<div className="rounded-b-md bg-[#303446]">
-					<div className="border-main-purple font-jetbrains flex items-center gap-x-2 border-b px-5 py-2 text-sm">
+				<div className="bg-terminal-background rounded-b-md">
+					<div className="border-main-purple font-jetbrains flex items-center gap-x-2 border-b px-[20px] py-[8px] text-sm">
 						Saída:
 						{statusIcon()}
 					</div>

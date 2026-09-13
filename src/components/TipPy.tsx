@@ -18,7 +18,7 @@ export function TipPy({ tipFields }: { tipFields: TipData }) {
 	return (
 		<div
 			ref={tip}
-			className="group mb-5 w-full max-w-[600px] rounded-lg bg-[#181724] shadow-lg"
+			className="group bg-tip-background mb-[20px] w-full max-w-[600px] rounded-lg shadow-lg"
 		>
 			<div className="flex items-center border-b border-b-(--theme-color) px-4 py-2">
 				<div className="flex gap-2">

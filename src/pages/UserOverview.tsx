@@ -127,19 +127,19 @@ export function UserOverview() {
 					<div className="flex flex-col gap-y-5">
 						<p className="flex flex-col">
 							Módulo atual:{' '}
-							<span className="font-bold text-[#29bd5f]">
+							<span className="text-progress-titles font-bold">
 								{titles.module || <SkeletonLoader height={24} width={250} />}
 							</span>
 						</p>
 						<p className="flex flex-col">
 							Tópico atual:{' '}
-							<span className="font-bold text-[#29bd5f]">
+							<span className="text-progress-titles font-bold">
 								{titles.topic || <SkeletonLoader height={24} width={250} />}
 							</span>
 						</p>
 						<p className="flex flex-col">
 							Subtópico atual:{' '}
-							<span className="font-bold text-[#29bd5f]">
+							<span className="text-progress-titles font-bold">
 								{titles.subtopic || <SkeletonLoader height={24} width={250} />}
 							</span>
 						</p>

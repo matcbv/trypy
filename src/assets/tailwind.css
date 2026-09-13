@@ -5,8 +5,7 @@
 	--color-main-bg: #080014;
 	--color-main-green: #00a63e;
 	--color-glow-green: #00ff5f;
-	--color-main-purple: #7a55c2;
-	--color-glow-purple: #9466e8;
+	--color-main-purple: #8558d6;
 	--color-main-cyan: #34a8ad;
 	--color-main-red: #f24854;
 	--color-highlight-green: #b5fbbe;
@@ -15,6 +14,13 @@
 	--color-shadow-green: #20663b;
 	--color-shadow-purple: #402d66;
 	--color-shadow-cyan: #1e585b;
+	--color-module-background: #0f0d16;
+	--color-terminal-background: #303446;
+	--color-toast-background: #131117;
+	--color-tip-background: #181724;
+	--color-dashboard-background: #231e57;
+	--color-progress-titles: #29bd5f;
+	--color-codeblock-symbols: #81c8be;
 
 	/* Espaçamentos */
 	--spacing-hero-x: clamp(2.5rem, -1.413rem + 17.3913vw, 12.5rem);
@@ -127,6 +133,14 @@
 }
 
 @layer utilities {
+	.bg-forms {
+		background-image: linear-gradient(
+			to bottom right,
+			#12612f,
+			#240051,
+			var(--color-main-bg)
+		);
+	}
 }
 
 @layer components {

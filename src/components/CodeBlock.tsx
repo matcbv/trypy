@@ -10,7 +10,7 @@ export function CodeBlock({ code }: { code: string }) {
 		() =>
 			highlightCode(code).replace(
 				/>(\.\.\.|>>>)/g,
-				'><span class="text-[#81c8be] select-none">$1 </span>',
+				'><span class="text-codeblock-symbols select-none">$1 </span>',
 			),
 		[code],
 	);

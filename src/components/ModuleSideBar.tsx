@@ -113,18 +113,22 @@ export function ModuleSideBar({
 		<>
 			<div
 				ref={sidebarRef}
-				className={`${isSidebarOpen ? 'visible left-0' : 'invisible -left-[300px]'} absolute z-20 h-full w-[300px] shrink-0 rounded-lg bg-white/5 p-[15px] shadow-[0_0_20px_#ffffff]/5 backdrop-blur-lg transition-[left,visibility] duration-500 lg:relative lg:h-auto`}
+				className={`${isSidebarOpen ? 'visible left-0' : 'invisible -left-[300px]'} absolute z-20 h-full w-[300px] shrink-0 rounded-lg bg-white/5 p-[12px] shadow-[0_0_20px_#ffffff]/5 backdrop-blur-lg transition-[left,visibility] duration-500 lg:relative lg:h-auto`}
 			>
 				<div className="sticky top-[80px] flex flex-col gap-y-[15px]">
 					{currentModule.topics?.map((topic) => (
 						<div
 							key={topic.title}
-							className="flex flex-col overflow-hidden rounded-lg bg-[#0d0a14]/80 lg:cursor-pointer"
+							className="bg-module-background/80 flex flex-col overflow-hidden rounded-lg lg:cursor-pointer"
 							onClick={() => handleClick(topic.slug)}
 						>
-							<div className="flex h-[75px] w-full items-center justify-between gap-x-2 rounded-lg px-[12px]">
-								<div className="flex items-center gap-x-[12px]">
-									<img {...iconData(topic)} className="w-5" draggable={false} />
+							<div className="flex h-[75px] w-full items-center justify-between gap-x-[8px] rounded-lg px-[12px]">
+								<div className="flex items-center gap-x-[8px]">
+									<img
+										{...iconData(topic)}
+										className="w-[20px]"
+										draggable={false}
+									/>
 									<p className="font-jetbrains text-[0.85rem] leading-6">
 										{topic.title}
 									</p>

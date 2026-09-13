@@ -3,7 +3,7 @@ import { ResetPasswordForm } from '../components/ResetPasswordForm';
 export function ResetPassword() {
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<div className="to-main-bg relative mx-[10px] my-[120px] flex min-h-[400px] max-w-[500px] rounded-lg bg-linear-to-br from-[#12612f] via-[#240051] shadow-[0_0_20px_#ffffff]/10">
+			<div className="bg-forms relative mx-[10px] my-[120px] flex min-h-[400px] max-w-[500px] rounded-lg shadow-[0_0_20px_#ffffff]/10">
 				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-20'></div>
 				<div className="relative flex flex-col justify-center p-[40px]">
 					<h1 className="mb-[15px] text-2xl font-bold tracking-wider">

@@ -76,7 +76,7 @@ export function Support() {
 						<input
 							type="submit"
 							value="Enviar"
-							className="border-main-purple order-2 w-[150px] self-end rounded-md border bg-[#7955c2]/20 py-2 text-sm transition-all duration-300 lg:order-1 lg:col-start-1 lg:row-start-2 lg:cursor-pointer lg:hover:bg-[#7955c2]/70 lg:hover:shadow-[0_0_15px_#7955c270]"
+							className="border-main-purple lg:hover:bg-main-purple/70 bg-main-purple/20 order-2 w-[150px] self-end rounded-md border py-[8px] text-sm transition-all duration-300 lg:order-1 lg:col-start-1 lg:row-start-2 lg:cursor-pointer lg:hover:shadow-[0_0_15px_#7955c270]"
 						/>
 						<div className="order-1 flex flex-col gap-y-2 lg:order-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
 							<label htmlFor="description" className="text-sm">
