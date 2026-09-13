@@ -1,80 +1,71 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { AuthContext } from '../contexts/AuthProvider/context';
-import { fetchContent } from '../content/services/fetchContent';
 import { ProgressBar } from '../components/ProgressBar';
-import { logError } from '../utils/logger';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { SkeletonLoader } from '../components/SkeletonLoader';
-import { Timestamp } from 'firebase/firestore';
+import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
 
 export function UserOverview() {
 	const { authState } = useSafeContext(AuthContext);
+	const { modules } = useSafeContext(ContentfulContentContext);
 	const { progressState } = useSafeContext(ProgressContext);
-	const [progressPercentual, setProgressPercentual] = useState(0);
-	const [titles, setTitles] = useState({
-		module: '',
-		topic: '',
-		subtopic: '',
-	});
 	const [isCopied, setIsCopied] = useState(false);
 
-	const accountDate = () => {
-		const { createdAt } = authState.data!;
-
-		if (createdAt && createdAt instanceof Timestamp) {
-			return new Date(createdAt.toDate()).toLocaleDateString('pt-br');
+	const accountDate = useMemo(() => {
+		if (!authState.data) {
+			return <SkeletonLoader height={24} width={85} />;
 		}
 
-		return <SkeletonLoader height={18} width={85} />;
-	};
+		return authState.data.createdAt.toLocaleDateString('pt-br');
+	}, [authState.data]);
 
-	useEffect(() => {
-		void (async () => {
-			try {
-				const modules = await fetchContent({
-					contentType: 'module',
-					include: 2,
-				});
+	const currentProgress = useMemo(() => {
+		if (!modules) return null;
 
-				const module = modules.find(
-					(module) => module.fields.slug === progressState.inProgressModule,
-				);
-				const topic = module!.fields.topics.find(
-					(topic) => topic!.fields.slug === progressState.inProgressTopic,
-				);
-				const subtopic = topic!.fields.subtopics.find(
-					(subtopic) =>
-						subtopic!.fields.slug === progressState.inProgressSubtopic,
-				);
+		const module =
+			modules.find(
+				(module) => module.slug === progressState.inProgressModule,
+			) ?? null;
+		const topic =
+			module?.topics.find(
+				(topic) => topic.slug === progressState.inProgressTopic,
+			) ?? null;
+		const subtopic =
+			topic?.subtopics.find(
+				(subtopic) => subtopic.slug === progressState.inProgressSubtopic,
+			) ?? null;
 
-				const subtopicsLength = modules.flatMap((module) =>
-					module.fields.topics.flatMap((topic) => topic?.fields.subtopics),
-				).length;
-
-				const percentual =
-					(progressState.doneSubtopics.length * 100) / subtopicsLength;
-
-				setProgressPercentual(Math.round(Number(percentual.toFixed(2))));
-
-				setTitles({
-					module: module!.fields.title,
-					topic: topic!.fields.title,
-					subtopic: subtopic!.fields.title,
-				});
-			} catch (error) {
-				logError({
-					error,
-					text: 'Não foi possível calcular seu progresso. Tente novamente ou fale conosco.',
-				});
-			}
-		})();
+		return { module, topic, subtopic };
 	}, [
+		modules,
 		progressState.inProgressModule,
 		progressState.inProgressTopic,
 		progressState.inProgressSubtopic,
-		progressState.doneSubtopics.length,
 	]);
+
+	const titles = useMemo(
+		() => ({
+			module: currentProgress?.module?.title,
+			topic: currentProgress?.topic?.title,
+			subtopic: currentProgress?.subtopic?.title,
+		}),
+		[currentProgress],
+	);
+
+	const progressPercentual = useMemo(() => {
+		if (!modules) return 0;
+
+		const subtopicsLength = modules.flatMap((module) =>
+			module.topics.flatMap((topic) => topic.subtopics),
+		).length;
+
+		const percentual =
+			(progressState.doneSubtopics.length * 100) / subtopicsLength;
+		const roundedPercentual = Math.round(Number(percentual.toFixed(2)));
+
+		return roundedPercentual;
+	}, [modules, progressState.doneSubtopics.length]);
 
 	const copyText = async (text: string) => {
 		await navigator.clipboard.writeText(text);
