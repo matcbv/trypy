@@ -22,14 +22,12 @@ import {
 	userNavigationRef,
 	userProgressRef,
 } from '../database/refs/userRefs';
-import { logout } from '../database/auth/auth';
+import { useLogout } from '../hooks/useLogout';
 
 type Providers = (typeof ProviderId)[keyof typeof ProviderId];
 
 export function EditProfile() {
-	const { authState, authDispatch } = useSafeContext(AuthContext);
-	const { setProgressState } = useSafeContext(ProgressContext);
-	const { setNavigationState } = useSafeContext(NavigationContext);
+	const { authState } = useSafeContext(AuthContext);
 	const [userPassword, setUserPassword] = useState('');
 	const [isVisible, setIsVisible] = useState(false);
 	const [provider, setProvider] = useState<Providers | null>(null);
@@ -37,6 +35,7 @@ export function EditProfile() {
 	const [deleteCode] = useState(() => idGenerator().generateID());
 	const [isDeleting, setIsDeleting] = useState(false);
 	const navigate = useNavigate();
+	const logout = useLogout();
 
 	useEffect(() => {
 		void (async () => {
@@ -51,7 +50,11 @@ export function EditProfile() {
 		try {
 			const { currentUser } = auth;
 			if (!currentUser) {
-				throw new Error('Sessão expirada. Faça login e tente novamente.');
+				await logout();
+				void navigate('/', { replace: true });
+				throw new Error(
+					'Sua sessão expirou. Faça login novamente para continuar.',
+				);
 			}
 
 			if (provider === ProviderId.PASSWORD) {
@@ -72,11 +75,8 @@ export function EditProfile() {
 			setIsDeleting(true);
 
 			await deleteUser(currentUser);
-			await deleteDoc(userDataRef(authState.uid!));
-			await deleteDoc(userProgressRef(authState.uid!));
-			await deleteDoc(userNavigationRef(authState.uid!));
-			await logout({ authDispatch, setProgressState, setNavigationState });
 
+			await logout();
 			void navigate('/', { replace: true });
 			logSuccess('Conta deletada com sucesso!');
 		} catch (error) {
@@ -89,16 +89,14 @@ export function EditProfile() {
 					logWarning('Senha incorreta. Tente novamente.');
 					break;
 				}
-
 				case 'auth/requires-recent-login': {
-					await logout({ authDispatch, setProgressState, setNavigationState });
+					await logout();
 					void navigate('/', { replace: true });
 					logWarning(
-						'Por motivos de segurança, faça login novamente para continuar.',
+						'Por motivos de segurança, faça login novamente para poder excluir sua conta.',
 					);
 					break;
 				}
-
 				default: {
 					logError({ error });
 					break;

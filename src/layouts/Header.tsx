@@ -2,10 +2,8 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { AuthContext } from '../contexts/AuthProvider/context';
-import { logout } from '../database/auth/auth';
 import { logError, logSuccess } from '../utils/logger';
-import { ProgressContext } from '../contexts/ProgressProvider/context';
-import { NavigationContext } from '../contexts/NavigationProvider/context';
+import { useLogout } from '../hooks/useLogout';
 
 const objectsMap = [
 	{ slug: '', title: 'Dashboard' },
@@ -21,12 +19,11 @@ export function Header() {
 	const headerRef = useRef<HTMLDivElement>(null);
 	const navIconRef = useRef<HTMLImageElement>(null);
 	const navRef = useRef<HTMLElement>(null);
-	const { authState, authDispatch } = useSafeContext(AuthContext);
-	const { setProgressState } = useSafeContext(ProgressContext);
-	const { setNavigationState } = useSafeContext(NavigationContext);
+	const { authState } = useSafeContext(AuthContext);
 	const underlineRef = useRef<HTMLSpanElement>(null);
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
+	const logout = useLogout();
 
 	const showUnderline = (e: MouseEvent<HTMLLIElement>) => {
 		const underline = e.currentTarget.querySelector('span');
@@ -44,7 +41,7 @@ export function Header() {
 
 	const logoutWrapper = async () => {
 		try {
-			await logout({ authDispatch, setProgressState, setNavigationState });
+			await logout();
 			void navigate('/', { replace: true });
 			logSuccess('Você foi deslogado com sucesso!');
 		} catch (error) {

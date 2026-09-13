@@ -1,28 +1,21 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { logError, logSuccess } from '../utils/logger';
-import { ProgressContext } from '../contexts/ProgressProvider/context';
-import { NavigationContext } from '../contexts/NavigationProvider/context';
-import { useSafeContext } from '../hooks/useSafeContext';
-import { AuthContext } from '../contexts/AuthProvider/context';
-import { logout } from '../database/auth/auth';
+import { useLogout } from '../hooks/useLogout';
 
+const objectsMap = [
+	{ slug: '', title: 'Visão geral', icon: 'user-overview' },
+	{ slug: 'profile', title: 'Editar conta', icon: 'edit-account' },
+	{ slug: 'support-us', title: 'Assinatura', icon: 'support-us' },
+	{ slug: 'certifications', title: 'Certificações', icon: 'certificate' },
+	{ slug: 'resolutions', title: 'Resoluções', icon: 'resolution' },
+];
 export function DashboardNavbar() {
 	const navigate = useNavigate();
-	const { authDispatch } = useSafeContext(AuthContext);
-	const { setProgressState } = useSafeContext(ProgressContext);
-	const { setNavigationState } = useSafeContext(NavigationContext);
-
-	const objectsMap = [
-		{ slug: '', title: 'Visão geral', icon: 'user-overview' },
-		{ slug: 'profile', title: 'Editar conta', icon: 'edit-account' },
-		{ slug: 'support-us', title: 'Assinatura', icon: 'support-us' },
-		{ slug: 'certifications', title: 'Certificações', icon: 'certificate' },
-		{ slug: 'resolutions', title: 'Resoluções', icon: 'resolution' },
-	];
+	const logout = useLogout();
 
 	const logoutWrapper = async () => {
 		try {
-			await logout({ authDispatch, setProgressState, setNavigationState });
+			await logout();
 			void navigate('/', { replace: true });
 			logSuccess('Você foi deslogado com sucesso!');
 		} catch (error) {
