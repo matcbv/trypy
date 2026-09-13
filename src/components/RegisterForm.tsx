@@ -8,13 +8,13 @@ import { validationRegex } from '../constants/validationRegex';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { logError, logSuccess } from '../utils/logger';
 import { signInWithGoogle } from '../database/auth/oAuth';
-import authActionTypes from '../contexts/AuthProvider/actionTypes';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { idGenerator } from '../utils/idGenerator';
 import { LoadingPage } from '../pages/LoadingPage';
 import { signOut } from 'firebase/auth';
 import { auth } from '../database/configs/firebase';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
+import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
 
 const formMap = {
 	email: 'E-mail',
@@ -26,7 +26,8 @@ const formMap = {
 
 export function RegisterForm() {
 	const navigate = useNavigate();
-	const { authDispatch } = useSafeContext(AuthContext);
+	const { setAuthState } = useSafeContext(AuthContext);
+	const { modules } = useSafeContext(ContentfulContentContext);
 	const { setProgressState } = useSafeContext(ProgressContext);
 	const { setNavigationState } = useSafeContext(NavigationContext);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,7 +79,6 @@ export function RegisterForm() {
 		e.preventDefault();
 
 		const isDataValid = checkData();
-
 		if (!isDataValid) return;
 
 		setIsSubmitting(true);
@@ -92,20 +92,20 @@ export function RegisterForm() {
 
 		try {
 			const res = await signUpWithCredentials({
-				...formattedData,
-				id: 'TPY-' + idGenerator().generateID(),
-				picture: null,
-				createdAt: new Date(),
-				supporter: false,
-				resolutions: [],
+				userData: {
+					...formattedData,
+					id: 'TPY-' + idGenerator().generateID(),
+					picture: null,
+					createdAt: new Date(),
+					supporter: false,
+					resolutions: [],
+				},
+				modules,
 			});
 
 			const { uid, userData, progressData, navigationData } = res;
 
-			authDispatch({
-				type: authActionTypes.SET_DATA,
-				payload: { uid, data: userData },
-			});
+			setAuthState((prev) => ({ ...prev, uid: uid, data: userData }));
 			setProgressState((prev) => ({ ...prev, ...progressData }));
 			setNavigationState((prev) => ({ ...prev, ...navigationData }));
 
@@ -122,13 +122,14 @@ export function RegisterForm() {
 		setIsSubmitting(true);
 
 		try {
-			const res = await signInWithGoogle();
-			const { uid, providerData, progressData, navigationData } = res;
+			const res = await signInWithGoogle({ modules });
+			const { uid, userData, progressData, navigationData } = res;
 
-			authDispatch({
-				type: authActionTypes.SET_DATA,
-				payload: { uid, data: providerData },
-			});
+			setAuthState((prev) => ({
+				...prev,
+				uid: uid,
+				data: prev.data && { ...prev.data, ...userData },
+			}));
 			setProgressState((prev) => ({ ...prev, ...progressData }));
 			setNavigationState(navigationData);
 
