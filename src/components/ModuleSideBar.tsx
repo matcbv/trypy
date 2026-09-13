@@ -2,17 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { SubtopicDropdown } from './SubtopicDropdown';
 import { useSafeContext } from '../hooks/useSafeContext';
-import type { TopicData } from '../types/content';
+import type { ModuleData, TopicData } from '../types/content';
 
 interface SidebarProps {
-	topics: TopicData[];
-	moduleOrder: number;
+	currentModule: ModuleData;
 	sidebarButtonOffset: number;
 }
 
 export function ModuleSideBar({
-	topics,
-	moduleOrder,
+	currentModule,
 	sidebarButtonOffset,
 }: SidebarProps) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -28,7 +26,8 @@ export function ModuleSideBar({
 	const handleClick = (slug: string) => {
 		if (
 			!progressState.doneTopics.includes(slug) &&
-			progressState.inProgressTopic !== slug
+			progressState.inProgressTopic !== slug &&
+			currentModule.topics[0]!.slug !== slug
 		) {
 			return;
 		}
@@ -66,7 +65,10 @@ export function ModuleSideBar({
 			return { src: '/assets/images/icons/success.png', alt: 'Concluído' };
 		}
 
-		if (progressState.inProgressTopic === topic.slug) {
+		if (
+			progressState.inProgressTopic === topic.slug ||
+			currentModule.topics[0]!.slug === topic.slug
+		) {
 			return { src: '/assets/images/icons/progress.png', alt: 'Em progresso' };
 		}
 
@@ -114,10 +116,10 @@ export function ModuleSideBar({
 				className={`${isSidebarOpen ? 'visible left-0' : 'invisible -left-[300px]'} absolute z-20 h-full w-[300px] shrink-0 rounded-lg bg-white/5 p-[15px] shadow-[0_0_20px_#ffffff]/5 backdrop-blur-lg transition-[left,visibility] duration-500 lg:relative lg:h-auto`}
 			>
 				<div className="sticky top-[80px] flex flex-col gap-y-[15px]">
-					{topics?.map((topic) => (
+					{currentModule.topics?.map((topic) => (
 						<div
 							key={topic.title}
-							className="flex cursor-pointer flex-col overflow-hidden rounded-lg bg-[#0d0a14]/80"
+							className="flex flex-col overflow-hidden rounded-lg bg-[#0d0a14]/80 lg:cursor-pointer"
 							onClick={() => handleClick(topic.slug)}
 						>
 							<div className="flex h-[75px] w-full items-center justify-between gap-x-2 rounded-lg px-[12px]">
@@ -128,7 +130,8 @@ export function ModuleSideBar({
 									</p>
 								</div>
 								{(progressState.doneTopics.includes(topic.slug) ||
-									progressState.inProgressTopic === topic.slug) && (
+									progressState.inProgressTopic === topic.slug ||
+									currentModule.topics[0]!.slug === topic.slug) && (
 									<img
 										id={topic.slug}
 										src="/assets/images/icons/arrow-down.png"
@@ -141,7 +144,7 @@ export function ModuleSideBar({
 								)}
 							</div>
 							<SubtopicDropdown
-								moduleOrder={moduleOrder}
+								moduleOrder={currentModule.order}
 								topic={topic}
 								dropdownsContainer={dropdownsContainer}
 								setIsSidebarOpen={setIsSidebarOpen}
@@ -155,7 +158,7 @@ export function ModuleSideBar({
 				src="/assets/images/icons/show-sidebar.png"
 				alt="Exibir barra de navegação"
 				ref={sidebarIconRef}
-				className={`fixed ${isSidebarOpen ? 'left-[300px] rotate-180' : '-left-[10px]'} z-20 w-[40px] -translate-y-1/2 cursor-pointer transition-[rotate,left] duration-500 lg:hidden`}
+				className={`fixed ${isSidebarOpen ? 'left-[300px] rotate-180' : '-left-[10px]'} z-20 w-[40px] -translate-y-1/2 transition-[rotate,left] duration-500 lg:hidden`}
 				style={{ top: `${sidebarButtonOffset}px` }}
 				onClick={() => setIsSidebarOpen((prev) => !prev)}
 				role="button"

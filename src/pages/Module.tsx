@@ -1,34 +1,24 @@
 import { useParams } from 'react-router-dom';
 import { ModuleSideBar } from '../components/ModuleSideBar';
-import { useEffect, useRef, useState } from 'react';
-import { fetchContent } from '../content/services/fetchContent';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { contentfulFormatter } from '../content/formatters/contentfulFormatter';
 import { ModuleButtons } from '../components/ModuleButtons';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
-import { logError } from '../utils/logger';
 import { useSafeContext } from '../hooks/useSafeContext';
-import type { ModuleData, SubtopicData, TopicData } from '../types/content';
-import { mapContent } from '../content/mappers/mapContent';
 import { Terminal } from '../components/Terminal';
 import { LoadingPage } from './LoadingPage';
-import { updateDoc } from 'firebase/firestore';
-import { userNavigationRef } from '../database/refs/userRefs';
-import { AuthContext } from '../contexts/AuthProvider/context';
 import { themeStyles } from '../constants/themeStyle';
+import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
+import { ErrorPage } from './ErrorPage';
 
 export function Module() {
-	const { authState } = useSafeContext(AuthContext);
+	const { modules, isLoading, errorData, refreshModules } = useSafeContext(
+		ContentfulContentContext,
+	);
 	const { navigationState } = useSafeContext(NavigationContext);
-	const [moduleData, setModuleData] = useState<ModuleData | null>(null);
-	const [topics, setTopics] = useState<TopicData[]>([]);
-	const [topicData, setTopicData] = useState<TopicData | null>(null);
-	const [subtopics, setSubtopics] = useState<SubtopicData[]>([]);
-	const [subtopicData, setSubtopicData] = useState<SubtopicData | null>(null);
 	const [scrollY, setScrollY] = useState(0);
 	const [topButtonOffset, setTopButtonOffset] = useState(0);
-	const [sidebarButtonOffset, setSidebarButtonOffset] = useState(
-		window.innerHeight / 2,
-	);
+	const [sidebarButtonOffset, setSidebarButtonOffset] = useState(0);
 	const footerRef = useRef<HTMLElement>(null);
 	const moduleRef = useRef<HTMLDivElement>(null);
 	const params = useParams<{ moduleId: string }>();
@@ -42,7 +32,7 @@ export function Module() {
 
 			if (!footerRef.current || !moduleRef.current) return;
 
-			// * Calculando a distância do botão de volar ao topo:
+			// * Calculando a distância do botão de voltar ao topo:
 			const footerTop = footerRef.current.getBoundingClientRect().top;
 			const footerOverlap = window.innerHeight - footerTop;
 			// * Setando o maior valor entre o intervalo citado. Ao descer a tela, o footer ficará cada vez mais próximo da tela, diminuindo o valor de footerTop e aumentando o valor de overlap. Dessa forma, irá sempre acompanhar o tamanho do footer, somado de 20px.
@@ -51,139 +41,114 @@ export function Module() {
 			// * Calculando a distância do botão de mostrar a sidebar:
 			const moduleRect = moduleRef.current.getBoundingClientRect();
 			const moduleBottom = moduleRect.top + moduleRect.height;
-			// * No caso abaixo, iremos obter o valor mínimo entre a metade da tela e o final do módulo. Quanto a tela se aproximar do final do módulo, seu valor começará e ficar menor que a metade da tela, parando nesse ponto.
-			const moduleOverlap = Math.min(window.innerHeight / 2, moduleBottom - 50);
+
+			// * Obtendo os valores mínimo e máximo para nosso botão de exibir a sidebar:
+			const minOffset = moduleRect.top + 50;
+			const maxOffset = moduleBottom - 50;
+
+			// * No caso abaixo, iremos obter o valor máximo entre o offset mínimo, e o valor mínimo entre a metade da tela e o offset máximo. O segundo valor é calculado a medida que a tela se aproxima do final do módulo, o offset máximo começara a ficar menor que a metade da tela, parando nesse ponto.
+			const moduleOverlap = Math.max(
+				minOffset,
+				Math.min(window.innerHeight / 2, maxOffset),
+			);
+
 			setSidebarButtonOffset(moduleOverlap);
 		};
+
+		handleScroll();
+
 		window.addEventListener('scroll', handleScroll, { passive: true });
 
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
 
-	// * useEffect para obter o conteúdo do módulo a ser exibido.
-	useEffect(() => {
-		void (async () => {
-			const { moduleId } = params;
-
-			if (!moduleId) return;
-
-			try {
-				const content = await fetchContent({
-					contentType: 'module',
-					include: 3,
-					slug: moduleId,
-				});
-
-				if (!content[0]) {
-					throw new Error(`Não foi possível obter o módulo ${moduleId}`);
-				}
-				setModuleData(mapContent(content[0]));
-			} catch (error) {
-				logError({
-					error,
-					text: 'Não foi possível carregar o conteúdo do módulo. Tente novamente ou fale conosco.',
-				});
-			}
-		})();
-	}, [params]);
-
-	// * useEffect responsável por atualizar os estados com o conteúdo do módulo obtido.
-	useEffect(() => {
-		if (!moduleData) return;
-		const topic = moduleData.topics.find(
-			(topic) => topic.slug === navigationState[moduleData.order]!.currentTopic,
-		);
-		if (!topic) return;
-
-		const subtopic = topic.subtopics.find(
-			(subtopic) =>
-				subtopic.slug === navigationState[moduleData.order]!.currentSubtopic,
-		);
-
-		if (!subtopic) return;
-
-		setTopics(moduleData.topics.map((topic) => topic));
-		setTopicData(topic);
-		setSubtopics(topic.subtopics.map((subtopic) => subtopic));
-		setSubtopicData(subtopic);
-	}, [moduleData, navigationState]);
-
-	// * useEffect para atualização persistente dos dados de navegação do usuário no banco de dados.
-	useEffect(() => {
-		const { uid } = authState;
-
-		if (!uid || !moduleData || !topicData || !subtopicData) return;
-
-		void (async () => {
-			await updateDoc(userNavigationRef(uid), {
-				[moduleData.order]: {
-					currentTopic: topicData.slug,
-					currentSubtopic: subtopicData.slug,
-				},
-			});
-		})();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [subtopicData]);
-
-	return !moduleData || !topicData || !subtopicData ? (
-		<LoadingPage />
-	) : (
-		<div className="relative mx-[10px] my-[120px] flex min-h-screen justify-center lg:mx-[50px] lg:gap-x-[40px]">
-			<ModuleSideBar
-				topics={topics}
-				moduleOrder={moduleData.order}
-				sidebarButtonOffset={sidebarButtonOffset}
-			/>
-			<div
-				ref={moduleRef}
-				className="max-w-[1200px] min-w-0 flex-1 rounded-lg bg-[#0d0a14] p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-[40px]"
-				style={
-					{
-						'--theme-color': `var(${themeStyles[moduleData.theme].color})`,
-						'--highlight-theme-color': `var(${themeStyles[moduleData.theme].highlight})`,
-					} as React.CSSProperties
-				}
-			>
-				<h1
-					className={`text-content-h1 mb-5 tracking-wide text-(--theme-color)!`}
-				>
-					{subtopicData?.title}
-				</h1>
-				<div className="mb-10 flex flex-col gap-y-5">
-					{subtopicData?.content && contentfulFormatter(subtopicData.content)}
-					{subtopicData?.videoLink && (
-						<div className="flex justify-center">
-							<iframe
-								className="aspect-video w-full max-w-[720px] rounded-md shadow-[0_0_30px_#ffffff0f]"
-								src={subtopicData?.videoLink}
-								title={subtopicData?.title}
-								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-								referrerPolicy="strict-origin-when-cross-origin"
-								allowFullScreen
-							></iframe>
-						</div>
-					)}
-					{subtopicData?.subtopicType === 'exercise' && (
-						<Terminal subtopicData={subtopicData} />
-					)}
-				</div>
-				<ModuleButtons
-					topics={topics}
-					subtopics={subtopics}
-					moduleData={moduleData}
-					topicData={topicData}
-					subtopicData={subtopicData}
-				/>
-			</div>
-			{scrollY > 0 && (
-				<span
-					className="bg-main-green lg:transition-[transform, shadow] fixed right-[5px] z-10 flex size-[30px] shrink-0 cursor-pointer items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] lg:right-[10px] lg:duration-300 lg:hover:-translate-y-1 lg:hover:shadow-[0_0_10px_var(--color-glow-green)]/50"
-					onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-					style={{ bottom: `${topButtonOffset}px` }}
-				>
-					<img src="/assets/images/icons/arrow-up.png" alt="Ir ao topo" />
-				</span>
-			)}
-		</div>
+	const currentModule = useMemo(
+		() => modules?.find((module) => module.slug === params.moduleId) ?? null,
+		[modules, params.moduleId],
 	);
+
+	const currentTopic = useMemo(() => {
+		if (!currentModule || !navigationState) return null;
+		return (
+			currentModule.topics.find(
+				(topic) =>
+					topic.slug === navigationState[currentModule.order]?.currentTopic,
+			) ?? null
+		);
+	}, [currentModule, navigationState]);
+
+	const currentSubtopic = useMemo(() => {
+		if (!currentTopic || !currentModule || !navigationState) return null;
+		return (
+			currentTopic.subtopics.find(
+				(subtopic) =>
+					subtopic.slug ===
+					navigationState[currentModule.order]?.currentSubtopic,
+			) ?? null
+		);
+	}, [currentModule, currentTopic, navigationState]);
+
+	if (errorData.error) {
+		return <ErrorPage onRetry={refreshModules} />;
+	} else {
+		return isLoading.modules ? (
+			<LoadingPage />
+		) : (
+			<div className="relative mx-[10px] my-[120px] flex min-h-screen justify-center lg:mx-[50px] lg:gap-x-[40px]">
+				<ModuleSideBar
+					currentModule={currentModule!}
+					sidebarButtonOffset={sidebarButtonOffset}
+				/>
+				<div
+					ref={moduleRef}
+					className="max-w-[1200px] min-w-0 flex-1 rounded-lg bg-[#0d0a14] p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-[40px]"
+					style={
+						{
+							'--theme-color': `var(${themeStyles[currentModule!.theme].color})`,
+							'--highlight-theme-color': `var(${themeStyles[currentModule!.theme].highlight})`,
+						} as React.CSSProperties
+					}
+				>
+					<h1
+						className={`text-content-h1 mb-5 tracking-wide text-(--theme-color)!`}
+					>
+						{currentSubtopic?.title}
+					</h1>
+					<div className="mb-10 flex flex-col gap-y-5">
+						{currentSubtopic?.content &&
+							contentfulFormatter(currentSubtopic.content)}
+						{currentSubtopic?.videoLink && (
+							<div className="flex justify-center">
+								<iframe
+									className="aspect-video w-full max-w-[720px] rounded-md shadow-[0_0_30px_#ffffff0f]"
+									src={currentSubtopic?.videoLink}
+									title={currentSubtopic?.title}
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+									referrerPolicy="strict-origin-when-cross-origin"
+									allowFullScreen
+								></iframe>
+							</div>
+						)}
+						{currentSubtopic?.subtopicType === 'exercise' && (
+							<Terminal subtopicData={currentSubtopic} />
+						)}
+					</div>
+					<ModuleButtons
+						moduleData={currentModule!}
+						topicData={currentTopic!}
+						subtopicData={currentSubtopic!}
+					/>
+				</div>
+				{scrollY > 0 && (
+					<span
+						className="bg-main-green lg:transition-[transform, shadow] fixed right-[5px] z-10 flex size-[30px] shrink-0 items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] lg:right-[10px] lg:cursor-pointer lg:duration-300 lg:hover:-translate-y-1 lg:hover:shadow-[0_0_10px_var(--color-glow-green)]/50"
+						onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+						style={{ bottom: `${topButtonOffset}px` }}
+					>
+						<img src="/assets/images/icons/arrow-up.png" alt="Ir ao topo" />
+					</span>
+				)}
+			</div>
+		);
+	}
 }

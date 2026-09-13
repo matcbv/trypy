@@ -3,34 +3,31 @@ import { getNextContent } from '../content/navigation/getNextContent';
 import { logError, logInfo, logSuccess } from '../utils/logger';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { useNavigate, useParams } from 'react-router-dom';
-import { setDoc, updateDoc } from 'firebase/firestore';
+import { writeBatch } from 'firebase/firestore';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleData, SubtopicData, TopicData } from '../types/content';
-import type { ProgressState } from '../types/states';
 import { userNavigationRef, userProgressRef } from '../database/refs/userRefs';
 import { type MouseEvent } from 'react';
 import { TerminalContext } from '../contexts/TerminalProvider/context';
+import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
+import { db } from '../database/configs/firebase';
 
 interface ModuleButtonsProps {
-	topics: TopicData[];
-	subtopics: SubtopicData[];
 	moduleData: ModuleData;
 	topicData: TopicData;
 	subtopicData: SubtopicData;
 }
 
 export function ModuleButtons({
-	topics,
-	subtopics,
 	moduleData,
 	topicData,
 	subtopicData,
 }: ModuleButtonsProps) {
 	const { authState } = useSafeContext(AuthContext);
+	const { modules } = useSafeContext(ContentfulContentContext);
 	const { progressState, setProgressState } = useSafeContext(ProgressContext);
-	const { navigationState, setNavigationState } =
-		useSafeContext(NavigationContext);
+	const { setNavigationState } = useSafeContext(NavigationContext);
 	const { terminalState } = useSafeContext(TerminalContext);
 	const params = useParams<{ moduleId: string }>();
 	const navigate = useNavigate();
@@ -40,7 +37,7 @@ export function ModuleButtons({
 		!progressState.doneSubtopics.includes(subtopicData.slug) &&
 		!terminalState.solved;
 
-	const handleNext = async (e: MouseEvent<HTMLButtonElement>) => {
+	const handleNext = (e: MouseEvent<HTMLButtonElement>) => {
 		if (isNextButtonLocked) {
 			e.preventDefault();
 			logInfo(
@@ -49,94 +46,74 @@ export function ModuleButtons({
 			return;
 		}
 
-		window.scrollTo({ top: 0, behavior: 'smooth' });
+		const data = { ...progressState };
 
-		const data: ProgressState = { ...progressState };
+		const { nextTopic, nextSubtopic } = getNextContent({
+			modules: modules!,
+			currentModuleData: moduleData,
+			currentTopicData: topicData,
+			currentSubtopicData: subtopicData,
+		});
 
-		try {
-			const { nextTopic, nextSubtopic } = await getNextContent(
-				moduleData,
-				topicData,
-				subtopicData,
-			);
+		const isSubtopicDone = progressState.doneSubtopics.includes(
+			subtopicData.slug,
+		);
 
-			// * Adicionando o subtópico concluído à lista de progresso do usuário, caso não esteja presente.
-			if (
-				!progressState.doneSubtopics.includes(
-					navigationState[moduleData.order]!.currentSubtopic,
-				)
-			) {
-				data.doneSubtopics = [
-					...progressState.doneSubtopics,
-					navigationState[moduleData.order]!.currentSubtopic,
-				];
-			}
-
-			// * Validando se o tópico foi concluído.
-			const isTopicDone = subtopics.every((subtopic) =>
-				data.doneSubtopics?.includes(subtopic.slug),
-			);
-
-			// * Caso concluído e não presente na lista de tópicos concluídos, iremos adicioná-lo à ela.
-			if (
-				isTopicDone &&
-				!progressState.doneTopics.includes(
-					navigationState[moduleData.order]!.currentTopic,
-				)
-			) {
-				data.doneTopics = [
-					...progressState.doneTopics,
-					navigationState[moduleData.order]!.currentTopic,
-				];
-
-				const secureNextTopic =
-					topics.find((topic) => topic.order === topicData.order + 1)?.slug ||
-					navigationState[moduleData.order]!.currentTopic;
-
-				data.inProgressTopic = secureNextTopic;
-			}
-
-			// * Checando se o próximo subtópico está bloqueado.
-			const isNextSubtopicBlocked =
-				!isTopicDone &&
-				nextTopic.slug !== navigationState[moduleData.order]!.currentTopic &&
-				nextTopic.subtopics.some(
-					(subtopic) => nextSubtopic.slug === subtopic.slug,
-				);
-
-			if (!isNextSubtopicBlocked) {
-				// * Caso o próximo subtópico não esteja na lista de concluídos, iremos adicioná-lo como o subtópico em progresso do usuário.
-				if (!progressState.doneSubtopics.includes(nextSubtopic.slug)) {
-					data.inProgressSubtopic = nextSubtopic.slug;
-				}
-
-				setNavigationState((prev) => ({
-					...prev,
-					[moduleData.order]: {
-						currentTopic: nextTopic.slug,
-						currentSubtopic: nextSubtopic.slug,
-					},
-				}));
-			} else {
-				logInfo(
-					'Finalize todos os subtópicos do tópico atual para concluí-lo.',
-				);
-			}
-
-			setProgressState((prev) => ({ ...prev, ...data }));
-
-			if (authState.uid) await setDoc(userProgressRef(authState.uid), data);
-		} catch (error) {
-			logError({ error });
+		// * Adicionando o subtópico concluído à lista de progresso do usuário, caso não esteja presente.
+		if (!isSubtopicDone) {
+			data.doneSubtopics = [...progressState.doneSubtopics, subtopicData.slug];
 		}
+
+		// * Validando se o tópico foi concluído.
+		const isTopicDone = topicData.subtopics.every((subtopic) =>
+			data.doneSubtopics?.includes(subtopic.slug),
+		);
+
+		// * Caso concluído e não presente na lista de tópicos concluídos, iremos adicioná-lo à ela.
+		if (isTopicDone && !progressState.doneTopics.includes(topicData.slug)) {
+			data.doneTopics = [...progressState.doneTopics, topicData.slug];
+			data.inProgressTopic = nextTopic.slug;
+		}
+
+		// * Checando se o próximo subtópico está bloqueado.
+		const isNextSubtopicBlocked =
+			!isTopicDone &&
+			nextTopic.slug !== topicData.slug &&
+			nextTopic.subtopics.some(
+				(subtopic) => nextSubtopic.slug === subtopic.slug,
+			);
+
+		if (!isNextSubtopicBlocked) {
+			// * Caso o próximo subtópico não esteja na lista de concluídos, iremos adicioná-lo como o subtópico em progresso do usuário.
+			if (!progressState.doneSubtopics.includes(nextSubtopic.slug)) {
+				data.inProgressSubtopic = nextSubtopic.slug;
+			}
+
+			setNavigationState((prev) => ({
+				...prev,
+				[moduleData.order]: {
+					currentTopic: nextTopic.slug,
+					currentSubtopic: nextSubtopic.slug,
+				},
+			}));
+		} else {
+			logInfo('Finalize todos os subtópicos do tópico atual para concluí-lo.');
+			return;
+		}
+
+		if (!isSubtopicDone) setProgressState((prev) => ({ ...prev, ...data }));
+
+		window.scrollTo({ top: 0, behavior: 'smooth' });
 	};
 
 	const handlePrevious = () => {
-		if (subtopicData.slug === topics[0]?.subtopics[0]?.slug) return;
+		const isFirstSubtopic =
+			subtopicData.slug === moduleData.topics[0]?.subtopics[0]?.slug;
+		if (isFirstSubtopic) return;
 
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 
-		const previousSubtopic = subtopics.find(
+		const previousSubtopic = topicData.subtopics.find(
 			(subtopic) => subtopic.order === subtopicData.order - 1,
 		);
 
@@ -144,7 +121,7 @@ export function ModuleButtons({
 			setNavigationState((prev) => ({
 				...prev,
 				[moduleData.order]: {
-					...prev[moduleData.order]!,
+					...prev![moduleData.order]!,
 					currentSubtopic: previousSubtopic.slug,
 				},
 			}));
@@ -152,7 +129,7 @@ export function ModuleButtons({
 		}
 
 		// * Caso o subtópico anterior não exista, iremos obter o último subtópico do tópico anterior:
-		const previousTopic = topics.find(
+		const previousTopic = moduleData.topics.find(
 			(topic) => topic.order === topicData.order - 1,
 		);
 
@@ -176,7 +153,7 @@ export function ModuleButtons({
 	const finishModule = async () => {
 		if (!params.moduleId) return;
 
-		const isConclusionUnlocked = subtopics
+		const isConclusionUnlocked = topicData.subtopics
 			.filter((subtopic) => subtopic.subtopicType !== 'conclusion')
 			.every((subtopic) => progressState.doneSubtopics.includes(subtopic.slug));
 
@@ -185,22 +162,17 @@ export function ModuleButtons({
 			return;
 		}
 
-		const { nextModule, nextSubtopic, nextTopic } = await getNextContent(
-			moduleData,
-			topicData,
-			subtopicData,
-		);
+		const { nextModule, nextSubtopic, nextTopic } = getNextContent({
+			modules: modules!,
+			currentModuleData: moduleData,
+			currentTopicData: topicData,
+			currentSubtopicData: subtopicData,
+		});
 
 		if (!progressState.doneModules.includes(params.moduleId)) {
 			const data = {
-				doneSubtopics: [
-					...progressState.doneSubtopics,
-					navigationState[moduleData.order]!.currentSubtopic,
-				],
-				doneTopics: [
-					...progressState.doneTopics,
-					navigationState[moduleData.order]!.currentTopic,
-				],
+				doneSubtopics: [...progressState.doneSubtopics, subtopicData.slug],
+				doneTopics: [...progressState.doneTopics, topicData.slug],
 				doneModules: [...progressState.doneModules, params.moduleId],
 				inProgressModule: nextModule.slug,
 				inProgressTopic: nextTopic.slug,
@@ -214,16 +186,26 @@ export function ModuleButtons({
 				},
 			};
 
+			if (authState.uid) {
+				try {
+					const batch = writeBatch(db);
+					batch.update(userProgressRef(authState.uid), data);
+					batch.update(userNavigationRef(authState.uid), nextModuleValue);
+					await batch.commit();
+				} catch (error) {
+					logError({
+						error,
+						text: 'Não foi possível salvar seu progresso. Tente novamente.',
+					});
+					return;
+				}
+			}
+
 			setProgressState((prev) => ({ ...prev, ...data }));
 			setNavigationState((prev) => ({
 				...prev,
 				...nextModuleValue,
 			}));
-
-			if (authState.uid) {
-				await updateDoc(userProgressRef(authState.uid), data);
-				await updateDoc(userNavigationRef(authState.uid), nextModuleValue);
-			}
 
 			logSuccess('Módulo finalizado com sucesso!');
 		}

@@ -3,7 +3,7 @@ import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { SubtopicData, TopicData } from '../types/content';
 import type { Dispatch, RefObject } from 'react';
-import { logError, logInfo } from '../utils/logger';
+import { logInfo } from '../utils/logger';
 
 interface DropdownProps {
 	topic: TopicData;
@@ -24,31 +24,27 @@ export function SubtopicDropdown({
 	const { setNavigationState } = useSafeContext(NavigationContext);
 
 	const changeSubtopic = (currentSubtopic: SubtopicData) => {
-		try {
-			if (currentSubtopic.subtopicType === 'resolution') {
-				const topicExercise = topic.subtopics.find(
-					(subtopic) => subtopic.subtopicType === 'exercise',
-				);
+		if (currentSubtopic.subtopicType === 'resolution') {
+			const topicExercise = topic.subtopics.find(
+				(subtopic) => subtopic.subtopicType === 'exercise',
+			);
 
-				if (!progressState.doneSubtopics.includes(topicExercise!.slug)) {
-					logInfo('Conclua o exercício para acessar sua resolução');
-					return;
-				}
+			if (!progressState.doneSubtopics.includes(topicExercise!.slug)) {
+				logInfo('Conclua o exercício para acessar sua resolução');
+				return;
 			}
-			setNavigationState((prev) => ({
-				...prev,
-				[moduleOrder]: {
-					currentTopic: topic.slug,
-					currentSubtopic: currentSubtopic.slug,
-				},
-			}));
-
-			if (!isDesktop) setIsSidebarOpen(false);
-
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		} catch (error) {
-			logError({ error });
 		}
+		setNavigationState((prev) => ({
+			...prev,
+			[moduleOrder]: {
+				currentTopic: topic.slug,
+				currentSubtopic: currentSubtopic.slug,
+			},
+		}));
+
+		if (!isDesktop) setIsSidebarOpen(false);
+
+		window.scrollTo({ top: 0, behavior: 'smooth' });
 	};
 
 	return (
