@@ -15,6 +15,7 @@ import { getProgressStorage } from '../../services/progressStorage';
 import { isProgressInitialized } from '../../utils/progress';
 import { fetchInitialContent } from '../../content/services/fetchInitialContent';
 import type { ModuleData } from '../../types/content';
+import { DisplayableError } from '../../classes/DisplayableError';
 
 type SignUpType = UserData & { password: string };
 
@@ -38,7 +39,7 @@ export const signUpWithCredentials = async ({
 	let finalProgress = getProgressStorage();
 	if (!isProgressInitialized(finalProgress)) {
 		if (!modules) {
-			throw new Error(
+			throw new DisplayableError(
 				'Conteúdo inicial ainda não carregado. Tente novamente em instantes.',
 			);
 		}
@@ -81,7 +82,7 @@ export const signInWithCredentials = async (
 	]);
 
 	if (!userDoc.exists() || !progressDoc.exists() || !navigationDoc.exists()) {
-		throw new Error(
+		throw new DisplayableError(
 			'Não foi possível acessar sua conta no momento. Entre em contato conosco para regularizar a situação.',
 		);
 	}

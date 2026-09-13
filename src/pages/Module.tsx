@@ -94,14 +94,14 @@ export function Module() {
 		return isLoading.modules ? (
 			<LoadingPage />
 		) : (
-			<div className="relative mx-[10px] my-[120px] flex min-h-screen justify-center lg:mx-[50px] lg:gap-x-[40px]">
+			<div className="relative mx-[10px] my-30 flex min-h-screen justify-center lg:mx-[50px] lg:gap-x-10">
 				<ModuleSideBar
 					currentModule={currentModule!}
 					sidebarButtonOffset={sidebarButtonOffset}
 				/>
 				<div
 					ref={moduleRef}
-					className="bg-module-background max-w-[1200px] min-w-0 flex-1 rounded-lg p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-[40px]"
+					className="bg-module-background max-w-300 min-w-0 flex-1 rounded-lg p-[30px] shadow-[0_0_20px_#ffffff]/5 lg:p-10"
 					style={
 						{
 							'--theme-color': `var(${themeStyles[currentModule!.theme].color})`,
@@ -110,7 +110,7 @@ export function Module() {
 					}
 				>
 					<h1
-						className={`text-content-h1 mb-[20px] tracking-wide text-(--theme-color)`}
+						className={`text-content-h1 mb-5 tracking-wide text-(--theme-color)`}
 					>
 						{currentSubtopic?.title}
 					</h1>
@@ -120,7 +120,7 @@ export function Module() {
 						{currentSubtopic?.videoLink && (
 							<div className="flex justify-center">
 								<iframe
-									className="aspect-video w-full max-w-[720px] rounded-md shadow-[0_0_30px_#ffffff0f]"
+									className="aspect-video w-full max-w-180 rounded-md shadow-[0_0_30px_#ffffff0f]"
 									src={currentSubtopic?.videoLink}
 									title={currentSubtopic?.title}
 									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -108,8 +108,8 @@ export function SessionForm() {
 	return isSubmitting ? (
 		<LoadingPage />
 	) : (
-		<form className="mb-[25px] w-full" onSubmit={(e) => void handleSubmit(e)}>
-			<div className="mb-[25px] flex max-w-[350px] flex-col gap-y-6 text-sm">
+		<form className="mb-6 w-full" onSubmit={(e) => void handleSubmit(e)}>
+			<div className="mb-6 flex max-w-[350px] flex-col gap-y-6 text-sm">
 				{Object.entries(userCredentials).map(([key, value]) => (
 					<div
 						className="border-b-main-green relative flex w-full items-end border-b-2"
@@ -119,7 +119,7 @@ export function SessionForm() {
 							{key === 'email' ? 'E-mail' : 'Senha'}
 						</label>
 						<input
-							className="w-full focus:outline-none"
+							className={`w-full focus:outline-none ${key === 'password' && 'pr-9'}`}
 							type={key === 'email' ? 'text' : isVisible ? 'text' : 'password'}
 							id={key}
 							value={value}

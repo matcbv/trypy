@@ -43,15 +43,15 @@ export function PictureInput() {
 
 	return (
 		<div className="mb-10">
-			<h2 className="mb-[15px] text-lg">Foto de perfil</h2>
+			<h2 className="mb-3 text-lg">Foto de perfil</h2>
 			<label htmlFor="picture" className="group relative block w-fit">
-				<div className="h-[120px] w-[120px] overflow-hidden rounded-full">
+				<div className="size-30 overflow-hidden rounded-full">
 					{isUpdating ? (
 						<div className="flex size-full items-center justify-center bg-black/50">
 							<img
 								src="/assets/images/loading.png"
 								alt="Atualizando foto"
-								className="h-[40px] w-[40px]"
+								className="h-10 w-10"
 							/>
 						</div>
 					) : (

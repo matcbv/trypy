@@ -1,7 +1,7 @@
 export function BeAPartner() {
 	return (
-		<div className="mx-[20px] my-[120px] flex justify-center">
-			<div className="flex max-w-[800px] flex-col gap-y-[120px]">
+		<div className="mx-5 my-30 flex justify-center">
+			<div className="flex max-w-200 flex-col gap-y-30">
 				<section>
 					<h1 className="text-main-purple text-title-4xl mb-6 font-bold tracking-wide">
 						Torne-se um patrocinador

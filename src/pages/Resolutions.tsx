@@ -7,11 +7,11 @@ export function Resolutions() {
 
 	return (
 		<div>
-			<h1 className="mb-[40px] text-2xl font-bold tracking-wide">
+			<h1 className="mb-10 text-2xl font-bold tracking-wide">
 				Exercícios resolvidos
 			</h1>
 			{authState.data && Object.keys(authState.data.resolutions).length > 0 ? (
-				<div className="flex flex-col gap-y-[20px]">
+				<div className="flex flex-col gap-y-5">
 					{authState.data.resolutions.map(({ slug, title, code }) => (
 						<ResolutionCard key={slug} slug={slug} title={title} code={code} />
 					))}

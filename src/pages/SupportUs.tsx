@@ -1,7 +1,7 @@
 export function SupportUs() {
 	return (
 		<div>
-			<h1 className="mb-[40px] text-2xl font-bold tracking-wide">
+			<h1 className="mb-10 text-2xl font-bold tracking-wide">
 				Seja um apoiador
 			</h1>
 			<div className="flex flex-col gap-y-10">

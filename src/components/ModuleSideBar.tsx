@@ -113,22 +113,18 @@ export function ModuleSideBar({
 		<>
 			<div
 				ref={sidebarRef}
-				className={`${isSidebarOpen ? 'visible left-0' : 'invisible -left-[300px]'} absolute z-20 h-full w-[300px] shrink-0 rounded-lg bg-white/5 p-[12px] shadow-[0_0_20px_#ffffff]/5 backdrop-blur-lg transition-[left,visibility] duration-500 lg:relative lg:h-auto`}
+				className={`${isSidebarOpen ? 'visible left-0' : 'invisible -left-75'} absolute z-20 h-full w-75 shrink-0 rounded-lg bg-white/5 p-3 shadow-[0_0_20px_#ffffff]/5 backdrop-blur-lg transition-[left,visibility] duration-500 lg:relative lg:h-auto`}
 			>
-				<div className="sticky top-[80px] flex flex-col gap-y-[15px]">
+				<div className="sticky top-20 flex flex-col gap-y-3">
 					{currentModule.topics?.map((topic) => (
 						<div
 							key={topic.title}
 							className="bg-module-background/80 flex flex-col overflow-hidden rounded-lg lg:cursor-pointer"
 							onClick={() => handleClick(topic.slug)}
 						>
-							<div className="flex h-[75px] w-full items-center justify-between gap-x-[8px] rounded-lg px-[12px]">
-								<div className="flex items-center gap-x-[8px]">
-									<img
-										{...iconData(topic)}
-										className="w-[20px]"
-										draggable={false}
-									/>
+							<div className="flex h-[75px] w-full items-center justify-between gap-x-2 rounded-lg px-3">
+								<div className="flex items-center gap-x-2">
+									<img {...iconData(topic)} className="w-5" draggable={false} />
 									<p className="font-jetbrains text-[0.85rem] leading-6">
 										{topic.title}
 									</p>
@@ -162,7 +158,7 @@ export function ModuleSideBar({
 				src="/assets/images/icons/show-sidebar.png"
 				alt="Exibir barra de navegação"
 				ref={sidebarIconRef}
-				className={`fixed ${isSidebarOpen ? 'left-[300px] rotate-180' : '-left-[10px]'} z-20 w-[40px] -translate-y-1/2 transition-[rotate,left] duration-500 lg:hidden`}
+				className={`fixed ${isSidebarOpen ? 'left-75 rotate-180' : '-left-[10px]'} z-20 w-10 -translate-y-1/2 transition-[rotate,left] duration-500 lg:hidden`}
 				style={{ top: `${sidebarButtonOffset}px` }}
 				onClick={() => setIsSidebarOpen((prev) => !prev)}
 				role="button"

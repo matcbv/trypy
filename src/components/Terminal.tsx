@@ -88,11 +88,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 
 		if (terminalState.status === 'running') {
 			return (
-				<img
-					src={`/assets/images/loading.png`}
-					alt="Status"
-					className="w-[20px]"
-				/>
+				<img src={`/assets/images/loading.png`} alt="Status" className="w-5" />
 			);
 		}
 
@@ -100,7 +96,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 			<img
 				src={`/assets/images/icons/${terminalState.error ? 'warning' : 'success'}.png`}
 				alt="Status"
-				className="w-[20px]"
+				className="w-5"
 			/>
 		);
 	};
@@ -114,12 +110,12 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 					<img
 						src={`/assets/images/icons/${solved ? 'success' : 'loading'}.png`}
 						alt="Status"
-						className="size-[20px]"
+						className="w-5"
 					/>
 				</span>
 			</div>
 			<div className="flex w-full flex-col gap-y-1">
-				<div className="relative h-[400px]">
+				<div className="relative h-100">
 					{terminalState.status === 'loading' ? (
 						<LoadingPage />
 					) : (
@@ -135,11 +131,11 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 				</div>
 
 				<div className="bg-terminal-background rounded-b-md">
-					<div className="border-main-purple font-jetbrains flex items-center gap-x-2 border-b px-[20px] py-[8px] text-sm">
+					<div className="border-main-purple font-jetbrains flex items-center gap-x-2 border-b px-5 py-2 text-sm">
 						Saída:
 						{statusIcon()}
 					</div>
-					<div className="codeScrollbar h-[200px] overflow-scroll px-5 py-2">
+					<div className="codeScrollbar h-50 overflow-scroll px-5 py-2">
 						<code className="text-sm whitespace-pre-wrap">
 							{terminalState.error || terminalState.output}
 						</code>

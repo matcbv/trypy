@@ -34,12 +34,12 @@ export function Home() {
 			<div className="flex w-full justify-center">
 				<HeroBanner />
 			</div>
-			<span className="block h-[1px] bg-indigo-900"></span>
-			<section className="relative mx-[40px] flex items-center justify-center py-[120px]">
-				<div className="flex flex-col gap-y-[60px]">
-					<div className="flex max-w-[600px] flex-col gap-y-10">
+			<span className="block h-px bg-indigo-900"></span>
+			<section className="relative mx-10 flex items-center justify-center py-30">
+				<div className="flex flex-col gap-y-15">
+					<div className="flex max-w-150 flex-col gap-y-10">
 						<div>
-							<h2 className="text-main-purple text-title-5xl mb-[20px]">
+							<h2 className="text-main-purple text-title-5xl mb-5">
 								Aprendizado Guiado
 							</h2>
 							<p className="text-section-xl">
@@ -50,7 +50,7 @@ export function Home() {
 							</p>
 						</div>
 					</div>
-					<div className="font-jetbrains flex w-fit flex-col lg:max-w-[1200px] lg:flex-row lg:gap-y-0">
+					<div className="font-jetbrains flex w-fit flex-col lg:max-w-300 lg:flex-row lg:gap-y-0">
 						<div
 							className="guide-cards"
 							onMouseMove={handleMouseMove}
@@ -117,10 +117,10 @@ export function Home() {
 					</div>
 				</div>
 			</section>
-			<span className="block h-[1px] bg-indigo-900"></span>
-			<section className="relative mx-[40px] flex items-center justify-center py-[120px]">
-				<div className="flex flex-col gap-y-10 lg:flex-row-reverse lg:gap-x-[60px] lg:gap-y-0">
-					<div className="flex max-w-[600px] min-w-0 flex-1 flex-col gap-y-10">
+			<span className="block h-px bg-indigo-900"></span>
+			<section className="relative mx-10 flex items-center justify-center py-30">
+				<div className="flex flex-col gap-y-10 lg:flex-row-reverse lg:gap-x-15 lg:gap-y-0">
+					<div className="flex max-w-150 min-w-0 flex-1 flex-col gap-y-10">
 						<div>
 							<h2 className="text-main-green text-title-5xl mb-5">
 								Certificado gratuito e personalizado
@@ -137,7 +137,7 @@ export function Home() {
 							value={studentName}
 							onChange={handleChange}
 							placeholder="Digite seu nome..."
-							className="border-main-green text-section-xl placeholder:text-section-xl py-section-btn-y self-start rounded-md border bg-white/5 px-[20px] transition-shadow duration-300 focus:shadow-[0_0_20px_var(--color-glow-green)]/20 focus:outline-none"
+							className="border-main-green text-section-xl placeholder:text-section-xl py-section-btn-y self-start rounded-md border bg-white/5 px-5 transition-shadow duration-300 focus:shadow-[0_0_20px_var(--color-glow-green)]/20 focus:outline-none"
 						/>
 					</div>
 					<div className="w-section-img relative rounded-md lg:self-center">
@@ -153,12 +153,12 @@ export function Home() {
 					</div>
 				</div>
 			</section>
-			<span className="block h-[1px] bg-indigo-900"></span>
-			<section className="relative mx-[40px] flex items-center justify-center py-[120px]">
-				<div className="flex flex-col gap-y-10 lg:flex-row lg:gap-x-[60px] lg:gap-y-0">
-					<div className="flex max-w-[600px] flex-col gap-y-10">
+			<span className="block h-px bg-indigo-900"></span>
+			<section className="relative mx-10 flex items-center justify-center py-30">
+				<div className="flex flex-col gap-y-10 lg:flex-row lg:gap-x-15 lg:gap-y-0">
+					<div className="flex max-w-150 flex-col gap-y-10">
 						<div>
-							<h2 className="text-main-purple text-title-5xl mb-[20px]">
+							<h2 className="text-main-purple text-title-5xl mb-5">
 								Video-aulas integradas
 							</h2>
 							<p className="text-section-xl">
@@ -192,10 +192,10 @@ export function Home() {
 					/>
 				</div>
 			</section>
-			<span className="block h-[1px] bg-indigo-900"></span>
-			<section className="relative mx-[40px] flex items-center justify-center py-[120px]">
+			<span className="block h-px bg-indigo-900"></span>
+			<section className="relative mx-10 flex items-center justify-center py-30">
 				<div className="flex flex-col gap-y-5 lg:flex-row-reverse lg:gap-x-5 lg:gap-y-0">
-					<div className="flex max-w-[600px] flex-col gap-y-10 py-5">
+					<div className="flex max-w-150 flex-col gap-y-10 py-5">
 						<div>
 							<h2 className="text-main-cyan text-title-5xl mb-5">
 								Suporte ao aluno
@@ -209,7 +209,7 @@ export function Home() {
 
 						<Link
 							to="/support"
-							className="lg:hover:bg-main-cyan/70 px-section-btn-x py-section-btn-y text-section-xl-btn border-main-cyan self-start rounded-md border bg-white/5 font-bold transition-all duration-300 lg:bg-transparent lg:hover:border-black lg:hover:shadow-[0_0_25px_#FFFFFF]/25"
+							className="lg:hover:bg-main-cyan/70 px-section-btn-x py-section-btn-y text-section-xl-btn border-main-cyan self-start rounded-md border bg-white/5 font-bold transition-all duration-300 lg:bg-transparent lg:hover:border-black lg:hover:shadow-[0_0_20px_#FFFFFF]/25"
 						>
 							Fale conosco
 						</Link>

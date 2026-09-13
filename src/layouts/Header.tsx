@@ -112,13 +112,13 @@ export function Header() {
 				className="font-jetbrains fixed top-0 z-30 w-full"
 				style={{ '--header-bg': 'transparent' } as React.CSSProperties}
 			>
-				<header className="flex h-[65px] items-center justify-between bg-(--header-bg) px-[20px] transition-[background-color] duration-500 lg:px-[60px]">
+				<header className="flex h-[65px] items-center justify-between bg-(--header-bg) px-5 transition-[background-color] duration-500 lg:px-15">
 					<Link to="/">
 						<img
 							src="/assets/images/trypy-logo.png"
 							alt="Logo TryPy"
 							draggable="false"
-							className="w-[40px] transition-[width] lg:w-[50px]"
+							className="w-10 transition-[width] lg:w-[50px]"
 						/>
 					</Link>
 					<nav className="hidden lg:block" ref={navRef}>
@@ -153,12 +153,12 @@ export function Header() {
 							</li>
 						</ul>
 					</nav>
-					<div className="flex gap-x-[20px] lg:hidden">
+					<div className="flex gap-x-5 lg:hidden">
 						<img
 							ref={navIconRef}
 							src="/assets/images/icons/menu.png"
 							alt="Menu"
-							className="w-[28px]"
+							className="w-7"
 							onClick={() => setIsMenuOpen((prev) => !prev)}
 							role="button"
 							tabIndex={0}
@@ -167,7 +167,7 @@ export function Header() {
 							<img
 								src="/assets/images/icons/logout.png"
 								alt="Deslogar"
-								className="w-[28px]"
+								className="w-7"
 								onClick={() => void logoutWrapper()}
 								role="button"
 								tabIndex={0}
@@ -182,25 +182,25 @@ export function Header() {
 						{authState.data ? (
 							objectsMap.map(({ slug, title }) => (
 								<li key={slug} className="border-b border-b-gray-200">
-									<Link className="block p-[20px]" to={`/dashboard/${slug}`}>
+									<Link className="block p-5" to={`/dashboard/${slug}`}>
 										{title}
 									</Link>
 								</li>
 							))
 						) : (
 							<li className="border-b border-b-gray-200">
-								<Link className="block p-[20px]" to="/session">
+								<Link className="block p-5" to="/session">
 									Iniciar sessão
 								</Link>
 							</li>
 						)}
 						<li className="border-b border-b-gray-200">
-							<Link className="block p-[20px]" to="/learning-path">
+							<Link className="block p-5" to="/learning-path">
 								Trilha de aprendizagem
 							</Link>
 						</li>
 						<li>
-							<Link className="block p-[20px]" to="/">
+							<Link className="block p-5" to="/">
 								Conteúdo extra
 							</Link>
 						</li>

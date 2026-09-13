@@ -44,10 +44,10 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 	return (
 		<div
 			key={card.title}
-			className="relative flex min-h-[460px] max-w-[460px] overflow-hidden rounded-md bg-[url('/assets/images/batthern-background.png')] shadow-[0_0_30px_#000000]/50"
+			className="relative flex min-h-115 max-w-115 overflow-hidden rounded-md bg-[url('/assets/images/batthern-background.png')] shadow-[0_0_30px_#000000]/50"
 		>
 			<div className="bg-module-background/80 flex flex-col">
-				<h2 className="flex gap-x-[12px] rounded-t-md border-b border-(--theme-color) p-[20px]">
+				<h2 className="flex gap-x-3 rounded-t-md border-b border-(--theme-color) p-5">
 					{card.title}
 					{progressState.doneModules.includes(card.moduleId) && (
 						<img src="/assets/images/icons/done.png" alt="Concluído" />
@@ -76,7 +76,7 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 						}
 					>
 						<p
-							className={`absolute left-[40px] flex items-center gap-x-3 transition-all duration-300 ${!isModuleBlocked && 'lg:group-hover:left-[302px]'}`}
+							className={`absolute left-10 flex items-center gap-x-3 transition-all duration-300 ${!isModuleBlocked && 'lg:group-hover:left-[302px]'}`}
 						>
 							{isModuleBlocked && (
 								<img src="/assets/images/icons/locked.png" alt="Bloqueado" />

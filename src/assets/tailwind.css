@@ -145,15 +145,15 @@
 
 @layer components {
 	.register-form-btn {
-		@apply from-main-green/40 to-main-purple/40 h-[50px] w-[200px] rounded-md border bg-linear-to-br lg:cursor-pointer lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/15;
+		@apply from-main-green/40 to-main-purple/40 h-[50px] w-50 rounded-md border bg-linear-to-br lg:cursor-pointer lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/15;
 	}
 
 	.form-btn {
-		@apply rounded-md border border-white/50 bg-white/10 px-[20px] py-[10px] text-center lg:cursor-pointer lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/10;
+		@apply rounded-md border border-white/50 bg-white/10 px-5 py-[10px] text-center lg:cursor-pointer lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/10;
 	}
 
 	.module-btn {
-		@apply flex w-[120px] items-center justify-center gap-x-2 rounded-md border-2 border-(--theme-color) bg-(--theme-color)/10 py-2 text-sm lg:w-[150px] lg:cursor-pointer lg:transition-[width,box-shadow] lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/5;
+		@apply flex w-30 items-center justify-center gap-x-2 rounded-md border-2 border-(--theme-color) bg-(--theme-color)/10 py-2 text-sm lg:w-[150px] lg:cursor-pointer lg:transition-[width,box-shadow] lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/5;
 	}
 
 	.support-fields {
@@ -161,6 +161,6 @@
 	}
 
 	.guide-cards {
-		@apply flex min-h-[250px] max-w-[360px] flex-col gap-y-[20px] rounded-md bg-black/40 p-[25px] shadow-[0_0_30px_black]/40 lg:transition-[scale] lg:duration-300 lg:hover:scale-105;
+		@apply flex min-h-[250px] max-w-90 flex-col gap-y-5 rounded-md bg-black/40 p-6 shadow-[0_0_30px_black]/40 lg:transition-[scale] lg:duration-300 lg:hover:scale-105;
 	}
 }

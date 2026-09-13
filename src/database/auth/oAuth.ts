@@ -12,6 +12,7 @@ import { getProgressStorage } from '../../services/progressStorage';
 import { isProgressInitialized } from '../../utils/progress';
 import { fetchInitialContent } from '../../content/services/fetchInitialContent';
 import type { ModuleData } from '../../types/content';
+import { DisplayableError } from '../../classes/DisplayableError';
 
 interface SignInWithGoogleProps {
 	modules: ModuleData[] | null;
@@ -23,7 +24,7 @@ export const signInWithGoogle = async ({ modules }: SignInWithGoogleProps) => {
 	const { displayName, email, photoURL, uid } = credential.user;
 
 	if (!email) {
-		throw new Error(
+		throw new DisplayableError(
 			'Não foi possível obter o e-mail da conta selecionada. Verifique as configurações da sua conta Google ou fale conosco.',
 		);
 	}
@@ -37,7 +38,7 @@ export const signInWithGoogle = async ({ modules }: SignInWithGoogleProps) => {
 		]);
 
 		if (!progressDoc.exists() || !navigationDoc.exists()) {
-			throw new Error(
+			throw new DisplayableError(
 				'Não foi possível acessar sua conta no momento. Entre em contato conosco para regularizar a situação.',
 			);
 		}
@@ -53,7 +54,7 @@ export const signInWithGoogle = async ({ modules }: SignInWithGoogleProps) => {
 	let finalProgress = getProgressStorage();
 	if (!isProgressInitialized(finalProgress)) {
 		if (!modules) {
-			throw new Error(
+			throw new DisplayableError(
 				'Conteúdo inicial ainda não carregado. Tente novamente em instantes.',
 			);
 		}

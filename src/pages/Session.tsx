@@ -4,9 +4,9 @@ import { SessionForm } from '../components/SessionForm';
 export function Session() {
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<div className="bg-forms relative mx-[10px] my-[120px] flex min-h-[500px] w-full max-w-[500px] rounded-lg shadow-[0_0_20px_#ffffff]/10">
+			<div className="bg-forms relative mx-[10px] my-30 flex min-h-125 w-full max-w-125 rounded-lg shadow-[0_0_20px_#ffffff]/10">
 				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-20'></div>
-				<div className="relative flex w-full flex-col items-start justify-center p-[40px]">
+				<div className="relative flex w-full flex-col items-start justify-center p-10">
 					<h1 className="mb-10 text-2xl font-bold tracking-wide">
 						Iniciar sessão
 					</h1>

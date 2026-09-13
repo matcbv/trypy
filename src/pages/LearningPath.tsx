@@ -16,7 +16,7 @@ export function LearningPath() {
 		return isLoading.modules || isLoading.moduleCards ? (
 			<LoadingPage />
 		) : (
-			<div className="font-jetbrains mx-[10px] my-[120px] flex min-h-screen justify-center sm:mx-0">
+			<div className="font-jetbrains mx-[10px] my-30 flex min-h-screen justify-center sm:mx-0">
 				<div className="flex flex-col items-center justify-center gap-y-[230px]">
 					{moduleCards!.map((card) => (
 						<div

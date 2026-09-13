@@ -33,10 +33,10 @@ export function Support() {
 
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<div className="relative mx-[20px] my-[120px] max-w-[400px] lg:max-w-[800px]">
+			<div className="relative mx-5 my-30 max-w-100 lg:max-w-200">
 				<div className="mb-10">
 					<h1 className="text-main-purple text-title-5xl mb-10">Contate-nos</h1>
-					<form className="border-l-main-purple grid grid-cols-1 gap-x-10 gap-y-5 border-l pl-4 lg:max-h-[280px] lg:grid-cols-2 lg:grid-rows-2">
+					<form className="border-l-main-purple grid grid-cols-1 gap-x-10 gap-y-5 border-l pl-4 lg:max-h-70 lg:grid-cols-2 lg:grid-rows-2">
 						<div className="col-start-1 row-start-1 flex flex-col justify-around gap-y-4">
 							<div className="flex flex-col gap-y-1">
 								<label htmlFor="subject" className="text-sm">
@@ -76,7 +76,7 @@ export function Support() {
 						<input
 							type="submit"
 							value="Enviar"
-							className="border-main-purple lg:hover:bg-main-purple/70 bg-main-purple/20 order-2 w-[150px] self-end rounded-md border py-[8px] text-sm transition-all duration-300 lg:order-1 lg:col-start-1 lg:row-start-2 lg:cursor-pointer lg:hover:shadow-[0_0_15px_#7955c270]"
+							className="border-main-purple lg:hover:bg-main-purple/70 bg-main-purple/20 order-2 w-[150px] self-end rounded-md border py-2 text-sm transition-all duration-300 lg:order-1 lg:col-start-1 lg:row-start-2 lg:cursor-pointer lg:hover:shadow-[0_0_15px_#7955c270]"
 						/>
 						<div className="order-1 flex flex-col gap-y-2 lg:order-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
 							<label htmlFor="description" className="text-sm">
@@ -115,7 +115,7 @@ export function Support() {
 										<img
 											src={`/assets/images/icons/${key}.png`}
 											alt={title}
-											className="size-[24px]"
+											className="w-6"
 										/>
 										{title}
 									</p>
@@ -136,7 +136,7 @@ export function Support() {
 													: '/assets/images/icons/copy.png'
 											}
 											alt="Copiar"
-											className="absolute -right-[25px] w-5 origin-left lg:scale-0 lg:cursor-pointer lg:transition-transform lg:group-hover:scale-100"
+											className="absolute -right-6 w-5 origin-left lg:scale-0 lg:cursor-pointer lg:transition-transform lg:group-hover:scale-100"
 											onClick={() => void copyText(key, value)}
 											role="button"
 											tabIndex={0}

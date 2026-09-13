@@ -35,14 +35,14 @@ export function AboutUs() {
 	const [iconHovered, setIconHovered] = useState('');
 
 	return (
-		<div className="mx-[20px] flex flex-col items-center">
-			<section className="group my-[120px] flex flex-col-reverse items-start gap-x-15 gap-y-10 lg:flex-row lg:items-center">
+		<div className="mx-5 flex flex-col items-center">
+			<section className="group my-30 flex flex-col-reverse items-start gap-x-15 gap-y-10 lg:flex-row lg:items-center">
 				<img
 					src="/assets/images/trycode-logo.png"
 					alt="TryCode"
 					className="w-about-logo"
 				/>
-				<div className="max-w-[600px]">
+				<div className="max-w-150">
 					<h1 className="text-title-4xl mb-5 font-bold tracking-wide">
 						Conheça a{' '}
 						<span className="bg-trycode bg-size-[200%_100%] bg-clip-text bg-left text-transparent transition-[background-position] duration-500 ease-in-out group-hover:bg-right">
@@ -74,18 +74,18 @@ export function AboutUs() {
 				</div>
 			</section>
 			<span className="block h-[2px] bg-white/50 bg-linear-to-r"></span>
-			<section className="mt-[40px] mb-[120px] flex flex-col justify-center">
-				<h1 className="text-title-4xl mb-[40px] font-bold lg:mb-[80px]">
+			<section className="mt-10 mb-30 flex flex-col justify-center">
+				<h1 className="text-title-4xl mb-10 font-bold lg:mb-20">
 					Conheça nossa equipe
 				</h1>
 				<div className="flex flex-col">
-					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-[40px] gap-y-[20px] lg:flex-row lg:gap-y-0">
+					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-10 gap-y-5 lg:flex-row lg:gap-y-0">
 						<div className="flex max-w-[150px] flex-col justify-between gap-y-[10px] self-center lg:gap-y-0 lg:self-stretch">
 							<div>
 								<img
 									src="/assets/images/matheus.png"
-									alt="Foto Matheus"
-									className="mb-2 size-[150px] rounded-full object-cover shadow-[0_0_20px_var(--color-glow-green)]/30"
+									alt="Matheus"
+									className="mb-2 rounded-full shadow-[0_0_20px_var(--color-glow-green)]/30"
 								/>
 								<h3 className="text-center text-sm font-bold">
 									Criador e Professor da plataforma TryPy
@@ -104,7 +104,7 @@ export function AboutUs() {
 								))}
 							</div>
 						</div>
-						<div className="flex max-w-[600px] flex-col justify-between gap-y-[20px] lg:gap-y-0">
+						<div className="flex max-w-150 flex-col justify-between gap-y-5 lg:gap-y-0">
 							<div>
 								<h2 className="text-main-green text-title-3xl mb-4 font-bold">
 									Matheus Cerqueira
@@ -128,19 +128,19 @@ export function AboutUs() {
 								<img
 									src={`/assets/images/icons/linktree-${iconHovered === 'lt-matheus' ? 'black' : 'white'}.png`}
 									alt="Linktree"
-									className="size-[24px] opacity-100"
+									className="opacity-100"
 								/>
 							</a>
 						</div>
 					</div>
-					<span className="from-main-green to-main-purple my-[80px] block h-[2px] max-w-[1000px] bg-linear-to-r"></span>
-					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-[40px] gap-y-[20px] lg:flex-row-reverse lg:gap-y-0">
+					<span className="from-main-green to-main-purple my-20 block h-[2px] bg-linear-to-r"></span>
+					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-10 gap-y-5 lg:flex-row-reverse lg:gap-y-0">
 						<div className="flex max-w-[150px] flex-col justify-between gap-y-[10px] self-center lg:gap-y-0 lg:self-stretch">
 							<div>
 								<img
 									src="/assets/images/daniel.png"
-									alt="Foto Daniel"
-									className="mb-2 size-[150px] rounded-full shadow-[0_0_20px_var(--color-main-purple)]/30"
+									alt="Daniel"
+									className="mb-2 rounded-full shadow-[0_0_20px_var(--color-main-purple)]/30"
 								/>
 								<h3 className="text-center text-sm font-bold">
 									Professor da plataforma TryPy
@@ -159,7 +159,7 @@ export function AboutUs() {
 								))}
 							</div>
 						</div>
-						<div className="flex max-w-[600px] flex-col justify-between gap-y-[20px] lg:gap-y-0">
+						<div className="flex max-w-150 flex-col justify-between gap-y-5 lg:gap-y-0">
 							<div>
 								<h2 className="text-main-purple text-title-3xl mb-4 font-bold">
 									Daniel Ferrari
@@ -183,7 +183,7 @@ export function AboutUs() {
 								<img
 									src={`/assets/images/icons/linktree-${iconHovered === 'lt-daniel' ? 'black' : 'white'}.png`}
 									alt="Linktree"
-									className="size-[24px] opacity-100"
+									className="opacity-100"
 								/>
 							</a>
 						</div>

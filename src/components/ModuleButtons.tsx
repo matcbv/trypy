@@ -222,7 +222,7 @@ export function ModuleButtons({
 	};
 
 	return (
-		<div className="flex justify-end gap-x-[25px]">
+		<div className="flex justify-end gap-x-6">
 			<button
 				type="button"
 				className="module-btn group"

@@ -115,8 +115,8 @@ export function ProfileForm() {
 			onSubmit={(e) => void handleSubmit(e)}
 		>
 			<PictureInput />
-			<div className="mb-[15px] w-full">
-				<h2 className="mb-[15px] text-lg">Dados básicos</h2>
+			<div className="mb-3 w-full">
+				<h2 className="mb-3 text-lg">Dados básicos</h2>
 				<div className="flex flex-col gap-y-3">
 					{(Object.keys(currentData) as Array<keyof typeof currentData>).map(
 						(key) => {
@@ -127,7 +127,7 @@ export function ProfileForm() {
 									value={currentData[key]}
 									placeholder={placeholders[key]}
 									onChange={handleChange}
-									className={`border-main-green/70 focus:border-main-green w-full max-w-[300px] rounded-md border-2 bg-white/5 py-2 pr-9 pl-3 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10 ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
+									className={`border-main-green/70 focus:border-main-green w-full max-w-75 rounded-md border-2 bg-white/5 px-3 py-2 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10 ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
 									type="text"
 								/>
 							);

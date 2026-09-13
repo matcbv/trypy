@@ -161,7 +161,7 @@ export function RegisterForm() {
 						id="birthDate"
 						onChange={handleChange}
 						value={userData.birthDate}
-						className={`focus:border-main-green w-full rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 tracking-wide transition-colors duration-300 outline-none ${!placeholders.birthDate ? 'placeholder-gray-400' : 'placeholder-red-400'}`}
+						className={`focus:border-main-green w-full rounded-full border-2 border-white/30 bg-white/5 px-3 py-1 tracking-wide transition-colors duration-300 outline-none ${!placeholders.birthDate ? 'placeholder-gray-400' : 'placeholder-red-400'}`}
 					/>
 				);
 			default:
@@ -172,7 +172,7 @@ export function RegisterForm() {
 						onChange={handleChange}
 						value={userData[key]}
 						placeholder={placeholders[key]}
-						className="focus:border-main-green w-full rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 placeholder-red-400 transition-colors duration-300 outline-none"
+						className="focus:border-main-green w-full rounded-full border-2 border-white/30 bg-white/5 px-3 py-1 placeholder-red-400 transition-colors duration-300 outline-none"
 					/>
 				);
 		}

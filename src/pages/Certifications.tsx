@@ -1,7 +1,7 @@
 export function Certifications() {
 	return (
 		<div>
-			<h1 className="mb-[40px] text-2xl font-bold tracking-wide">
+			<h1 className="mb-10 text-2xl font-bold tracking-wide">
 				Meus certificados
 			</h1>
 			<div className="flex flex-col items-center justify-center gap-y-5 opacity-60">

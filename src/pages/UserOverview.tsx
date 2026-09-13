@@ -76,13 +76,13 @@ export function UserOverview() {
 	};
 
 	return (
-		<div className="flex flex-col gap-y-[40px]">
+		<div className="flex flex-col gap-y-10">
 			<div>
 				<h1 className="mb-8 text-2xl font-bold">
 					Olá, {authState.data?.name}!
 				</h1>
 				<h2 className="mb-2 text-lg">Dados da conta:</h2>
-				<div className="flex flex-col items-start gap-y-2 rounded-md bg-black/40 p-[15px] shadow-[0_0_20px_#000000]/50 sm:max-w-[300px]">
+				<div className="flex flex-col items-start gap-y-2 rounded-md bg-black/40 p-5 shadow-[0_0_20px_#000000]/50 sm:max-w-75">
 					<div className="group relative flex items-center">
 						<p className="flex gap-x-2">
 							ID de usuário:
@@ -122,7 +122,7 @@ export function UserOverview() {
 			</div>
 			<div>
 				<h2 className="mb-2 text-lg tracking-wide">Progresso da trilha</h2>
-				<div className="flex flex-col items-center justify-center gap-y-[25px] rounded-md bg-black/40 p-[25px] shadow-[0_0_20px_#000000]/50 sm:flex-row sm:gap-x-[25px] sm:gap-y-0">
+				<div className="flex flex-col items-center justify-center gap-y-6 rounded-md bg-black/40 p-6 shadow-[0_0_20px_#000000]/50 sm:flex-row sm:gap-x-6 sm:gap-y-0">
 					<ProgressBar progressPercentual={progressPercentual} />
 					<div className="flex flex-col gap-y-5">
 						<p className="flex flex-col">

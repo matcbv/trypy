@@ -6,7 +6,7 @@ export function ProgressBar({
 	const perimeter = 2 * Math.PI * 80;
 
 	return (
-		<svg className="h-[200px] w-[200px] shrink-0 rounded-full shadow-[0_0_15px_#ffffff]/10">
+		<svg className="h-50 w-50 shrink-0 rounded-full shadow-[0_0_15px_#ffffff]/10">
 			<circle
 				cx={100}
 				cy={100}

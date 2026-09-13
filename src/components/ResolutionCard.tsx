@@ -52,7 +52,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 
 	return (
 		<div key={slug} className="bg-terminal-background rounded-md">
-			<div className="border-b-main-purple flex items-center justify-between gap-x-[20px] border-b p-[10px]">
+			<div className="border-b-main-purple flex items-center justify-between gap-x-5 border-b p-[10px]">
 				<h1 className="font-jetbrains text-xs">{title}</h1>
 				<span className="flex shrink-0 gap-x-3">
 					<img
@@ -86,7 +86,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 						<img
 							src="/assets/images/icons/success.png"
 							alt="Copiado"
-							className="size-[20px]"
+							className="w-6"
 						/>
 					) : (
 						<img
@@ -101,7 +101,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 				</span>
 			</div>
 			<div
-				className={`transition-[height, opacity] codeScrollbar overflow-y-scroll duration-300 ${isVisible ? 'h-[200px] opacity-100' : 'h-[15px] opacity-0'}`}
+				className={`transition-[height, opacity] codeScrollbar overflow-y-scroll duration-300 ${isVisible ? 'h-50 opacity-100' : 'h-5 opacity-0'}`}
 			>
 				{isVisible && (
 					<div
