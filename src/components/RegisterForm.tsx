@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { useNavigate } from 'react-router-dom';
-import { dateFormatter } from '../utils/dateFormatter';
+import { dateFormatter } from '../utils/formatter';
 import { PasswordInput } from './PasswordInput';
 import { signUpWithCredentials } from '../database/auth/auth';
 import { validationRegex } from '../constants/validationRegex';
