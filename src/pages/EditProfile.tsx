@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { ProfileForm } from '../components/ProfileForm';
 import { Link, useNavigate } from 'react-router-dom';
-import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { FirebaseError } from 'firebase/app';
-import { auth } from '../database/configs/firebase';
+import { auth, db } from '../database/configs/firebase';
 import {
 	deleteUser,
 	EmailAuthProvider,
@@ -14,9 +13,8 @@ import {
 	reauthenticateWithCredential,
 } from 'firebase/auth';
 import { idGenerator } from '../utils/idGenerator';
-import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { logError, logSuccess, logWarning } from '../utils/logger';
-import { deleteDoc } from 'firebase/firestore';
+import { writeBatch } from 'firebase/firestore';
 import {
 	userDataRef,
 	userNavigationRef,
@@ -61,7 +59,7 @@ export function EditProfile() {
 				if (userPassword.length <= 0) return;
 
 				const credential = EmailAuthProvider.credential(
-					authState.data!.email!,
+					authState.data!.email,
 					userPassword,
 				);
 				await reauthenticateWithCredential(currentUser, credential);
@@ -74,6 +72,11 @@ export function EditProfile() {
 
 			setIsDeleting(true);
 
+			const batch = writeBatch(db);
+			batch.delete(userDataRef(authState.uid!));
+			batch.delete(userProgressRef(authState.uid!));
+			batch.delete(userNavigationRef(authState.uid!));
+			await batch.commit();
 			await deleteUser(currentUser);
 
 			await logout();
