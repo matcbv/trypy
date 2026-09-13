@@ -29,15 +29,15 @@ export type SubtopicSkeleton = EntrySkeletonType<
 	{
 		title: EntryFieldTypes.Symbol;
 		content: EntryFieldTypes.RichText;
-		videoDescription: EntryFieldTypes.Symbol | undefined;
-		videoLink: EntryFieldTypes.Symbol | undefined;
+		videoDescription?: EntryFieldTypes.Symbol;
+		videoLink?: EntryFieldTypes.Symbol;
 		slug: EntryFieldTypes.Symbol;
 		order: EntryFieldTypes.Integer;
 		subtopicType: EntryFieldTypes.Symbol;
-		solutionCode: EntryFieldTypes.Text | undefined;
-		testCode: EntryFieldTypes.Text | undefined;
-		starterCode: EntryFieldTypes.Text | undefined;
-		expectedOutput: EntryFieldTypes.Text | undefined;
+		solutionCode?: EntryFieldTypes.Text;
+		testCode?: EntryFieldTypes.Text;
+		starterCode?: EntryFieldTypes.Text;
+		expectedOutput?: EntryFieldTypes.Text;
 	},
 	'subtopic'
 >;

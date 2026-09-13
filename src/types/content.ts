@@ -21,15 +21,15 @@ export interface TopicData {
 export interface SubtopicData {
 	title: string;
 	content: Document;
-	videoDescription: string | null;
-	videoLink: string | null;
+	videoDescription?: string;
+	videoLink?: string;
 	slug: string;
 	order: number;
 	subtopicType: SubtopicTypes;
-	solutionCode: string | null;
-	testCode: string | null;
-	starterCode: string | null;
-	expectedOutput: string | null;
+	solutionCode?: string;
+	testCode?: string;
+	starterCode?: string;
+	expectedOutput?: string;
 }
 
 export interface ModuleCardData {
