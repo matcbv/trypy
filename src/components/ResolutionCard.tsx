@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { useNavigate } from 'react-router-dom';
-import { fetchContent } from '../content/services/fetchContent';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
-import { highlightCode } from '../utils/highlightCode';
+import { highlightCode } from '../lib/shiki';
+import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
 
 interface ResolutionCardProps {
 	slug: string;
@@ -12,6 +12,7 @@ interface ResolutionCardProps {
 }
 
 export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
+	const { modules } = useSafeContext(ContentfulContentContext);
 	const [isCopied, setIsCopied] = useState(false);
 	const [isVisible, setIsVisible] = useState(false);
 	const { setNavigationState } = useSafeContext(NavigationContext);
@@ -27,32 +28,26 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 		}, 2000);
 	};
 
-	const navigateToExercise = async (slug: string) => {
-		const content = await fetchContent({ contentType: 'module', include: 2 });
-
-		const module = content.find((module) =>
-			module.fields.topics.some((topic) =>
-				topic!.fields.subtopics.some(
-					(subtopic) => subtopic!.fields.slug === slug,
-				),
+	const navigateToExercise = (slug: string) => {
+		const module = modules!.find((module) =>
+			module.topics.some((topic) =>
+				topic.subtopics.some((subtopic) => subtopic.slug === slug),
 			),
 		);
 
-		const topic = module!.fields.topics.find((topic) =>
-			topic!.fields.subtopics.some(
-				(subtopic) => subtopic!.fields.slug === slug,
-			),
+		const topic = module!.topics.find((topic) =>
+			topic.subtopics.some((subtopic) => subtopic.slug === slug),
 		);
 
 		setNavigationState((prev) => ({
 			...prev,
-			[module!.fields.order]: {
-				currentTopic: topic!.fields.slug,
+			[module!.order]: {
+				currentTopic: topic!.slug,
 				currentSubtopic: slug,
 			},
 		}));
 
-		void navigate(`/learning-path/${module!.fields.slug}`);
+		void navigate(`/learning-path/${module!.slug}`);
 	};
 
 	return (
