@@ -7,10 +7,11 @@ import { catppuccinFrappe } from '@catppuccin/codemirror';
 import { LoadingPage } from '../pages/LoadingPage';
 import type { SubtopicData } from '../types/content';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
-import { updateDoc } from 'firebase/firestore';
+import { writeBatch } from 'firebase/firestore';
 import { userDataRef, userProgressRef } from '../database/refs/userRefs';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { logError, logSuccess } from '../utils/logger';
+import { db } from '../database/configs/firebase';
 
 export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 	const { authState } = useSafeContext(AuthContext);
@@ -42,7 +43,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 					}));
 
 					const resolutions = [
-						...authState.data!.resolutions!,
+						...authState.data!.resolutions,
 						{
 							slug: subtopicData.slug,
 							title: subtopicData.title,
@@ -51,8 +52,10 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 					];
 
 					if (authState.uid) {
-						await updateDoc(userDataRef(authState.uid), { resolutions });
-						await updateDoc(userProgressRef(authState.uid), { doneSubtopics });
+						const batch = writeBatch(db);
+						batch.update(userDataRef(authState.uid), { resolutions });
+						batch.update(userProgressRef(authState.uid), { doneSubtopics });
+						await batch.commit();
 					}
 
 					setTerminalState((prev) => ({ ...prev, solved: false }));
@@ -146,12 +149,12 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 			<div className="flex gap-x-10">
 				<button
 					type="button"
-					className="border-main-green/60 hover:bg-main-green/20 w-[150px] cursor-pointer rounded-md border bg-white/5 py-3 text-sm tracking-wide text-white transition-colors duration-300"
+					className="border-main-green/60 lg:hover:bg-main-green/20 w-[150px] rounded-md border bg-white/5 py-3 text-sm tracking-wide lg:cursor-pointer lg:transition-colors lg:duration-300"
 					onClick={() =>
 						runCode({
 							userCode,
-							testCode: subtopicData.testCode,
-							expectedOutput: subtopicData.expectedOutput,
+							testCode: subtopicData.testCode || null,
+							expectedOutput: subtopicData.expectedOutput || null,
 						})
 					}
 				>
@@ -159,7 +162,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 				</button>
 				<button
 					type="button"
-					className="border-main-red/60 hover:bg-main-red/20 w-[150px] cursor-pointer rounded-md border bg-white/5 py-3 text-sm tracking-wide transition-colors duration-300"
+					className="border-main-red/60 lg:hover:bg-main-red/20 w-[150px] rounded-md border bg-white/5 py-3 text-sm tracking-wide lg:cursor-pointer lg:transition-colors lg:duration-300"
 					onClick={stopCodeExecution}
 				>
 					Interromper

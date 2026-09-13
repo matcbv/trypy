@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import initialState from './initialState';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { TerminalState } from '../../types/states';
 import { TerminalContext } from './context';
 import type { WorkerRequest, WorkerResponse } from '../../types/workers';
@@ -41,17 +41,7 @@ export function TerminalProvider() {
 		return { solved: true };
 	}
 
-	useEffect(() => {
-		const worker = createWorker();
-
-		workerRef.current = worker;
-
-		return () => {
-			worker.terminate();
-		};
-	}, []);
-
-	function createWorker() {
+	const createWorker = useCallback(() => {
 		const worker = new Worker(
 			new URL('../../workers/pyodide.worker.ts', import.meta.url),
 			{ type: 'module' },
@@ -115,13 +105,27 @@ export function TerminalProvider() {
 		};
 
 		return worker;
-	}
+	}, []);
+
+	useEffect(() => {
+		const worker = createWorker();
+
+		workerRef.current = worker;
+
+		return () => {
+			worker.terminate();
+		};
+	}, [createWorker]);
 
 	// * Função responsável por rodar o código do usuário.
 	function runCode({ userCode, testCode, expectedOutput }: RunCodeParams) {
 		if (!workerRef.current || !userCode) return;
-		setTerminalState((prev) => ({ ...prev, output: null, error: null }));
-		setTerminalState((prev) => ({ ...prev, status: 'running' }));
+		setTerminalState((prev) => ({
+			...prev,
+			output: null,
+			error: null,
+			status: 'running',
+		}));
 		expectedOutputRef.current = expectedOutput;
 		outputBufferRef.current = '';
 		postMessageWrapper(workerRef.current, {
