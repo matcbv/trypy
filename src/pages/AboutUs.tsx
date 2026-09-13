@@ -120,7 +120,7 @@ export function AboutUs() {
 								href=""
 								rel="noopener noreferrer"
 								target="_blank"
-								className="border-main-green hover:bg-main-green flex h-[50px] w-[150px] cursor-pointer items-center justify-center gap-x-2 rounded-md border-2 font-bold transition-all hover:border-black hover:text-black"
+								className="border-main-green hover:bg-main-green flex h-[50px] w-[150px] items-center justify-center gap-x-2 rounded-md border-2 font-bold transition-all hover:border-black hover:text-black"
 								onMouseEnter={() => setIconHovered('lt-matheus')}
 								onMouseLeave={() => setIconHovered('')}
 							>
@@ -175,7 +175,7 @@ export function AboutUs() {
 								href=""
 								rel="noopener noreferrer"
 								target="_blank"
-								className="border-main-purple hover:bg-main-purple flex h-[50px] w-[150px] cursor-pointer items-center justify-center gap-x-2 rounded-md border-2 font-bold transition-all hover:border-black hover:text-black"
+								className="border-main-purple hover:bg-main-purple flex h-[50px] w-[150px] items-center justify-center gap-x-2 rounded-md border-2 font-bold transition-all hover:border-black hover:text-black"
 								onMouseEnter={() => setIconHovered('lt-daniel')}
 								onMouseLeave={() => setIconHovered('')}
 							>

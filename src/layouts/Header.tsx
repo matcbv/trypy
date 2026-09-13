@@ -161,7 +161,7 @@ export function Header() {
 							ref={navIconRef}
 							src="/assets/images/icons/menu.png"
 							alt="Menu"
-							className="w-[28px] cursor-pointer"
+							className="w-[28px]"
 							onClick={() => setIsMenuOpen((prev) => !prev)}
 							role="button"
 							tabIndex={0}
@@ -170,7 +170,7 @@ export function Header() {
 							<img
 								src="/assets/images/icons/logout.png"
 								alt="Deslogar"
-								className="w-[28px] cursor-pointer"
+								className="w-[28px]"
 								onClick={() => void logoutWrapper()}
 								role="button"
 								tabIndex={0}
@@ -184,10 +184,7 @@ export function Header() {
 					<ul className="flex flex-col text-sm">
 						{authState.data ? (
 							objectsMap.map(({ slug, title }) => (
-								<li
-									key={slug}
-									className="cursor-pointer border-b border-b-gray-200"
-								>
+								<li key={slug} className="border-b border-b-gray-200">
 									<Link className="block p-[20px]" to={`/dashboard/${slug}`}>
 										{title}
 									</Link>

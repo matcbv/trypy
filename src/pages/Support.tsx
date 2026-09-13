@@ -76,7 +76,7 @@ export function Support() {
 						<input
 							type="submit"
 							value="Enviar"
-							className="border-main-purple order-2 w-[150px] cursor-pointer self-end rounded-md border bg-[#7955c2]/20 py-2 text-sm transition-all duration-300 hover:shadow-[0_0_15px_#7955c270] lg:order-1 lg:col-start-1 lg:row-start-2 lg:hover:bg-[#7955c2]/70"
+							className="border-main-purple order-2 w-[150px] self-end rounded-md border bg-[#7955c2]/20 py-2 text-sm transition-all duration-300 lg:order-1 lg:col-start-1 lg:row-start-2 lg:cursor-pointer lg:hover:bg-[#7955c2]/70 lg:hover:shadow-[0_0_15px_#7955c270]"
 						/>
 						<div className="order-1 flex flex-col gap-y-2 lg:order-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
 							<label htmlFor="description" className="text-sm">
@@ -119,16 +119,16 @@ export function Support() {
 										/>
 										{title}
 									</p>
-									<p
-										className="group flex cursor-pointer items-center gap-x-2 transition-colors"
-										onMouseLeave={() =>
-											setTimeout(
-												() => setIsCopied((prev) => ({ ...prev, key: false })),
-												100,
-											)
-										}
-									>
-										<span className="lg:hover:text-main-green">{value}</span>
+									<div className="group relative flex items-center">
+										<p
+											className="lg:hover:text-main-green flex items-center gap-x-2 transition-colors lg:cursor-pointer"
+											onClick={() => void copyText(key, value)}
+											onMouseLeave={() =>
+												setIsCopied((prev) => ({ ...prev, [key]: false }))
+											}
+										>
+											{value}
+										</p>
 										<img
 											src={
 												isCopied[key]
@@ -136,12 +136,12 @@ export function Support() {
 													: '/assets/images/icons/copy.png'
 											}
 											alt="Copiar"
-											className="w-5 origin-left cursor-pointer transition-transform lg:scale-0 lg:group-hover:scale-100"
+											className="absolute -right-[25px] w-5 origin-left lg:scale-0 lg:cursor-pointer lg:transition-transform lg:group-hover:scale-100"
 											onClick={() => void copyText(key, value)}
 											role="button"
 											tabIndex={0}
 										/>
-									</p>
+									</div>
 								</div>
 							</div>
 						))}

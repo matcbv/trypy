@@ -91,27 +91,35 @@ export function UserOverview() {
 					Olá, {authState.data?.name}!
 				</h1>
 				<h2 className="mb-2 text-lg">Dados da conta:</h2>
-				<div className="flex flex-col gap-y-2 rounded-md bg-black/40 p-[15px] shadow-[0_0_20px_#000000]/50 sm:max-w-[300px]">
-					<p className="flex gap-x-2">
-						ID de usuário:
-						<span
-							className="group hover:text-main-purple relative flex cursor-pointer items-center transition-colors"
+				<div className="flex flex-col items-start gap-y-2 rounded-md bg-black/40 p-[15px] shadow-[0_0_20px_#000000]/50 sm:max-w-[300px]">
+					<div className="group relative flex items-center">
+						<p className="flex gap-x-2">
+							ID de usuário:
+							<span
+								className="lg:hover:text-main-purple lg:cursor-pointer lg:transition-colors"
+								onClick={(e) =>
+									void copyText(e.currentTarget.textContent.replace('#', ''))
+								}
+								onMouseLeave={() => setIsCopied(false)}
+							>
+								<span className="text-main-purple mr-0.5">#</span>
+								{authState.data?.id}
+							</span>
+						</p>
+						<img
+							src={`/assets/images/icons/${isCopied ? 'success' : 'copy'}.png`}
+							alt="Copiar"
+							tabIndex={0}
+							role="button"
+							className="absolute -right-6 w-[18px] origin-left lg:scale-0 lg:cursor-pointer lg:transition-transform lg:group-hover:scale-100"
 							onClick={(e) =>
 								void copyText(e.currentTarget.textContent.replace('#', ''))
 							}
-							onMouseLeave={() => setTimeout(() => setIsCopied(false), 100)}
-						>
-							<span className="text-main-purple mr-0.5">#</span>
-							{authState.data?.id}
-							<img
-								src={`/assets/images/icons/${isCopied ? 'success' : 'copy'}.png`}
-								alt="Copiar"
-								className="ml-1 w-4 origin-left scale-0 cursor-pointer transition-transform group-hover:scale-100"
-							/>
-						</span>
-					</p>
+						/>
+					</div>
+
 					<p className="flex items-center gap-x-1">
-						Criada em: <span>{accountDate()}</span>
+						Criada em: <span>{accountDate}</span>
 					</p>
 					<p>
 						Apoiador(a):{' '}
@@ -128,20 +136,20 @@ export function UserOverview() {
 					<div className="flex flex-col gap-y-5">
 						<p className="flex flex-col">
 							Módulo atual:{' '}
-							<span className="cursor-pointer font-bold text-[#29bd5f]">
-								{titles.module || <SkeletonLoader height={24} width={270} />}
+							<span className="font-bold text-[#29bd5f]">
+								{titles.module || <SkeletonLoader height={24} width={250} />}
 							</span>
 						</p>
 						<p className="flex flex-col">
 							Tópico atual:{' '}
-							<span className="cursor-pointer font-bold text-[#29bd5f]">
-								{titles.topic || <SkeletonLoader height={24} width={270} />}
+							<span className="font-bold text-[#29bd5f]">
+								{titles.topic || <SkeletonLoader height={24} width={250} />}
 							</span>
 						</p>
 						<p className="flex flex-col">
 							Subtópico atual:{' '}
-							<span className="cursor-pointer font-bold text-[#29bd5f]">
-								{titles.subtopic || <SkeletonLoader height={24} width={270} />}
+							<span className="font-bold text-[#29bd5f]">
+								{titles.subtopic || <SkeletonLoader height={24} width={250} />}
 							</span>
 						</p>
 					</div>

@@ -77,7 +77,7 @@ export function SubtopicDropdown({
 						/>
 					)}
 					<p
-						className="hover:cursor-pointer"
+						className="lg:cursor-pointer"
 						onClick={() => void changeSubtopic(subtopic)}
 					>
 						{subtopic?.title}

@@ -108,11 +108,8 @@ export function SessionForm() {
 	return isSubmitting ? (
 		<LoadingPage />
 	) : (
-		<form
-			className="mb-5 flex flex-col gap-y-10"
-			onSubmit={(e) => void handleSubmit(e)}
-		>
-			<div className="flex max-w-[350px] flex-col gap-y-6 text-sm">
+		<form className="mb-[25px] w-full" onSubmit={(e) => void handleSubmit(e)}>
+			<div className="mb-[25px] flex max-w-[350px] flex-col gap-y-6 text-sm">
 				{Object.entries(userCredentials).map(([key, value]) => (
 					<div
 						className="border-b-main-green relative flex w-full items-end border-b-2"
@@ -130,9 +127,9 @@ export function SessionForm() {
 						/>
 						{key === 'password' && (
 							<img
-								className="absolute right-1 cursor-pointer"
+								className="absolute right-1 lg:cursor-pointer"
 								onClick={() => setIsVisible((prev) => !prev)}
-								src={`/assets/images/icons/${isVisible ? 'hide' : 'visible'}.png`}
+								src={`/assets/images/icons/${isVisible ? 'hide' : 'show'}.png`}
 								alt="Mostrar senha"
 							/>
 						)}
@@ -143,7 +140,7 @@ export function SessionForm() {
 				<div className="flex items-center gap-x-5">
 					<input className="form-btn" type="submit" value="Acessar conta" />
 					<img
-						className="cursor-pointer transition-transform duration-300 hover:scale-110"
+						className="lg:cursor-pointer lg:transition-transform lg:duration-300 lg:hover:scale-110"
 						src="/assets/images/icons/google.png"
 						alt="Google"
 						onClick={() => void handleGoogle()}
@@ -151,7 +148,7 @@ export function SessionForm() {
 						tabIndex={0}
 					/>
 					<img
-						className="cursor-pointer transition-transform duration-300 hover:scale-110"
+						className="lg:cursor-pointer lg:transition-transform lg:duration-300 lg:hover:scale-110"
 						src="/assets/images/icons/github.png"
 						alt="GitHub"
 						onClick={() => void handleGitHub()}

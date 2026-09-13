@@ -84,7 +84,7 @@ export function contentfulFormatter(content: Document) {
 					<img
 						src={file.url}
 						alt={title}
-						className="size-[400px] self-center opacity-80"
+						className="size-[400px] self-center object-contain opacity-80"
 						draggable={false}
 					/>
 				);

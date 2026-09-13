@@ -36,11 +36,11 @@ export function PasswordInput({
 					className="focus:border-main-green min-h-[36px] w-full rounded-full border-2 border-white/30 bg-white/5 py-1 pr-9 pl-3 text-base leading-6 placeholder-red-400 transition-colors duration-300 outline-none"
 				/>
 				<img
-					className="absolute right-3 cursor-pointer"
+					className="absolute right-3 lg:cursor-pointer"
 					onClick={() => setIsVisible((prev) => !prev)}
 					onBlur={toggleText}
 					onFocus={() => setHideText(false)}
-					src={`/assets/images/icons/${isVisible ? 'hide' : 'visible'}.png`}
+					src={`/assets/images/icons/${isVisible ? 'hide' : 'show'}.png`}
 					alt={isVisible ? 'Esconder senha' : 'Exibir senha'}
 					role="button"
 					tabIndex={0}

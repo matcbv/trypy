@@ -52,7 +52,7 @@ export function HeroBanner() {
 					A melhor maneira de aprender é praticando!
 				</p>
 				<Link
-					className="border-main-green lg:hover:bg-main-green text-hero-subtitle px-section-btn-x py-section-btn-y hover: z-20 cursor-pointer rounded-md border-2 bg-white/5 text-white transition-all duration-300 lg:hover:border-black lg:hover:text-black"
+					className="border-main-green text-hero-subtitle px-section-btn-x py-section-btn-y lg:hover:bg-main-green z-20 rounded-md border-2 bg-white/5 duration-300 lg:transition-all lg:hover:border-black lg:hover:text-black"
 					to="/learning-path"
 				>
 					Vamos lá!

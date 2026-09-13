@@ -32,7 +32,10 @@ export function Footer() {
 				<ul className="flex flex-wrap justify-center gap-x-7 gap-y-2 sm:gap-x-10">
 					{Object.entries(footerMap).map(([key, value]) => (
 						<li key={key}>
-							<Link to={`/${key}`} className="footer-links">
+							<Link
+								to={`/${key}`}
+								className="border-l-main-green lg:hover:text-main-green border-l-2 pl-2 text-sm sm:text-base lg:transition-colors lg:duration-300"
+							>
 								{value}
 							</Link>
 						</li>

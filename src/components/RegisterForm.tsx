@@ -184,11 +184,9 @@ export function RegisterForm() {
 			className="flex flex-col gap-x-10 md:flex-row md:items-center"
 			onSubmit={(e) => void handleSubmit(e)}
 		>
-			<div className="mb-4 flex h-full flex-col justify-center md:mb-0">
-				<div className="flex flex-col gap-y-2 md:gap-y-4">
-					{(
-						Object.entries(formMap) as Array<[keyof typeof formMap, string]>
-					).map(([key, value]) => (
+			<div className="mb-4 flex flex-col gap-y-2 md:mb-0 md:gap-y-4">
+				{(Object.entries(formMap) as Array<[keyof typeof formMap, string]>).map(
+					([key, value]) => (
 						<div className="flex flex-col" key={key}>
 							<label
 								htmlFor={key}
@@ -198,8 +196,8 @@ export function RegisterForm() {
 							</label>
 							{inputType(key)}
 						</div>
-					))}
-				</div>
+					),
+				)}
 			</div>
 			<div className="flex flex-col gap-y-4">
 				<p className="font-space-grotesk hidden w-[303px] text-center text-4xl leading-14 tracking-wide text-shadow-[5px_5px_10px_#000000]/80 md:block">
@@ -221,7 +219,7 @@ export function RegisterForm() {
 						<img src="/assets/images/icons/google.png" alt="Google" />
 					</button>
 					<img
-						className="cursor-pointer transition-transform duration-300 hover:scale-110 md:hidden"
+						className="md:hidden"
 						src="/assets/images/icons/google.png"
 						alt="Google"
 						role="button"
@@ -233,9 +231,9 @@ export function RegisterForm() {
 						<img src="/assets/images/icons/github.png" alt="GitHub" />
 					</button>
 					<img
-						className="cursor-pointer transition-transform duration-300 hover:scale-110 md:hidden"
+						className="md:hidden"
 						src="/assets/images/icons/github.png"
-						alt="Google"
+						alt="Github"
 						role="button"
 						tabIndex={0}
 					/>

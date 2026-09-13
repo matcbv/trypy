@@ -32,7 +32,7 @@ export function TipPy({ tipFields }: { tipFields: TipData }) {
 						ref={copyIcon}
 						src={`${isCopied ? '/assets/images/icons/success.png' : '/assets/images/icons/copy.png'}`}
 						alt="Copiar código"
-						className="w-5 scale-0 cursor-pointer transition-transform group-hover:scale-100"
+						className="w-5 lg:scale-0 lg:cursor-pointer lg:transition-transform lg:group-hover:scale-100"
 						onClick={() => void copyText(tip.current!.innerText)}
 					/>
 				</div>

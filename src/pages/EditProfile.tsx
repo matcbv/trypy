@@ -118,9 +118,11 @@ export function EditProfile() {
 					type={isVisible ? 'text' : 'password'}
 				/>
 				<img
-					src={`/assets/images/icons/${isVisible ? 'hide' : 'visible'}.png`}
+					src={`/assets/images/icons/${isVisible ? 'hide' : 'show'}.png`}
 					alt={isVisible ? 'Esconder senha' : 'Exibir senha'}
-					className="absolute right-3 cursor-pointer"
+					tabIndex={0}
+					role="button"
+					className="absolute right-3 lg:cursor-pointer"
 					onClick={() => setIsVisible((prev) => !prev)}
 				/>
 			</div>
@@ -169,7 +171,7 @@ export function EditProfile() {
 						{deleteField}
 						<button
 							type="button"
-							className="form-btn cursor-pointer text-sm"
+							className="form-btn text-sm"
 							onClick={() => void deleteAccount()}
 							disabled={isDeleting}
 						>

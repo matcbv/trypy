@@ -41,7 +41,7 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 	return (
 		<div
 			key={card.title}
-			className="relative flex min-h-[460px] max-w-[460px] overflow-hidden rounded-md bg-[url('/assets/images/batthern.png')] shadow-[0_0_30px_#000000]/50"
+			className="relative flex min-h-[460px] max-w-[460px] overflow-hidden rounded-md bg-[url('/assets/images/batthern-background.png')] shadow-[0_0_30px_#000000]/50"
 		>
 			<div className="flex flex-col bg-[#0f0d16dc]">
 				<h2 className="flex gap-x-3 rounded-t-md border-b border-(--theme-color) p-5">
@@ -67,13 +67,13 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 					<Link
 						to={`/learning-path/${card.moduleId}`}
 						state={{ initialModuleSlug }}
-						className={`group relative mb-7 flex h-10 items-center border-y bg-black/20 py-1 transition-all duration-300 ${!isModuleBlocked && 'hover:bg-(--theme-color)/70 hover:shadow-[0_0_10px_var(--shadow-theme-color)]'}`}
+						className={`group relative mb-7 flex h-10 items-center border-y border-y-gray-200 bg-black/20 py-1 transition-all duration-300 ${!isModuleBlocked && 'lg:hover:bg-(--theme-color)/70 lg:hover:shadow-[0_0_15px_var(--shadow-theme-color)]'}`}
 						onClick={(e) =>
 							CheckModuleAccess({ event: e, moduleId: card.moduleId })
 						}
 					>
 						<p
-							className={`absolute left-10 flex items-center gap-x-3 text-white transition-all duration-300 ${!isModuleBlocked && 'group-hover:left-[292px]'}`}
+							className={`absolute left-[40px] flex items-center gap-x-3 transition-all duration-300 ${!isModuleBlocked && 'lg:group-hover:left-[302px]'}`}
 						>
 							{isModuleBlocked && (
 								<img src="/assets/images/icons/locked.png" alt="Bloqueado" />

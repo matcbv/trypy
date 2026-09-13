@@ -63,21 +63,27 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 					<img
 						src="/assets/images/icons/redirect.png"
 						alt="Visitar exercício"
-						className="cursor-pointer"
+						tabIndex={0}
+						role="button"
+						className="lg:cursor-pointer"
 						onClick={() => void navigateToExercise(slug)}
 					/>
 					{isVisible ? (
 						<img
 							src="/assets/images/icons/hide.png"
 							alt="Esconder código"
-							className="cursor-pointer"
+							tabIndex={0}
+							role="button"
+							className="lg:cursor-pointer"
 							onClick={() => setIsVisible(false)}
 						/>
 					) : (
 						<img
-							src="/assets/images/icons/visible.png"
+							src="/assets/images/icons/show.png"
 							alt="Ver código"
-							className="cursor-pointer"
+							tabIndex={0}
+							role="button"
+							className="lg:cursor-pointer"
 							onClick={() => setIsVisible(true)}
 						/>
 					)}
@@ -85,13 +91,15 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 						<img
 							src="/assets/images/icons/success.png"
 							alt="Copiado"
-							className="size-[20px] cursor-pointer"
+							className="size-[20px]"
 						/>
 					) : (
 						<img
 							src="/assets/images/icons/copy.png"
 							alt="Copiar"
-							className="cursor-pointer"
+							tabIndex={0}
+							role="button"
+							className="lg:cursor-pointer"
 							onClick={() => void copyText(code)}
 						/>
 					)}

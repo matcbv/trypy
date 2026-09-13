@@ -247,7 +247,7 @@ export function ModuleButtons({
 				onClick={handlePrevious}
 			>
 				<img
-					src={`/assets/images/icons/left_arrow.png`}
+					src={`/assets/images/icons/left-arrow.png`}
 					alt="Voltar"
 					className="lg:transition-transform lg:duration-300 lg:group-hover:-translate-x-2"
 				/>
@@ -263,7 +263,7 @@ export function ModuleButtons({
 					<img
 						src={`/assets/images/icons/done.png`}
 						alt="Concluir"
-						className="lg:transition-transform lg:duration-300 lg:group-hover:scale-110"
+						className="lg:transition-transform lg:duration-300 lg:group-hover:scale-105"
 					/>
 				</button>
 			) : (
@@ -274,7 +274,7 @@ export function ModuleButtons({
 				>
 					Avançar
 					<img
-						src={`/assets/images/icons/right_arrow.png`}
+						src={`/assets/images/icons/right-arrow.png`}
 						alt="Avançar"
 						className="lg:transition-transform lg:duration-300 lg:group-hover:translate-x-2"
 					/>

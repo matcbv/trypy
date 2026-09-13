@@ -3,22 +3,22 @@ import { ResetPasswordForm } from '../components/ResetPasswordForm';
 export function ResetPassword() {
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<div className="to-main-bg relative mx-[10px] my-[120px] rounded-lg bg-linear-to-br from-[#12612f] via-[#240051] shadow-[0_0_20px_#ffffff]/10">
-				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer.png")] opacity-20'></div>
-				<div className="relative max-w-[500px] p-10">
-					<h1 className="mb-6 text-2xl font-bold tracking-wider">
+			<div className="to-main-bg relative mx-[10px] my-[120px] flex min-h-[400px] max-w-[500px] rounded-lg bg-linear-to-br from-[#12612f] via-[#240051] shadow-[0_0_20px_#ffffff]/10">
+				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-20'></div>
+				<div className="relative flex flex-col justify-center p-[40px]">
+					<h1 className="mb-[15px] text-2xl font-bold tracking-wider">
 						Redefinir senha
 					</h1>
-					<p className="mb-8 text-sm tracking-wide">
+					<p className="mb-[30px] text-sm tracking-wide">
 						Para prosseguir com redefinição da senha, informe o e-mail
 						cadastrado em sua conta.
 					</p>
 					<ResetPasswordForm />
-					<div className="flex flex-col gap-y-3">
+					<div className="flex flex-col items-start gap-y-3">
 						<h2>Não se lembra do e-mail?</h2>
 						<button
 							type="button"
-							className="hover:text-main-purple w-fit cursor-pointer text-sm transition-colors"
+							className="lg:hover:text-main-purple text-sm lg:cursor-pointer lg:transition-colors"
 						>
 							Tente de outra forma
 						</button>

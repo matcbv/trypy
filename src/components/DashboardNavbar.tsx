@@ -37,7 +37,7 @@ export function DashboardNavbar() {
 					<li key={object.title}>
 						<Link
 							to={`/dashboard/${object.slug}`}
-							className="flex w-full cursor-pointer justify-center bg-white/10 px-[30px] py-[20px] hover:bg-[radial-gradient(ellipse,transparent,#ffffff1a)]"
+							className="flex w-full justify-center bg-white/10 px-[30px] py-[20px] hover:bg-[radial-gradient(ellipse,transparent,#ffffff1a)]"
 						>
 							<div className="flex w-full max-w-[130px] gap-x-3">
 								<img
