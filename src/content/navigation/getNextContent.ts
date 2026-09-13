@@ -1,12 +1,18 @@
 import type { ModuleData, SubtopicData, TopicData } from '../../types/content';
-import { fetchContent } from '../services/fetchContent';
-import { mapContent } from '../mappers/mapContent';
 
-export async function getNextContent(
-	currentModuleData: ModuleData,
-	currentTopicData: TopicData,
-	currentSubtopicData: SubtopicData,
-) {
+interface getNextContentProps {
+	modules: ModuleData[];
+	currentModuleData: ModuleData;
+	currentTopicData: TopicData;
+	currentSubtopicData: SubtopicData;
+}
+
+export function getNextContent({
+	modules,
+	currentModuleData,
+	currentTopicData,
+	currentSubtopicData,
+}: getNextContentProps) {
 	// * Iremos obter, respectivamente: os tópicos do módulo atual, os subtópicos do tópico atual, o próximo subtópico e o próximo tópico.
 	const topics = currentModuleData.topics.map((topic) => topic);
 
@@ -44,27 +50,18 @@ export async function getNextContent(
 	}
 
 	// * Caso o novo subtópico não exista, é sinal que o módulo chegou ao fim. Iremos obter o próximo módulo.
-	const nextModule = await fetchContent({
-		contentType: 'module',
-		include: 4,
-		order: currentModuleData.order + 1,
-	});
+	const nextModule = modules.find(
+		(module) => module.order === currentModuleData.order + 1,
+	);
 
 	// * Caso o próximo módulo existir, retornaremos ele, com seus primeiros tópico e subtópico.
-	if (nextModule[0]) {
-		const mappedModuleContent = mapContent(nextModule[0]);
-		const nextModuleTopic = mappedModuleContent.topics[0];
-		const nextTopicSubtopic = nextModuleTopic?.subtopics[0];
-
-		if (!nextModuleTopic || !nextTopicSubtopic) {
-			throw new Error(
-				'Não foi possível carregar o conteúdo do próximo módulo. Tente novamente ou fale conosco.',
-			);
-		}
+	if (nextModule) {
+		const nextModuleTopic = nextModule.topics[0]!;
+		const nextTopicSubtopic = nextModuleTopic.subtopics[0]!;
 
 		// * Retornaremos o próximo módulo e os primeiros tópico e subtópico dele.
 		return {
-			nextModule: mappedModuleContent,
+			nextModule: nextModule,
 			nextTopic: nextModuleTopic,
 			nextSubtopic: nextTopicSubtopic,
 		};
