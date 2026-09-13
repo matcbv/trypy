@@ -21,6 +21,7 @@ import {
 	userProgressRef,
 } from '../database/refs/userRefs';
 import { useLogout } from '../hooks/useLogout';
+import { DisplayableError } from '../classes/DisplayableError';
 
 type Providers = (typeof ProviderId)[keyof typeof ProviderId];
 
@@ -50,7 +51,7 @@ export function EditProfile() {
 			if (!currentUser) {
 				await logout();
 				void navigate('/', { replace: true });
-				throw new Error(
+				throw new DisplayableError(
 					'Sua sessão expirou. Faça login novamente para continuar.',
 				);
 			}

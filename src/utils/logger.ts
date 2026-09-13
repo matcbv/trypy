@@ -3,6 +3,7 @@ import { ToastNotification } from '../components/Notifications';
 import { errorMessages } from '../constants/errorMessages';
 import { FirebaseError } from 'firebase/app';
 import type { ToastData } from '../types/toast';
+import { DisplayableError } from '../classes/DisplayableError';
 
 interface LogErrorProps {
 	error: unknown;
@@ -38,6 +39,7 @@ export const logError = ({ error, text }: LogErrorProps) => {
 			type: 'error',
 			text:
 				text ||
+				(error instanceof DisplayableError && error.message) ||
 				(isKnownError(error) && errorMessages[error.code]) ||
 				'Algo deu errado. Tente novamente.',
 		},
