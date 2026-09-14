@@ -8,9 +8,9 @@ import { useLogout } from '../hooks/useLogout';
 const objectsMap = [
 	{ slug: '', title: 'Dashboard' },
 	{ slug: 'profile', title: 'Editar conta' },
-	{ slug: 'support-us', title: 'Assinatura' },
-	{ slug: 'certifications', title: 'Certificações' },
 	{ slug: 'resolutions', title: 'Resoluções' },
+	{ slug: 'certifications', title: 'Certificações' },
+	{ slug: 'support-us', title: 'Apoie-nos' },
 ];
 
 export function Header() {

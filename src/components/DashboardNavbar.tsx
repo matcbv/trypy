@@ -7,7 +7,7 @@ const objectsMap = [
 	{ slug: 'profile', title: 'Editar conta', icon: 'edit-account' },
 	{ slug: 'resolutions', title: 'Resoluções', icon: 'resolution' },
 	{ slug: 'certifications', title: 'Certificações', icon: 'certificate' },
-	{ slug: 'support-us', title: 'Assinatura', icon: 'support-us' },
+	{ slug: 'support-us', title: 'Apoie-nos', icon: 'support-us' },
 ];
 
 export function DashboardNavbar() {
