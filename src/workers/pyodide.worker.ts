@@ -43,7 +43,7 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 		postMessageWrapper({ type: 'status', status: 'running' });
 
 		try {
-			const fullCode = `${userCode}\n${testCode}`;
+			const fullCode = `${userCode}\n${testCode || ''}`;
 			await pyodideInstance.runPythonAsync(fullCode);
 			postMessageWrapper({ type: 'status', status: 'success' });
 		} catch (error) {

@@ -28,6 +28,7 @@ import { ScrollToTop } from '../components/ScrollToTop';
 import { guestMiddleware } from '../middlewares/guestMiddleware';
 import { SupportUs } from '../pages/SupportUs';
 import { ContentfulContentProvider } from '../contexts/ContentfulContentProvider';
+import { Playground } from '../pages/Playground';
 
 export function AppRoutes() {
 	return (
@@ -67,6 +68,9 @@ export function AppRoutes() {
 										</Route>
 									</Route>
 									<Route path="/learning-path" element={<LearningPath />} />
+									<Route element={<TerminalProvider />}>
+										<Route path="/playground" element={<Playground />} />
+									</Route>
 									<Route path="/reset-password" element={<ResetPassword />} />
 									<Route path="/support" element={<Support />} />
 									<Route path="/about-us" element={<AboutUs />} />
