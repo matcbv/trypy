@@ -16,7 +16,8 @@ function App() {
 				closeButton={false}
 				icon={false}
 				autoClose={3000}
-				pauseOnHover={true}
+				pauseOnHover={false}
+				closeOnClick={true}
 				pauseOnFocusLoss={true}
 				toastClassName={() =>
 					'bg-toast-background relative w-full overflow-hidden p-6 sm:mb-4 sm:rounded-xl'

@@ -35,7 +35,7 @@ export function HeroBanner() {
 	return (
 		<div className="px-hero-x relative flex w-full items-center justify-between overflow-hidden py-45">
 			<div
-				className="absolute inset-0 z-10"
+				className="absolute inset-0 z-10 hidden lg:block"
 				onMouseMove={(e) =>
 					setPointerPosition({
 						x: e.nativeEvent.offsetX,
