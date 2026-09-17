@@ -60,7 +60,7 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 							<p className="mb-4">Tópicos desse módulo:</p>
 							<ul className="ml-4 flex list-disc flex-col items-start gap-y-2 marker:text-(--theme-color)">
 								{card.topicsList?.map((topic) => (
-									<li className="bg-black/30 p-1" key={topic}>
+									<li className="bg-black/40 p-1" key={topic}>
 										{topic}
 									</li>
 								))}

@@ -102,8 +102,8 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 	};
 
 	return (
-		<div className="flex flex-col gap-y-5">
-			<div className="flex">
+		<div className="flex flex-col">
+			<div className="mb-6 flex">
 				<p className="mr-2 text-lg tracking-wide">Status do exercício:</p>
 				<span className="flex items-center gap-x-1 font-bold">
 					{solved ? 'Finalizado' : 'Em progresso...'}
@@ -113,6 +113,38 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 						className="w-5"
 					/>
 				</span>
+			</div>
+			<div className="mb-4 flex gap-x-6">
+				<button
+					onClick={() =>
+						runCode({
+							userCode,
+							testCode: null,
+							expectedOutput: null,
+						})
+					}
+					className="lg:hover:bg-glow-green/20 flex gap-x-1 rounded-md border border-white/50 bg-white/10 px-4 py-2 lg:cursor-pointer lg:transition-colors lg:duration-300"
+				>
+					Executar
+					<img
+						src="/assets/images/icons/run.png"
+						role="button"
+						tabIndex={0}
+						alt="Executar código"
+					/>
+				</button>
+				<button
+					onClick={stopCodeExecution}
+					className="lg:hover:bg-main-red/20 flex gap-x-1 rounded-md border border-white/50 bg-white/10 px-4 py-2 lg:cursor-pointer lg:transition-colors lg:duration-300"
+				>
+					Interromper
+					<img
+						src="/assets/images/icons/stop.png"
+						role="button"
+						tabIndex={0}
+						alt="Executar código"
+					/>
+				</button>
 			</div>
 			<div className="flex w-full flex-col gap-y-1">
 				<div className="relative h-100">
@@ -129,7 +161,6 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 						></CodeMirror>
 					)}
 				</div>
-
 				<div className="bg-terminal-background rounded-b-md">
 					<div className="border-main-purple font-jetbrains flex items-center gap-x-2 border-b px-5 py-2 text-sm">
 						Saída:
@@ -141,28 +172,6 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 						</code>
 					</div>
 				</div>
-			</div>
-			<div className="flex gap-x-10">
-				<button
-					type="button"
-					className="border-main-green/60 lg:hover:bg-main-green/20 w-[150px] rounded-md border bg-white/5 py-3 text-sm tracking-wide lg:cursor-pointer lg:transition-colors lg:duration-300"
-					onClick={() =>
-						runCode({
-							userCode,
-							testCode: subtopicData.testCode || null,
-							expectedOutput: subtopicData.expectedOutput || null,
-						})
-					}
-				>
-					Executar código
-				</button>
-				<button
-					type="button"
-					className="border-main-red/60 lg:hover:bg-main-red/20 w-[150px] rounded-md border bg-white/5 py-3 text-sm tracking-wide lg:cursor-pointer lg:transition-colors lg:duration-300"
-					onClick={stopCodeExecution}
-				>
-					Interromper
-				</button>
 			</div>
 		</div>
 	);

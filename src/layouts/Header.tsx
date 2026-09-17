@@ -5,12 +5,18 @@ import { AuthContext } from '../contexts/AuthProvider/context';
 import { logError, logSuccess } from '../utils/logger';
 import { useLogout } from '../hooks/useLogout';
 
-const objectsMap = [
+const userAccountMap = [
 	{ slug: '', title: 'Dashboard' },
 	{ slug: 'profile', title: 'Editar conta' },
 	{ slug: 'resolutions', title: 'Resoluções' },
 	{ slug: 'certifications', title: 'Certificações' },
 	{ slug: 'support-us', title: 'Apoie-nos' },
+];
+
+const pagesMap = [
+	{ slug: 'learning-path', title: 'Trilha de aprendizagem' },
+	{ slug: 'playground', title: 'Playground' },
+	{ slug: 'extra-content', title: 'Conteúdo extra' },
 ];
 
 export function Header() {
@@ -112,13 +118,13 @@ export function Header() {
 				className="font-jetbrains fixed top-0 z-30 w-full"
 				style={{ '--header-bg': 'transparent' } as React.CSSProperties}
 			>
-				<header className="flex h-[65px] items-center justify-between bg-(--header-bg) px-5 transition-[background-color] duration-500 lg:px-15">
+				<header className="flex h-[70px] items-center justify-between bg-(--header-bg) px-5 transition-[background-color] duration-500 lg:px-15">
 					<Link to="/">
 						<img
 							src="/assets/images/trypy-logo.png"
 							alt="Logo TryPy"
 							draggable="false"
-							className="w-10 transition-[width] lg:w-[50px]"
+							className="w-[50px] transition-[width] duration-300 lg:w-15"
 						/>
 					</Link>
 					<nav className="hidden lg:block" ref={navRef}>
@@ -135,22 +141,17 @@ export function Header() {
 								)}
 								<span className="bg-main-green absolute -bottom-1 h-0.5 w-0 rounded-full transition-[width] duration-300"></span>
 							</li>
-							<li
-								className="item relative flex flex-col items-center"
-								onMouseEnter={showUnderline}
-								onMouseLeave={hideUnderline}
-							>
-								<Link to="/learning-path">Trilha de aprendizagem</Link>
-								<span className="bg-main-green absolute -bottom-1 h-0.5 w-0 rounded-full transition-[width] duration-300"></span>
-							</li>
-							<li
-								className="item relative flex flex-col items-center"
-								onMouseEnter={showUnderline}
-								onMouseLeave={hideUnderline}
-							>
-								<Link to="/">Conteúdo extra</Link>
-								<span className="bg-main-green absolute -bottom-1 h-0.5 w-0 rounded-full transition-[width] duration-300"></span>
-							</li>
+							{pagesMap.map(({ slug, title }) => (
+								<li
+									key={slug}
+									className="item relative flex flex-col items-center"
+									onMouseEnter={showUnderline}
+									onMouseLeave={hideUnderline}
+								>
+									<Link to={`/${slug}`}>{title}</Link>
+									<span className="bg-main-green absolute -bottom-1 h-0.5 w-0 rounded-full transition-[width] duration-300"></span>
+								</li>
+							))}
 						</ul>
 					</nav>
 					<div className="flex gap-x-5 lg:hidden">
@@ -158,7 +159,7 @@ export function Header() {
 							ref={navIconRef}
 							src="/assets/images/icons/menu.png"
 							alt="Menu"
-							className="w-7"
+							className="w-8"
 							onClick={() => setIsMenuOpen((prev) => !prev)}
 							role="button"
 							tabIndex={0}
@@ -167,7 +168,7 @@ export function Header() {
 							<img
 								src="/assets/images/icons/logout.png"
 								alt="Deslogar"
-								className="w-7"
+								className="w-8"
 								onClick={() => void logoutWrapper()}
 								role="button"
 								tabIndex={0}
@@ -180,30 +181,30 @@ export function Header() {
 				>
 					<ul className="flex flex-col text-sm">
 						{authState.data ? (
-							objectsMap.map(({ slug, title }) => (
-								<li key={slug} className="border-b border-b-gray-200">
+							userAccountMap.map(({ slug, title }) => (
+								<li key={slug} className="border-b border-b-gray-400">
 									<Link className="block p-5" to={`/dashboard/${slug}`}>
 										{title}
 									</Link>
 								</li>
 							))
 						) : (
-							<li className="border-b border-b-gray-200">
+							<li className="border-b border-b-gray-400">
 								<Link className="block p-5" to="/session">
 									Iniciar sessão
 								</Link>
 							</li>
 						)}
-						<li className="border-b border-b-gray-200">
-							<Link className="block p-5" to="/learning-path">
-								Trilha de aprendizagem
-							</Link>
-						</li>
-						<li>
-							<Link className="block p-5" to="/">
-								Conteúdo extra
-							</Link>
-						</li>
+						{pagesMap.map(({ title, slug }, i) => (
+							<li
+								key={slug}
+								className={`${i < pagesMap.length - 1 && 'border-b border-b-gray-400'}`}
+							>
+								<Link className="block p-5" to={`/${slug}`}>
+									{title}
+								</Link>
+							</li>
+						))}
 					</ul>
 				</nav>
 			</div>

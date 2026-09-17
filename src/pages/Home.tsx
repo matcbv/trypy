@@ -50,13 +50,13 @@ export function Home() {
 							</p>
 						</div>
 					</div>
-					<div className="font-jetbrains flex w-fit flex-col lg:max-w-300 lg:flex-row lg:gap-y-0">
+					<div className="flex w-fit flex-col lg:max-w-300 lg:flex-row lg:gap-y-0">
 						<div
 							className="guide-cards"
 							onMouseMove={handleMouseMove}
 							onMouseLeave={(e) => (e.currentTarget.style.transform = '')}
 						>
-							<h2 className="text-section-lg border-b-main-green border-b pb-[10px]">
+							<h2 className="text-section-lg border-b-main-purple border-b pb-[10px]">
 								Organização do conteúdo
 							</h2>
 							<p className="text-section-base">
@@ -64,7 +64,7 @@ export function Home() {
 								aprendizado, facilitando a jornada de estudos.
 							</p>
 						</div>
-						<svg className="h-[55px] w-[5px] shrink-0 self-center lg:h-[5px] lg:w-[55px]">
+						<svg className="h-[60px] w-[5px] shrink-0 self-center lg:h-[5px] lg:w-[60px]">
 							<polyline
 								className="fill-none stroke-white stroke-5 lg:hidden"
 								points="0,0 0,55"
@@ -81,7 +81,7 @@ export function Home() {
 							onMouseMove={handleMouseMove}
 							onMouseLeave={(e) => (e.currentTarget.style.transform = '')}
 						>
-							<h2 className="text-section-lg border-b-main-purple border-b pb-[10px]">
+							<h2 className="text-section-lg border-b-main-green border-b pb-[10px]">
 								Material didático
 							</h2>
 							<p className="text-section-base">
@@ -89,15 +89,15 @@ export function Home() {
 								adaptado para uma abordagem mais didática e acessível.
 							</p>
 						</div>
-						<svg className="h-[55px] w-[5px] shrink-0 self-center lg:h-[5px] lg:w-[55px]">
+						<svg className="h-[60px] w-[5px] shrink-0 self-center lg:h-[5px] lg:w-[60px]">
 							<polyline
 								className="fill-none stroke-white stroke-5 lg:hidden"
-								points="0,0 0,55"
+								points="0,0 0,60"
 								strokeDasharray="5"
 							/>
 							<polyline
 								className="hidden fill-none stroke-white stroke-5 lg:block"
-								points="0,0 55,0"
+								points="0,0 60,0"
 								strokeDasharray="5"
 							/>
 						</svg>
