@@ -16,6 +16,7 @@ import type { NavigationState } from '../../types/states';
 import { ContentfulContentContext } from '../ContentfulContentProvider/context';
 import { FirebaseError } from 'firebase/app';
 import { signOutAndClear } from '../../services/signOutAndClear';
+import { sharedToasts } from '../../constants/errorMessages';
 
 export function NavigationProvider({ children }: { children: ReactNode }) {
 	const { modules } = useSafeContext(ContentfulContentContext);
@@ -25,8 +26,8 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 	const navigate = useNavigate();
 	const skipNextSyncRef = useRef(false);
 
+	// * useEffect responsável por atualizar o estado de navegação caso necessário.
 	useEffect(() => {
-		// * useEffect responsável por atualizar o estado de navegação caso necessário.
 		const handleNavigationState = async (user: User | null) => {
 			if (user) {
 				try {
@@ -42,10 +43,15 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 					if (isAuthError) {
 						await signOutAndClear();
 						void navigate('/', { replace: true });
+						logError({
+							error,
+							...sharedToasts.sessionError,
+						});
+						return;
 					}
 					logError({
 						error,
-						text: 'Não foi possível carregar seu histórico de navegação. Tente novamente.',
+						...sharedToasts.loadDataError,
 					});
 				}
 			} else {

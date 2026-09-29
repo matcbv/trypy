@@ -1,21 +1,25 @@
-import { toast } from 'react-toastify';
+import { toast, type Id } from 'react-toastify';
 import { ToastNotification } from '../components/Notifications';
-import { errorMessages } from '../constants/errorMessages';
+import { firebaseErrorMessages } from '../constants/errorMessages';
 import { FirebaseError } from 'firebase/app';
-import type { ToastData } from '../types/toast';
 import { DisplayableError } from '../classes/DisplayableError';
 
 interface LogErrorProps {
 	error: unknown;
 	text?: string;
+	toastId?: Id;
+}
+
+export interface ToastData {
+	text: string;
 }
 
 // * Função aplicando type predicate para checagem do código de erro recebido.
 export function isKnownError(
 	error: unknown,
-): error is FirebaseError & { code: keyof typeof errorMessages } {
+): error is FirebaseError & { code: keyof typeof firebaseErrorMessages } {
 	// * Caso a afirmação abaixo retorne um boolean true, error será tratado como um FirebaseError (tipo exposto pelo Firebase contendo propriedades extras para o erro, como a propriedade code), onde a propriedade code é uma chave conhecida do objeto errorMessages.
-	return error instanceof FirebaseError && error.code in errorMessages;
+	return error instanceof FirebaseError && error.code in firebaseErrorMessages;
 }
 
 export const logDev = (error: unknown) => {
@@ -30,19 +34,19 @@ export const logDev = (error: unknown) => {
 	}
 };
 
-export const logError = ({ error, text }: LogErrorProps) => {
+export const logError = ({ error, text, toastId }: LogErrorProps) => {
 	logDev(error);
 
 	toast<ToastData>(ToastNotification, {
 		type: 'error',
 		data: {
-			type: 'error',
 			text:
 				text ||
 				(error instanceof DisplayableError && error.message) ||
-				(isKnownError(error) && errorMessages[error.code]) ||
+				(isKnownError(error) && firebaseErrorMessages[error.code]) ||
 				'Algo deu errado. Tente novamente.',
 		},
+		...(toastId && { toastId }),
 	});
 };
 
@@ -50,7 +54,6 @@ export const logSuccess = (text: string) => {
 	toast<ToastData>(ToastNotification, {
 		type: 'success',
 		data: {
-			type: 'success',
 			text: text,
 		},
 	});
@@ -60,7 +63,6 @@ export const logInfo = (text: string) => {
 	toast<ToastData>(ToastNotification, {
 		type: 'info',
 		data: {
-			type: 'info',
 			text: text,
 		},
 	});
@@ -70,7 +72,6 @@ export const logWarning = (text: string) => {
 	toast<ToastData>(ToastNotification, {
 		type: 'warning',
 		data: {
-			type: 'warning',
 			text: text,
 		},
 	});

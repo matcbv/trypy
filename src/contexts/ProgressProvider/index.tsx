@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ProgressContext } from './context';
-import { getDoc, setDoc } from 'firebase/firestore';
+import { getDoc } from 'firebase/firestore';
 import { auth } from '../../database/configs/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { userProgressRef } from '../../database/refs/userRefs';
 import { fetchInitialContent } from '../../content/services/fetchInitialContent';
-import { logDev, logError } from '../../utils/logger';
+import { logError } from '../../utils/logger';
 import { useNavigate } from 'react-router-dom';
 import {
 	getProgressStorage,
@@ -17,6 +17,7 @@ import { ContentfulContentContext } from '../ContentfulContentProvider/context';
 import { FirebaseError } from 'firebase/app';
 import { isProgressInitialized } from '../../utils/progress';
 import { signOutAndClear } from '../../services/signOutAndClear';
+import { sharedToasts } from '../../constants/errorMessages';
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
 	const { modules } = useSafeContext(ContentfulContentContext);
@@ -41,10 +42,15 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 					if (isAuthError) {
 						await signOutAndClear();
 						void navigate('/', { replace: true });
+						logError({
+							error,
+							...sharedToasts.sessionError,
+						});
+						return;
 					}
 					logError({
 						error,
-						text: 'Não foi possível carregar seu histórico de progresso. Tente novamente.',
+						...sharedToasts.loadDataError,
 					});
 				}
 			} else {
@@ -69,20 +75,6 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
 	useEffect(() => {
 		setProgressStorage(progressState);
-	}, [progressState]);
-
-	useEffect(() => {
-		if (skipNextSyncRef.current) {
-			skipNextSyncRef.current = false;
-			return;
-		}
-
-		const uid = auth.currentUser?.uid;
-		if (!uid) return;
-
-		void setDoc(userProgressRef(uid), progressState).catch((error) => {
-			logDev(error);
-		});
 	}, [progressState]);
 
 	return (
