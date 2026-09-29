@@ -152,7 +152,6 @@ export function ContentfulContentProvider({
 					...card.fields,
 					theme: card.fields.theme as Themes,
 				}));
-				console.log('mapped', mappedContent);
 				if (isMounted) {
 					setModuleCards(() => mappedContent);
 					setIsLoading((prev) => ({ ...prev, moduleCards: false }));
