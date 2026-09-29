@@ -1,13 +1,13 @@
 import { useSafeContext } from '../hooks/useSafeContext';
 import { TerminalContext } from '../contexts/TerminalProvider/context';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
 import { catppuccinFrappe } from '@catppuccin/codemirror';
 import { LoadingPage } from '../pages/LoadingPage';
 import type { SubtopicData } from '../types/content';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
-import { writeBatch } from 'firebase/firestore';
+import { arrayUnion, writeBatch } from 'firebase/firestore';
 import { userDataRef, userProgressRef } from '../database/refs/userRefs';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { logError, logSuccess } from '../utils/logger';
@@ -19,6 +19,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 	const { terminalState, setTerminalState, runCode, stopCodeExecution } =
 		useSafeContext(TerminalContext);
 	const [userCode, setUserCode] = useState<string>('');
+	const lastRunRef = useRef<{ slug: string; code: string } | null>(null);
 
 	const solved =
 		terminalState.solved ||
@@ -26,48 +27,47 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 
 	// * useEffect responsável pela conclusão do exercício resolvido
 	useEffect(() => {
-		if (
-			terminalState.solved &&
-			!progressState.doneSubtopics.includes(subtopicData.slug)
-		) {
-			void (async () => {
-				try {
-					const doneSubtopics = [
-						...progressState.doneSubtopics,
-						subtopicData.slug,
-					];
+		if (!terminalState.solved) return;
 
-					setProgressState((prev) => ({
-						...prev,
-						doneSubtopics,
-					}));
+		const lastRun = lastRunRef.current;
+		// * Caso a execução seja iniciada estando em outro subtópico, iremos descartar o resultado:
+		if (lastRun?.slug !== subtopicData.slug) {
+			setTerminalState((prev) => ({ ...prev, solved: false }));
+			return;
+		}
 
-					const resolutions = [
-						...authState.data!.resolutions,
-						{
+		if (progressState.doneSubtopics.includes(subtopicData.slug)) return;
+
+		void (async () => {
+			try {
+				if (authState.uid) {
+					const batch = writeBatch(db);
+					batch.update(userDataRef(authState.uid), {
+						resolutions: arrayUnion({
 							slug: subtopicData.slug,
 							title: subtopicData.title,
-							code: userCode,
-						},
-					];
-
-					if (authState.uid) {
-						const batch = writeBatch(db);
-						batch.update(userDataRef(authState.uid), { resolutions });
-						batch.update(userProgressRef(authState.uid), { doneSubtopics });
-						await batch.commit();
-					}
-
-					setTerminalState((prev) => ({ ...prev, solved: false }));
-					logSuccess('Exercício resolvido com sucesso!');
-				} catch (error) {
-					logError({
-						error,
-						text: 'Não foi possível seguir com a conclusão do exercício. Tente novamente.',
+							code: lastRun.code,
+						}),
 					});
+					batch.update(userProgressRef(authState.uid), {
+						doneSubtopics: arrayUnion(subtopicData.slug),
+					});
+					await batch.commit();
 				}
-			})();
-		}
+
+				setProgressState((prev) => ({
+					...prev,
+					doneSubtopics: [...prev.doneSubtopics, subtopicData.slug],
+				}));
+				setTerminalState((prev) => ({ ...prev, solved: false }));
+				logSuccess('Exercício resolvido com sucesso!');
+			} catch (error) {
+				logError({
+					error,
+					text: 'Não foi possível seguir com a conclusão do exercício. Tente novamente.',
+				});
+			}
+		})();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [terminalState.solved]);
@@ -116,13 +116,14 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 			</div>
 			<div className="mb-4 flex gap-x-6">
 				<button
-					onClick={() =>
+					onClick={() => {
+						lastRunRef.current = { slug: subtopicData.slug, code: userCode };
 						runCode({
 							userCode,
-							testCode: null,
-							expectedOutput: null,
-						})
-					}
+							testCode: subtopicData.testCode || null,
+							expectedOutput: subtopicData.expectedOutput || null,
+						});
+					}}
 					className="lg:hover:bg-glow-green/20 flex gap-x-1 rounded-md border border-white/50 bg-white/10 px-4 py-2 lg:cursor-pointer lg:transition-colors lg:duration-300"
 				>
 					Executar
