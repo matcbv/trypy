@@ -23,7 +23,7 @@ export function setNavigationStorage(data: NavigationState) {
 	}
 }
 
-export function removeNavigationSorage() {
+export function removeNavigationStorage() {
 	try {
 		localStorage.removeItem(storageKeys.NAVIGATION_STATE);
 	} catch (error) {
