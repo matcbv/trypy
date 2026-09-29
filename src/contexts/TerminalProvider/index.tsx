@@ -14,10 +14,13 @@ export function TerminalProvider() {
 	const [terminalState, setTerminalState] =
 		useState<TerminalState>(initialState);
 	const workerRef = useRef<Worker | null>(null);
+	// * Saída esperada do terminal
 	const expectedOutputRef = useRef<string | null>(null);
+	// * Saída do terminal
 	const outputBufferRef = useRef<string>('');
 
 	function isExerciseSolved(): { solved: boolean; errorMessage?: string } {
+		// * Comparando as saídas caso exista uma saída esperada:
 		if (expectedOutputRef.current) {
 			if (
 				expectedOutputRef.current.trim().toLowerCase() !==
@@ -49,6 +52,7 @@ export function TerminalProvider() {
 
 		postMessageWrapper(worker, { type: 'init' });
 
+		// * Resposta recebida pelo worker:
 		worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
 			const { type, status, data, error } = event.data;
 
@@ -73,6 +77,7 @@ export function TerminalProvider() {
 					break;
 				}
 				case 'stdout': {
+					// * Concatenando as saídas geradas pelo Pyodide em uma só, caso separadas em mais de uma:
 					outputBufferRef.current = outputBufferRef.current
 						? outputBufferRef.current + '\n' + data!
 						: data!;
@@ -92,11 +97,14 @@ export function TerminalProvider() {
 					break;
 				}
 				case 'error': {
+					// * Formatando o erro exibido na saída:
 					const errorLines = error!.trim().split('\n');
-					const filteredError = errorLines[errorLines.length - 1];
+					const displayedLines = errorLines.slice(-2);
+					const line = displayedLines[0]?.match(/line \d+/);
+					const formattedError = displayedLines[1] + ' at ' + line![0];
 					setTerminalState((prev) => ({
 						...prev,
-						error: filteredError!,
+						error: formattedError,
 						solved: false,
 					}));
 					break;

@@ -10,18 +10,19 @@ const postMessageWrapper = (message: WorkerResponse) =>
 // * Função responsável por inicializar o worker.
 async function initPyodide(): Promise<PyodideInterface> {
 	const pyodide = await loadPyodide({
-		stdout: (res: string) => {
-			postMessageWrapper({ type: 'stdout', data: res });
+		stdout: (output: string) => {
+			postMessageWrapper({ type: 'stdout', data: output });
 		},
 
-		stderr: (res: string) => {
-			postMessageWrapper({ type: 'stderr', error: res });
+		stderr: (error: string) => {
+			postMessageWrapper({ type: 'stderr', error });
 		},
 	});
 
 	return pyodide;
 }
 
+// * Requisição recebida pelo worker:
 self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 	const { type, userCode, testCode } = event.data;
 
