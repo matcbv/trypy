@@ -21,7 +21,6 @@ const pagesMap = [
 
 export function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const [isAtTop, setIsAtTop] = useState(true);
 	const headerRef = useRef<HTMLDivElement>(null);
 	const navIconRef = useRef<HTMLImageElement>(null);
 	const navRef = useRef<HTMLElement>(null);
@@ -74,15 +73,7 @@ export function Header() {
 		if (!header) return;
 
 		const changeColor = () => {
-			let color: string;
-
-			if (window.scrollY === 0) {
-				color = 'transparent';
-				setIsAtTop(true);
-			} else {
-				color = '#000000f0';
-				setIsAtTop(false);
-			}
+			const color = window.scrollY === 0 ? 'transparent' : '#000000f0';
 			header.style.setProperty('--header-bg', color);
 		};
 		window.addEventListener('scroll', changeColor);
@@ -176,7 +167,7 @@ export function Header() {
 					</div>
 				</header>
 				<nav
-					className={`bg-(--header-bg) ${isAtTop && 'backdrop-blur-xl'} transition-[background-color, height] duration-500 ${isMenuOpen ? 'visible h-fit opacity-100' : 'invisible h-0 opacity-0'}`}
+					className={`transition-[background-color, height] bg-(--header-bg) backdrop-blur-xl duration-500 ${isMenuOpen ? 'visible h-fit opacity-100' : 'invisible h-0 opacity-0'}`}
 				>
 					<ul className="flex flex-col text-sm">
 						{authState.data ? (

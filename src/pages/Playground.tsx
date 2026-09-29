@@ -136,12 +136,14 @@ export function Playground() {
 						onPointerDown={handlePointerDown}
 						onPointerMove={handlePointerMove}
 						onPointerUp={handlePointerUp}
+						onDoubleClick={() =>
+							isDesktop ? setOutputWidth(33.3) : setOutputHeight(33.3)
+						}
 					>
 						<img
 							src={`/assets/images/icons/resize-${isDesktop ? 'width' : 'height'}.png`}
 							alt="Redimensionar"
 							className="absolute top-1/2 left-1/2 w-8 max-w-none -translate-x-1/2 -translate-y-1/2 touch-none lg:cursor-pointer"
-							onDoubleClick={() => isDesktop && setOutputWidth(33.3)}
 						/>
 					</div>
 					<div

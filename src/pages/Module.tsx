@@ -141,7 +141,7 @@ export function Module() {
 				</div>
 				{scrollY > 0 && (
 					<span
-						className="bg-main-green lg:transition-[transform, shadow] fixed right-[5px] z-10 flex size-[30px] shrink-0 items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] lg:right-[10px] lg:cursor-pointer lg:duration-300 lg:hover:-translate-y-1 lg:hover:shadow-[0_0_10px_var(--color-glow-green)]/50"
+						className="bg-main-green lg:transition-[transform, shadow] fixed right-[5px] z-10 hidden size-[30px] shrink-0 items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] lg:right-[10px] lg:flex lg:cursor-pointer lg:duration-300 lg:hover:-translate-y-1 lg:hover:shadow-[0_0_10px_var(--color-glow-green)]/50"
 						onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
 						style={{ bottom: `${topButtonOffset}px` }}
 					>
