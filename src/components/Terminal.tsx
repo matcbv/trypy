@@ -103,8 +103,8 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 
 	return (
 		<div className="flex flex-col">
-			<div className="mb-6 flex">
-				<p className="mr-2 text-lg tracking-wide">Status do exercício:</p>
+			<div className="mb-6 flex items-end gap-x-2">
+				<p className="text- tracking-wide">Status do exercício:</p>
 				<span className="flex items-center gap-x-1 font-bold">
 					{solved ? 'Finalizado' : 'Em progresso...'}
 					<img
@@ -166,7 +166,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 						Saída:
 						{statusIcon()}
 					</div>
-					<div className="codeScrollbar h-50 overflow-scroll px-5 py-2">
+					<div className="codeScrollbar h-50 overflow-auto px-5 py-2">
 						<code className="text-sm whitespace-pre-wrap">
 							{terminalState.error || terminalState.output}
 						</code>

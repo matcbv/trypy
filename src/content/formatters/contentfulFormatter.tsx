@@ -60,6 +60,9 @@ export function contentfulFormatter(content: Document) {
 			[BLOCKS.HEADING_3]: (_, children) => (
 				<h3 className="text-content-h3 tracking-wide">{children}</h3>
 			),
+			[BLOCKS.HEADING_4]: (_, children) => (
+				<h4 className="text-content-h4 tracking-wide">{children}</h4>
+			),
 			[BLOCKS.HR]: () => <hr className="my-8" />,
 			[BLOCKS.PARAGRAPH]: (node, children) => {
 				const paragraph = node as Paragraph;

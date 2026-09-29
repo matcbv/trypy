@@ -64,7 +64,7 @@ export function Home() {
 								aprendizado, facilitando a jornada de estudos.
 							</p>
 						</div>
-						<svg className="h-[60px] w-[5px] shrink-0 self-center lg:h-[5px] lg:w-[60px]">
+						<svg className="h-15 w-[5px] shrink-0 self-center lg:h-[5px] lg:w-15">
 							<polyline
 								className="fill-none stroke-white stroke-5 lg:hidden"
 								points="0,0 0,55"
@@ -89,7 +89,7 @@ export function Home() {
 								adaptado para uma abordagem mais didática e acessível.
 							</p>
 						</div>
-						<svg className="h-[60px] w-[5px] shrink-0 self-center lg:h-[5px] lg:w-[60px]">
+						<svg className="h-15 w-[5px] shrink-0 self-center lg:h-[5px] lg:w-15">
 							<polyline
 								className="fill-none stroke-white stroke-5 lg:hidden"
 								points="0,0 0,60"

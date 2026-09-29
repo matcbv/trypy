@@ -77,8 +77,8 @@ export function Playground() {
 	};
 
 	return (
-		<div className="mx-[10px] my-30 flex min-h-screen lg:mx-15">
-			<div className="flex flex-1 flex-col">
+		<div className="mx-[10px] my-30 flex h-screen lg:mx-15">
+			<div className="flex size-full flex-col">
 				<div className="mb-4">
 					<div className="flex gap-x-6">
 						<button
@@ -117,7 +117,7 @@ export function Playground() {
 					ref={containerRef}
 					className="relative flex h-full flex-col gap-y-2 lg:flex-row lg:gap-x-2"
 				>
-					<div className="relative min-h-0 flex-1">
+					<div className="relative flex-1 overflow-hidden">
 						{terminalState.status === 'loading' ? (
 							<LoadingPage />
 						) : (
@@ -145,19 +145,17 @@ export function Playground() {
 						/>
 					</div>
 					<div
-						className="flex h-1/3 flex-col gap-y-4 lg:h-full"
+						className="bg-terminal-background codeScrollbar flex h-1/3 flex-col overflow-auto rounded-b-md lg:h-full lg:rounded-r-md lg:rounded-bl-none"
 						style={{ width: `${outputWidth}%`, height: `${outputHeight}%` }}
 					>
-						<div className="bg-terminal-background flex-1 rounded-md">
-							<div className="border-main-purple font-jetbrains flex items-center gap-x-2 border-b px-5 py-2 text-sm">
-								Saída:
-								{statusIcon()}
-							</div>
-							<div className="codeScrollbar h-50 overflow-scroll px-5 py-2">
-								<code className="text-sm whitespace-pre-wrap">
-									{terminalState.error || terminalState.output}
-								</code>
-							</div>
+						<div className="border-main-purple font-jetbrains flex items-center gap-x-2 border-b px-5 py-2 text-sm">
+							Saída:
+							{statusIcon()}
+						</div>
+						<div className="flex-1 px-5 py-2">
+							<code className="text-sm whitespace-pre-wrap">
+								{terminalState.error || terminalState.output}
+							</code>
 						</div>
 					</div>
 				</div>

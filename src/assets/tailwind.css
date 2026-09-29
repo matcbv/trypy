@@ -61,10 +61,13 @@
 	--text-content-h3: clamp(1.125rem, 1.0761rem + 0.2174vw, 1.25rem);
 	--text-content-h3--line-height: 1.4;
 
+	--text-content-h4: clamp(1rem, 0.9511rem + 0.2174vw, 1.125rem);
+	--text-content-h4--line-height: 1.5;
+
 	--text-content-p: clamp(0.9375rem, 0.913rem + 0.1087vw, 1rem);
 	--text-content-p--line-height: 1.6;
 
-	--text-hero-title: clamp(3rem, 1.0435rem + 8.6957vw, 8rem);
+	--text-hero-title: clamp(3.25rem, 0.9674rem + 9.0217vw, 8rem);
 	--text-hero-title--line-height: 1;
 
 	--text-hero-subtitle: clamp(0.875rem, 0.7283rem + 0.6522vw, 1.25rem);

@@ -26,15 +26,14 @@ export function CodeBlock({ code }: { code: string }) {
 	return (
 		<div
 			ref={codeBlockWrapperRef}
-			className="group relative shadow-[0_0_10px_var(--color-main-purple)]/15"
+			className="group relative overflow-hidden rounded-lg shadow-[0_0_10px_var(--color-main-purple)]/15"
 		>
-			<div className="codeScrollbar overflow-x-auto rounded-lg">
+			<div className="codeScrollbar overflow-x-auto">
 				<div
 					className="text-content-p w-fit min-w-full"
 					dangerouslySetInnerHTML={{ __html: html }}
 				></div>
 			</div>
-
 			<img
 				ref={copyIcon}
 				src={`${isCopied ? '/assets/images/icons/success.png' : '/assets/images/icons/copy.png'}`}
