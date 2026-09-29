@@ -2,12 +2,14 @@ import { auth } from '../../database/configs/firebase';
 import { useEffect, useState, type ReactNode } from 'react';
 import initialState from './initialState';
 import { AuthContext } from './context';
-import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
+import { onAuthStateChanged, type User } from 'firebase/auth';
 import { getDoc } from 'firebase/firestore';
 import { userDataRef } from '../../database/refs/userRefs';
 import { logError } from '../../utils/logger';
 import { useNavigate } from 'react-router-dom';
 import type { AuthState } from '../../types/states';
+import { signOutAndClear } from '../../services/signOutAndClear';
+import { sharedToasts } from '../../constants/errorMessages';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const [authState, setAuthState] = useState<AuthState>(initialState);
@@ -16,8 +18,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	useEffect(() => {
 		const handleAuthState = async (user: User | null) => {
 			setAuthState((prev) => ({ ...prev, loading: true }));
-			try {
-				if (user) {
+
+			if (user) {
+				try {
 					const userData = await getDoc(userDataRef(user.uid));
 					if (!userData.exists()) return;
 					setAuthState((prev) => ({
@@ -25,17 +28,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 						uid: user.uid,
 						data: userData.data(),
 					}));
-				} else {
-					setAuthState(initialState);
+				} catch (error) {
+					await signOutAndClear();
+					void navigate('/', { replace: true });
+					logError({
+						error,
+						...sharedToasts.sessionError,
+					});
+				} finally {
+					setAuthState((prev) => ({ ...prev, loading: false }));
 				}
-			} catch (error) {
-				await signOut(auth);
-				void navigate('/', { replace: true });
-				logError({
-					error,
-					text: 'Não foi possível renovar a sessão. Faça login novamente.',
-				});
-			} finally {
+			} else {
+				setAuthState(initialState);
 				setAuthState((prev) => ({ ...prev, loading: false }));
 			}
 		};

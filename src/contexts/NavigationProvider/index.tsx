@@ -5,7 +5,7 @@ import { logDev, logError } from '../../utils/logger';
 import { useSafeContext } from '../../hooks/useSafeContext';
 import { getDoc, setDoc } from 'firebase/firestore';
 import { userNavigationRef } from '../../database/refs/userRefs';
-import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
+import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '../../database/configs/firebase';
 import { fetchInitialContent } from '../../content/services/fetchInitialContent';
 import {
@@ -15,6 +15,7 @@ import {
 import type { NavigationState } from '../../types/states';
 import { ContentfulContentContext } from '../ContentfulContentProvider/context';
 import { FirebaseError } from 'firebase/app';
+import { signOutAndClear } from '../../services/signOutAndClear';
 
 export function NavigationProvider({ children }: { children: ReactNode }) {
 	const { modules } = useSafeContext(ContentfulContentContext);
@@ -39,7 +40,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 						(error.code === 'permission-denied' ||
 							error.code === 'unauthenticated');
 					if (isAuthError) {
-						await signOut(auth);
+						await signOutAndClear();
 						void navigate('/', { replace: true });
 					}
 					logError({

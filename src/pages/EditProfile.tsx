@@ -20,8 +20,8 @@ import {
 	userNavigationRef,
 	userProgressRef,
 } from '../database/refs/userRefs';
-import { useLogout } from '../hooks/useLogout';
 import { DisplayableError } from '../classes/DisplayableError';
+import { signOutAndClear } from '../services/signOutAndClear';
 
 type Providers = (typeof ProviderId)[keyof typeof ProviderId];
 
@@ -34,7 +34,6 @@ export function EditProfile() {
 	const [deleteCode] = useState(() => idGenerator().generateID());
 	const [isDeleting, setIsDeleting] = useState(false);
 	const navigate = useNavigate();
-	const logout = useLogout();
 
 	useEffect(() => {
 		void (async () => {
@@ -49,7 +48,7 @@ export function EditProfile() {
 		try {
 			const { currentUser } = auth;
 			if (!currentUser) {
-				await logout();
+				await signOutAndClear();
 				void navigate('/', { replace: true });
 				throw new DisplayableError(
 					'Sua sessão expirou. Faça login novamente para continuar.',
@@ -80,7 +79,7 @@ export function EditProfile() {
 			await batch.commit();
 			await deleteUser(currentUser);
 
-			await logout();
+			await signOutAndClear();
 			void navigate('/', { replace: true });
 			logSuccess('Conta deletada com sucesso!');
 		} catch (error) {
@@ -92,7 +91,7 @@ export function EditProfile() {
 						break;
 					}
 					case 'auth/requires-recent-login': {
-						await logout();
+						await signOutAndClear();
 						void navigate('/', { replace: true });
 						logWarning(
 							'Por motivos de segurança, faça login novamente para poder excluir sua conta.',
@@ -102,6 +101,8 @@ export function EditProfile() {
 				}
 			}
 			logError({ error });
+		} finally {
+			setIsDeleting(false);
 		}
 	};
 

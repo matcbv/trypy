@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ProgressContext } from './context';
 import { getDoc, setDoc } from 'firebase/firestore';
 import { auth } from '../../database/configs/firebase';
-import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
+import { onAuthStateChanged, type User } from 'firebase/auth';
 import { userProgressRef } from '../../database/refs/userRefs';
 import { fetchInitialContent } from '../../content/services/fetchInitialContent';
 import { logDev, logError } from '../../utils/logger';
@@ -16,6 +16,7 @@ import { useSafeContext } from '../../hooks/useSafeContext';
 import { ContentfulContentContext } from '../ContentfulContentProvider/context';
 import { FirebaseError } from 'firebase/app';
 import { isProgressInitialized } from '../../utils/progress';
+import { signOutAndClear } from '../../services/signOutAndClear';
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
 	const { modules } = useSafeContext(ContentfulContentContext);
@@ -38,7 +39,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 						(error.code === 'permission-denied' ||
 							error.code === 'unauthenticated');
 					if (isAuthError) {
-						await signOut(auth);
+						await signOutAndClear();
 						void navigate('/', { replace: true });
 					}
 					logError({

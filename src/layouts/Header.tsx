@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { logError, logSuccess } from '../utils/logger';
-import { useLogout } from '../hooks/useLogout';
+import { signOutAndClear } from '../services/signOutAndClear';
 
 const userAccountMap = [
 	{ slug: '', title: 'Dashboard' },
@@ -29,7 +29,6 @@ export function Header() {
 	const underlineRef = useRef<HTMLSpanElement>(null);
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
-	const logout = useLogout();
 
 	const showUnderline = (e: MouseEvent<HTMLLIElement>) => {
 		const underline = e.currentTarget.querySelector('span');
@@ -47,7 +46,7 @@ export function Header() {
 
 	const logoutWrapper = async () => {
 		try {
-			await logout();
+			await signOutAndClear();
 			void navigate('/', { replace: true });
 			logSuccess('Você foi deslogado com sucesso!');
 		} catch (error) {

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { logError, logSuccess } from '../utils/logger';
-import { useLogout } from '../hooks/useLogout';
+import { signOutAndClear } from '../services/signOutAndClear';
 
 const objectsMap = [
 	{ slug: '', title: 'Visão geral', icon: 'user-overview' },
@@ -12,11 +12,10 @@ const objectsMap = [
 
 export function DashboardNavbar() {
 	const navigate = useNavigate();
-	const logout = useLogout();
 
 	const logoutWrapper = async () => {
 		try {
-			await logout();
+			await signOutAndClear();
 			void navigate('/', { replace: true });
 			logSuccess('Você foi deslogado com sucesso!');
 		} catch (error) {
