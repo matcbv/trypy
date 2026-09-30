@@ -181,7 +181,7 @@ export function ModuleSideBar({
 				ref={sidebarRef}
 				className={`${isSidebarOpen ? 'visible left-0' : 'invisible -left-75'} absolute z-20 h-full w-75 rounded-lg bg-white/5 shadow-[0_0_20px_#ffffff]/5 backdrop-blur-lg transition-[left,visibility] duration-500 lg:relative lg:h-auto`}
 			>
-				<div className="sidebarScrollbar sticky top-[82px] h-[calc(100vh-132px)] overflow-x-auto p-3">
+				<div className="sidebarScrollbar sticky top-[70px] h-[calc(100vh-120px)] overflow-x-auto p-3 lg:h-fit">
 					<SearchInput
 						currentModule={currentModule}
 						searchValue={searchValue}
