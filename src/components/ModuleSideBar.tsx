@@ -42,7 +42,7 @@ export function ModuleSideBar({
 	const sidebarIconRef = useRef<HTMLImageElement>(null);
 
 	const firstTopicSlug = currentModule.topics[0]!.slug;
-	console.log(searchResult);
+
 	const isTopicBlocked = useCallback(
 		(topicSlug: string) => {
 			return (
