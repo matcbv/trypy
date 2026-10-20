@@ -29,6 +29,9 @@ import { guestMiddleware } from '../middlewares/guestMiddleware';
 import { SupportUs } from '../pages/SupportUs';
 import { ContentfulContentProvider } from '../contexts/ContentfulContentProvider';
 import { Playground } from '../pages/Playground';
+import { pendingVerificationMiddleware } from '../middlewares/pendingVerificationMiddleware';
+import { VerifyEmail } from '../pages/VerifyEmail';
+import { NewPassword } from '../pages/NewPassword';
 
 export function AppRoutes() {
 	return (
@@ -46,6 +49,15 @@ export function AppRoutes() {
 									>
 										<Route path="/session" element={<Session />} />
 										<Route path="/register" element={<Register />} />
+									</Route>
+									<Route
+										element={
+											<ProtectedRoute
+												middlewares={[pendingVerificationMiddleware]}
+											/>
+										}
+									>
+										<Route path="/verify-email" element={<VerifyEmail />} />
 									</Route>
 									<Route
 										element={<ProtectedRoute middlewares={[authMiddleware]} />}
@@ -72,6 +84,7 @@ export function AppRoutes() {
 										<Route path="/playground" element={<Playground />} />
 									</Route>
 									<Route path="/reset-password" element={<ResetPassword />} />
+									<Route path="/new-password" element={<NewPassword />} />
 									<Route path="/support" element={<Support />} />
 									<Route path="/about-us" element={<AboutUs />} />
 									<Route path="/be-a-partner" element={<BeAPartner />} />
