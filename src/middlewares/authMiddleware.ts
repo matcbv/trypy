@@ -1,27 +1,13 @@
 import type { Middleware } from '../types/middlewares';
 
-export const authMiddleware: Middleware = (context) => {
-	if (context.user.loading) {
-		return {
-			pending: true,
-		};
-	}
-	if (!context.user.uid) {
-		if (context.moduleId && context.moduleId === context.initialModuleSlug) {
-			return {
-				pending: false,
-				passed: true,
-			};
-		}
+export const authMiddleware: Middleware = ({
+	user,
+	moduleId,
+	initialModuleSlug,
+}) => {
+	if (user?.emailVerified) return { passed: true };
 
-		return {
-			pending: false,
-			passed: false,
-			redirectTo: '/session',
-		};
-	}
-	return {
-		pending: false,
-		passed: true,
-	};
+	if (moduleId && moduleId === initialModuleSlug) return { passed: true };
+
+	return { passed: false, redirectTo: user ? '/verify-email' : '/' };
 };
