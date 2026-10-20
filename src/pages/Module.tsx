@@ -10,6 +10,7 @@ import { LoadingPage } from './LoadingPage';
 import { themeStyles } from '../constants/themeStyle';
 import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
 import { ErrorPage } from './ErrorPage';
+import { CodeBlock } from '../components/CodeBlock';
 
 export function Module() {
 	const { modules, isLoading, errorData, refreshModules } = useSafeContext(
@@ -19,9 +20,37 @@ export function Module() {
 	const [scrollY, setScrollY] = useState(0);
 	const [topButtonOffset, setTopButtonOffset] = useState(0);
 	const [sidebarButtonOffset, setSidebarButtonOffset] = useState(0);
+	const [showSolutionCode, setShowSolutionCode] = useState(false);
+	const [enableBlurTransition, setEnableBlurTransition] = useState(true);
 	const footerRef = useRef<HTMLElement>(null);
 	const moduleRef = useRef<HTMLDivElement>(null);
 	const params = useParams<{ moduleId: string }>();
+
+	const currentModule = useMemo(
+		() => modules?.find((module) => module.slug === params.moduleId) ?? null,
+		[modules, params.moduleId],
+	);
+
+	const currentTopic = useMemo(() => {
+		if (!currentModule || !navigationState) return null;
+		return (
+			currentModule.topics.find(
+				(topic) =>
+					topic.slug === navigationState[currentModule.order]?.currentTopic,
+			) ?? null
+		);
+	}, [currentModule, navigationState]);
+
+	const currentSubtopic = useMemo(() => {
+		if (!currentTopic || !currentModule || !navigationState) return null;
+		return (
+			currentTopic.subtopics.find(
+				(subtopic) =>
+					subtopic.slug ===
+					navigationState[currentModule.order]?.currentSubtopic,
+			) ?? null
+		);
+	}, [currentModule, currentTopic, navigationState]);
 
 	// * useEffect para aparição e posicionamento do botão de scroll para o topo.
 	useEffect(() => {
@@ -62,31 +91,70 @@ export function Module() {
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
 
-	const currentModule = useMemo(
-		() => modules?.find((module) => module.slug === params.moduleId) ?? null,
-		[modules, params.moduleId],
-	);
+	useEffect(() => {
+		setShowSolutionCode(false);
+		setEnableBlurTransition(false);
+	}, [currentSubtopic]);
 
-	const currentTopic = useMemo(() => {
-		if (!currentModule || !navigationState) return null;
-		return (
-			currentModule.topics.find(
-				(topic) =>
-					topic.slug === navigationState[currentModule.order]?.currentTopic,
-			) ?? null
-		);
-	}, [currentModule, navigationState]);
-
-	const currentSubtopic = useMemo(() => {
-		if (!currentTopic || !currentModule || !navigationState) return null;
-		return (
-			currentTopic.subtopics.find(
-				(subtopic) =>
-					subtopic.slug ===
-					navigationState[currentModule.order]?.currentSubtopic,
-			) ?? null
-		);
-	}, [currentModule, currentTopic, navigationState]);
+	const moduleContent = () => {
+		switch (currentSubtopic?.subtopicType) {
+			case 'exercise':
+				return <Terminal subtopicData={currentSubtopic} />;
+			case 'lesson':
+				return (
+					currentSubtopic.videoLink && (
+						<div>
+							<p>{contentfulFormatter(currentSubtopic.videoDescription!)}</p>
+							<iframe
+								className="aspect-video w-full max-w-180 rounded-md shadow-[0_0_30px_#ffffff0f]"
+								src={currentSubtopic?.videoLink}
+								title={currentSubtopic?.title}
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+								referrerPolicy="strict-origin-when-cross-origin"
+								allowFullScreen
+							></iframe>
+						</div>
+					)
+				);
+			case 'resolution':
+				return (
+					<div>
+						<h3 className="text-content-h3 mb-4">Solução pensada:</h3>
+						<div
+							className="group/wrapper relative mb-10 cursor-pointer overflow-hidden"
+							onClick={() => {
+								setShowSolutionCode(true);
+								setEnableBlurTransition(true);
+							}}
+						>
+							<img
+								src="/assets/images/icons/show-large.png"
+								alt="Exibir código"
+								className={`${showSolutionCode ? 'hidden' : 'inline'} absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 opacity-80 drop-shadow-[0_0_30px_#ffffff] transition-all duration-300 lg:cursor-pointer lg:group-hover/wrapper:opacity-100 lg:group-hover/wrapper:drop-shadow-[0_0_50px_#ffffff]`}
+							/>
+							<div
+								className={`${enableBlurTransition ? 'transition-opacity duration-500' : 'transition-none'} ${showSolutionCode ? 'pointer-events-none opacity-0' : 'opacity-100'} absolute inset-0 z-10 rounded-md backdrop-blur-sm`}
+							/>
+							<div inert={!showSolutionCode}>
+								<CodeBlock code={currentSubtopic.solutionCode!} />
+							</div>
+						</div>
+						<div className="flex flex-col gap-y-4">
+							<h3 className="text-content-h3">Videoaula de resolução:</h3>
+							{contentfulFormatter(currentSubtopic.videoDescription!)}
+							<iframe
+								className="aspect-video w-full max-w-180 rounded-md shadow-[0_0_30px_#ffffff0f]"
+								src={currentSubtopic?.videoLink}
+								title={currentSubtopic?.title}
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+								referrerPolicy="strict-origin-when-cross-origin"
+								allowFullScreen
+							></iframe>
+						</div>
+					</div>
+				);
+		}
+	};
 
 	if (errorData.error) {
 		return <ErrorPage onRetry={refreshModules} />;
@@ -114,24 +182,10 @@ export function Module() {
 					>
 						{currentSubtopic?.title}
 					</h1>
-					<div className="mb-10 flex flex-col gap-y-5">
+					<div className="mb-10 flex flex-col gap-y-4 selection:bg-(--theme-color)/50">
 						{currentSubtopic?.content &&
 							contentfulFormatter(currentSubtopic.content)}
-						{currentSubtopic?.videoLink && (
-							<div className="flex justify-center">
-								<iframe
-									className="aspect-video w-full max-w-180 rounded-md shadow-[0_0_30px_#ffffff0f]"
-									src={currentSubtopic?.videoLink}
-									title={currentSubtopic?.title}
-									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-									referrerPolicy="strict-origin-when-cross-origin"
-									allowFullScreen
-								></iframe>
-							</div>
-						)}
-						{currentSubtopic?.subtopicType === 'exercise' && (
-							<Terminal subtopicData={currentSubtopic} />
-						)}
+						{moduleContent()}
 					</div>
 					<ModuleButtons
 						moduleData={currentModule!}
@@ -140,13 +194,13 @@ export function Module() {
 					/>
 				</div>
 				{scrollY > 0 && (
-					<span
+					<button
 						className="bg-main-green lg:transition-[transform, shadow] fixed right-[5px] z-10 hidden size-[30px] shrink-0 items-center justify-center rounded-full shadow-[0_0_10px_#000000b0] lg:right-[10px] lg:flex lg:cursor-pointer lg:duration-300 lg:hover:-translate-y-1 lg:hover:shadow-[0_0_10px_var(--color-glow-green)]/50"
 						onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
 						style={{ bottom: `${topButtonOffset}px` }}
 					>
 						<img src="/assets/images/icons/arrow-up.png" alt="Ir ao topo" />
-					</span>
+					</button>
 				)}
 			</div>
 		);

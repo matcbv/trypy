@@ -1,4 +1,3 @@
-import { AuthContext } from '../contexts/AuthProvider/context';
 import { getNextContent } from '../content/navigation/getNextContent';
 import { logError, logInfo, logSuccess } from '../utils/logger';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
@@ -13,10 +12,9 @@ import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleData, SubtopicData, TopicData } from '../types/content';
 import { userNavigationRef, userProgressRef } from '../database/refs/userRefs';
-import { type MouseEvent } from 'react';
 import { TerminalContext } from '../contexts/TerminalProvider/context';
 import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
-import { db } from '../database/configs/firebase';
+import { auth, db } from '../database/configs/firebase';
 import type { ProgressState } from '../types/states';
 
 interface ModuleButtonsProps {
@@ -30,7 +28,6 @@ export function ModuleButtons({
 	topicData,
 	subtopicData,
 }: ModuleButtonsProps) {
-	const { authState } = useSafeContext(AuthContext);
 	const { modules } = useSafeContext(ContentfulContentContext);
 	const { progressState, setProgressState } = useSafeContext(ProgressContext);
 	const { setNavigationState } = useSafeContext(NavigationContext);
@@ -43,12 +40,21 @@ export function ModuleButtons({
 		!progressState.doneSubtopics.includes(subtopicData.slug) &&
 		!terminalState.solved;
 
-	const handleNext = async (e: MouseEvent<HTMLButtonElement>) => {
+	const isConclusionLocked =
+		subtopicData.subtopicType === 'conclusion' &&
+		topicData.subtopics
+			.filter((subtopic) => subtopic.subtopicType !== 'conclusion')
+			.some((subtopic) => !progressState.doneSubtopics.includes(subtopic.slug));
+
+	const handleNext = async () => {
 		if (isNextButtonLocked) {
-			e.preventDefault();
 			logInfo(
 				'Conclua o exercício proposto para avançar ao próximo subtópico.',
 			);
+			return;
+		}
+		if (isConclusionLocked) {
+			logInfo('Finalize todos os subtópicos para concluir o módulo.');
 			return;
 		}
 
@@ -119,9 +125,11 @@ export function ModuleButtons({
 				nextSubtopic.slug;
 		}
 
-		if (authState.uid) {
+		const user = auth.currentUser;
+
+		if (user?.emailVerified) {
 			try {
-				await updateDoc(userProgressRef(authState.uid), firestoreUpdate);
+				await updateDoc(userProgressRef(user.uid), firestoreUpdate);
 				setProgressState((prev) => ({ ...prev, ...localUpdate }));
 			} catch (error) {
 				logError({
@@ -184,15 +192,6 @@ export function ModuleButtons({
 	const finishModule = async () => {
 		if (!params.moduleId) return;
 
-		const isConclusionUnlocked = topicData.subtopics
-			.filter((subtopic) => subtopic.subtopicType !== 'conclusion')
-			.every((subtopic) => progressState.doneSubtopics.includes(subtopic.slug));
-
-		if (!isConclusionUnlocked) {
-			logInfo('Finalize todos os subtópicos para concluir o módulo.');
-			return;
-		}
-
 		const { nextModule, nextSubtopic, nextTopic } = getNextContent({
 			modules: modules!,
 			currentModuleData: moduleData,
@@ -221,11 +220,13 @@ export function ModuleButtons({
 			},
 		};
 
-		if (authState.uid) {
+		const user = auth.currentUser;
+
+		if (user?.emailVerified) {
 			try {
 				const batch = writeBatch(db);
-				batch.set(userProgressRef(authState.uid), progressUpdate);
-				batch.update(userNavigationRef(authState.uid), navigationUpdate);
+				batch.set(userProgressRef(user.uid), progressUpdate);
+				batch.update(userNavigationRef(user.uid), navigationUpdate);
 				await batch.commit();
 			} catch (error) {
 				logError({
@@ -267,14 +268,14 @@ export function ModuleButtons({
 					<img
 						src={`/assets/images/icons/done.png`}
 						alt="Concluir"
-						className="lg:transition-transform lg:duration-300 lg:group-hover:scale-105"
+						className="w-6 lg:transition-transform lg:duration-300 lg:group-hover:scale-105"
 					/>
 				</button>
 			) : (
 				<button
 					type="button"
 					className={`module-btn group`}
-					onClick={(e) => void handleNext(e)}
+					onClick={() => void handleNext()}
 				>
 					Avançar
 					<img

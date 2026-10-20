@@ -61,17 +61,30 @@ export function ModuleSideBar({
 	}: ChangeSubtopicProps) => {
 		if (isTopicBlocked(topicSlug)) return;
 
-		if (subtopicType === 'resolution') {
-			const topic = currentModule.topics.find(
-				(topic) => topic.slug === topicSlug,
-			)!;
+		const topic = currentModule.topics.find(
+			(topic) => topic.slug === topicSlug,
+		)!;
 
+		if (subtopicType === 'resolution') {
 			const topicExercise = topic.subtopics.find(
 				(subtopic) => subtopic.subtopicType === 'exercise',
 			);
 
 			if (!progressState.doneSubtopics.includes(topicExercise!.slug)) {
 				logInfo('Conclua o exercício para acessar sua resolução');
+				return;
+			}
+		}
+
+		if (subtopicType === 'conclusion') {
+			const isConclusionLocked = topic.subtopics
+				.filter((subtopic) => subtopic.subtopicType !== 'conclusion')
+				.some(
+					(subtopic) => !progressState.doneSubtopics.includes(subtopic.slug),
+				);
+
+			if (isConclusionLocked) {
+				logInfo('Finalize todos os subtópicos para concluir o módulo.');
 				return;
 			}
 		}
