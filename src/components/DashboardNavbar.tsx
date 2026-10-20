@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { logError, logSuccess } from '../utils/logger';
-import { signOutAndClear } from '../services/signOutAndClear';
+import { signOutAndClear } from '../services/auth/signOutAndClear';
 
 const objectsMap = [
 	{ slug: '', title: 'Visão geral', icon: 'user-overview' },

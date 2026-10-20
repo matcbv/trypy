@@ -1,6 +1,6 @@
-import { storageKeys } from '../constants/storageKeys';
-import type { NavigationState } from '../types/states';
-import { logDev } from '../utils/logger';
+import { storageKeys } from '../../constants/storageKeys';
+import type { NavigationState } from '../../types/states';
+import { logDev } from '../../utils/logger';
 
 export function getNavigationStorage() {
 	try {

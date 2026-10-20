@@ -4,7 +4,10 @@ import { fetchContent } from '../../content/services/fetchContent';
 import { mapContent } from '../../content/mappers/mapContent';
 import type { ModuleCardData, ModuleData } from '../../types/content';
 import { logDev } from '../../utils/logger';
-import { getCached, setCached } from '../../services/contentfulContentCache';
+import {
+	getCached,
+	setCached,
+} from '../../services/storage/contentfulContentCache';
 import type { Themes } from '../../constants/themeStyle';
 
 const MODULES_KEY = 'modules';

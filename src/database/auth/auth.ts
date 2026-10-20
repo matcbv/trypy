@@ -10,8 +10,8 @@ import {
 	userNavigationRef,
 	userProgressRef,
 } from '../refs/userRefs';
-import { getNavigationStorage } from '../../services/navigationStorage';
-import { getProgressStorage } from '../../services/progressStorage';
+import { getNavigationStorage } from '../../services/storage/navigationStorage';
+import { getProgressStorage } from '../../services/storage/progressStorage';
 import { isProgressInitialized } from '../../utils/progress';
 import { fetchInitialContent } from '../../content/services/fetchInitialContent';
 import type { ModuleData } from '../../types/content';

@@ -3,7 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { logError, logSuccess } from '../utils/logger';
-import { signOutAndClear } from '../services/signOutAndClear';
+import { signOutAndClear } from '../services/auth/signOutAndClear';
+import { auth } from '../database/configs/firebase';
 
 const userAccountMap = [
 	{ slug: '', title: 'Dashboard' },

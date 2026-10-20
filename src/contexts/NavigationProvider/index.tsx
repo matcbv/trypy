@@ -11,11 +11,11 @@ import { fetchInitialContent } from '../../content/services/fetchInitialContent'
 import {
 	getNavigationStorage,
 	setNavigationStorage,
-} from '../../services/navigationStorage';
+} from '../../services/storage/navigationStorage';
 import type { NavigationState } from '../../types/states';
 import { ContentfulContentContext } from '../ContentfulContentProvider/context';
 import { FirebaseError } from 'firebase/app';
-import { signOutAndClear } from '../../services/signOutAndClear';
+import { signOutAndClear } from '../../services/auth/signOutAndClear';
 import { sharedToasts } from '../../constants/errorMessages';
 
 export function NavigationProvider({ children }: { children: ReactNode }) {

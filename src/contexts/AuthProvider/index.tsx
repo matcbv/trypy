@@ -8,7 +8,7 @@ import { userDataRef } from '../../database/refs/userRefs';
 import { logError } from '../../utils/logger';
 import { useNavigate } from 'react-router-dom';
 import type { AuthState } from '../../types/states';
-import { signOutAndClear } from '../../services/signOutAndClear';
+import { signOutAndClear } from '../../services/auth/signOutAndClear';
 import { sharedToasts } from '../../constants/errorMessages';
 
 export function AuthProvider({ children }: { children: ReactNode }) {

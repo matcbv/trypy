@@ -10,13 +10,13 @@ import { useNavigate } from 'react-router-dom';
 import {
 	getProgressStorage,
 	setProgressStorage,
-} from '../../services/progressStorage';
+} from '../../services/storage/progressStorage';
 import type { ProgressState } from '../../types/states';
 import { useSafeContext } from '../../hooks/useSafeContext';
 import { ContentfulContentContext } from '../ContentfulContentProvider/context';
 import { FirebaseError } from 'firebase/app';
 import { isProgressInitialized } from '../../utils/progress';
-import { signOutAndClear } from '../../services/signOutAndClear';
+import { signOutAndClear } from '../../services/auth/signOutAndClear';
 import { sharedToasts } from '../../constants/errorMessages';
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
