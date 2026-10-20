@@ -3,9 +3,9 @@ import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { useSafeContext } from '../hooks/useSafeContext';
 import type { ModuleCardData } from '../types/content';
 import type { MouseEvent } from 'react';
-import { AuthContext } from '../contexts/AuthProvider/context';
 import { logInfo } from '../utils/logger';
 import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
+import { auth } from '../database/configs/firebase';
 
 interface ModuleCardProps {
 	card: ModuleCardData;
@@ -20,24 +20,35 @@ interface CheckModuleAccessProps {
 export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 	const navigate = useNavigate();
 	const { progressState } = useSafeContext(ProgressContext);
-	const { authState } = useSafeContext(AuthContext);
 	const { modules } = useSafeContext(ContentfulContentContext);
 
 	const isModuleBlocked =
 		!progressState.doneModules.includes(card.moduleId) &&
 		progressState.inProgressModule !== card.moduleId &&
-		modules?.[0]!.slug !== card.moduleId;
+		modules?.[0]?.slug !== card.moduleId;
 
-	const CheckModuleAccess = ({ event, moduleId }: CheckModuleAccessProps) => {
-		if (isModuleBlocked) {
+	const checkModuleAccess = ({ event, moduleId }: CheckModuleAccessProps) => {
+		const user = auth.currentUser;
+
+		const denyAccess = (message: string, redirectTo?: string) => {
 			event.preventDefault();
-			logInfo('Complete o módulo anterior para liberar o acesso.');
+			logInfo(message);
+			if (redirectTo) void navigate(redirectTo);
+		};
+
+		if (isModuleBlocked) {
+			denyAccess('Complete o módulo anterior para liberar o acesso.');
 			return;
 		}
-		if (!authState.uid && moduleId !== initialModuleSlug) {
-			event.preventDefault();
-			logInfo('Faça login ou crie uma conta para acessar o módulo.');
-			void navigate('/session');
+		if (moduleId === initialModuleSlug) return;
+
+		if (!user) {
+			denyAccess(
+				'Faça login ou crie uma conta para acessar o módulo.',
+				'/session',
+			);
+		} else if (!user.emailVerified) {
+			denyAccess('Confirme seu e-mail para acessar o módulo.', '/verify-email');
 		}
 	};
 
@@ -50,7 +61,11 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 				<h2 className="flex gap-x-3 rounded-t-md border-b border-(--theme-color) p-5">
 					{card.title}
 					{progressState.doneModules.includes(card.moduleId) && (
-						<img src="/assets/images/icons/done.png" alt="Concluído" />
+						<img
+							src="/assets/images/icons/done.png"
+							alt="Concluído"
+							className="w-6"
+						/>
 					)}
 				</h2>
 				<div className="flex flex-1 flex-col justify-between text-sm">
@@ -72,7 +87,7 @@ export function ModuleCard({ card, initialModuleSlug }: ModuleCardProps) {
 						state={{ initialModuleSlug }}
 						className={`group relative mb-7 flex h-10 items-center border-y border-y-gray-200 bg-black/20 py-1 transition-all duration-300 ${!isModuleBlocked && 'lg:hover:bg-(--theme-color)/70 lg:hover:shadow-[0_0_15px_var(--shadow-theme-color)]'}`}
 						onClick={(e) =>
-							CheckModuleAccess({ event: e, moduleId: card.moduleId })
+							checkModuleAccess({ event: e, moduleId: card.moduleId })
 						}
 					>
 						<p
