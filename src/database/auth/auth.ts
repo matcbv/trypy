@@ -1,6 +1,8 @@
 import {
 	createUserWithEmailAndPassword,
+	deleteUser,
 	signInWithEmailAndPassword,
+	updateProfile,
 } from 'firebase/auth';
 import { auth, db } from '../configs/firebase';
 import { getDoc, writeBatch } from 'firebase/firestore';
@@ -16,6 +18,7 @@ import { isProgressInitialized } from '../../utils/progress';
 import { fetchInitialContent } from '../../content/services/fetchInitialContent';
 import type { ModuleData } from '../../types/content';
 import { DisplayableError } from '../../classes/DisplayableError';
+import { logError } from '../../utils/logger';
 
 type SignUpType = UserData & { password: string };
 
@@ -34,37 +37,51 @@ export const signUpWithCredentials = async ({
 		persistedData.email,
 		password,
 	);
-	const { uid } = credential.user;
 
-	let finalProgress = getProgressStorage();
-	if (!isProgressInitialized(finalProgress)) {
-		if (!modules) {
-			throw new DisplayableError(
-				'Conteúdo inicial ainda não carregado. Tente novamente em instantes.',
-			);
+	try {
+		await updateProfile(credential.user, {
+			displayName: `${persistedData.name} ${persistedData.lastname}`,
+		});
+
+		let finalProgress = getProgressStorage();
+		if (!isProgressInitialized(finalProgress)) {
+			if (!modules) {
+				throw new DisplayableError(
+					'Conteúdo inicial ainda não carregado. Tente novamente em instantes.',
+				);
+			}
+			finalProgress = fetchInitialContent(modules);
 		}
-		finalProgress = fetchInitialContent(modules);
+		const navigationStorage = getNavigationStorage();
+		const initialNavigationState = navigationStorage || {
+			1: {
+				currentTopic: finalProgress.inProgressTopic,
+				currentSubtopic: finalProgress.inProgressSubtopic,
+			},
+		};
+
+		const { uid } = credential.user;
+
+		const batch = writeBatch(db);
+		batch.set(userDataRef(uid), persistedData);
+		batch.set(userProgressRef(uid), finalProgress);
+		batch.set(userNavigationRef(uid), initialNavigationState);
+		await batch.commit();
+
+		return {
+			userData: persistedData,
+			progressData: finalProgress,
+			navigationData: initialNavigationState,
+		};
+	} catch (error) {
+		try {
+			await deleteUser(credential.user);
+		} catch (rollbackError) {
+			logError({ error: rollbackError });
+		}
+
+		throw error;
 	}
-	const navigationStorage = getNavigationStorage();
-	const initialNavigationState = navigationStorage || {
-		1: {
-			currentTopic: finalProgress.inProgressTopic,
-			currentSubtopic: finalProgress.inProgressSubtopic,
-		},
-	};
-
-	const batch = writeBatch(db);
-	batch.set(userDataRef(uid), persistedData);
-	batch.set(userProgressRef(uid), finalProgress);
-	batch.set(userNavigationRef(uid), initialNavigationState);
-	await batch.commit();
-
-	return {
-		uid,
-		userData: persistedData,
-		progressData: finalProgress,
-		navigationData: initialNavigationState,
-	};
 };
 
 export const signInWithCredentials = async (
@@ -88,7 +105,6 @@ export const signInWithCredentials = async (
 	}
 
 	return {
-		uid,
 		userData: userDoc.data(),
 		progressData: progressDoc.data(),
 		navigationData: navigationDoc.data(),
