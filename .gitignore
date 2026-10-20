@@ -28,3 +28,4 @@ dist-ssr
 src/content/contentfulClient.js
 *.tsbuildinfo
 .mkcert
+serviceAccount.json
