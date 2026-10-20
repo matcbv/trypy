@@ -14,6 +14,8 @@ export interface ToastData {
 	text: string;
 }
 
+export const defaultErrorMessage = 'Algo deu errado. Tente novamente.';
+
 // * Função aplicando type predicate para checagem do código de erro recebido.
 export function isKnownError(
 	error: unknown,
@@ -44,7 +46,7 @@ export const logError = ({ error, text, toastId }: LogErrorProps) => {
 				text ||
 				(error instanceof DisplayableError && error.message) ||
 				(isKnownError(error) && firebaseErrorMessages[error.code]) ||
-				'Algo deu errado. Tente novamente.',
+				defaultErrorMessage,
 		},
 		...(toastId && { toastId }),
 	});
