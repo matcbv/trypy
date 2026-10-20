@@ -182,7 +182,7 @@ export function Module() {
 					>
 						{currentSubtopic?.title}
 					</h1>
-					<div className="mb-10 flex flex-col gap-y-4 selection:bg-(--theme-color)/50">
+					<div className="mb-10 flex flex-col gap-y-5 selection:bg-(--theme-color)/50">
 						{currentSubtopic?.content &&
 							contentfulFormatter(currentSubtopic.content)}
 						{moduleContent()}

@@ -79,7 +79,7 @@ export function Playground() {
 	return (
 		<div className="mx-[10px] my-30 flex h-screen lg:mx-15">
 			<div className="flex size-full flex-col">
-				<div className="mb-4">
+				<div className="mb-3">
 					<div className="flex gap-x-6">
 						<button
 							onClick={() =>

@@ -9,17 +9,17 @@ import type { SubtopicData } from '../types/content';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { arrayUnion, writeBatch } from 'firebase/firestore';
 import { userDataRef, userProgressRef } from '../database/refs/userRefs';
-import { AuthContext } from '../contexts/AuthProvider/context';
 import { logError, logSuccess } from '../utils/logger';
 import { db } from '../database/configs/firebase';
+import { useRequireUser } from '../hooks/useRequireUser';
 
 export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
-	const { authState } = useSafeContext(AuthContext);
 	const { progressState, setProgressState } = useSafeContext(ProgressContext);
 	const { terminalState, setTerminalState, runCode, stopCodeExecution } =
 		useSafeContext(TerminalContext);
 	const [userCode, setUserCode] = useState<string>('');
 	const lastRunRef = useRef<{ slug: string; code: string } | null>(null);
+	const requireUser = useRequireUser();
 
 	const solved =
 		terminalState.solved ||
@@ -40,20 +40,20 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 
 		void (async () => {
 			try {
-				if (authState.uid) {
-					const batch = writeBatch(db);
-					batch.update(userDataRef(authState.uid), {
-						resolutions: arrayUnion({
-							slug: subtopicData.slug,
-							title: subtopicData.title,
-							code: lastRun.code,
-						}),
-					});
-					batch.update(userProgressRef(authState.uid), {
-						doneSubtopics: arrayUnion(subtopicData.slug),
-					});
-					await batch.commit();
-				}
+				const user = await requireUser();
+
+				const batch = writeBatch(db);
+				batch.update(userDataRef(user.uid), {
+					resolutions: arrayUnion({
+						slug: subtopicData.slug,
+						title: subtopicData.title,
+						code: lastRun.code,
+					}),
+				});
+				batch.update(userProgressRef(user.uid), {
+					doneSubtopics: arrayUnion(subtopicData.slug),
+				});
+				await batch.commit();
 
 				setProgressState((prev) => ({
 					...prev,
@@ -103,9 +103,9 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 
 	return (
 		<div className="flex flex-col">
-			<div className="mb-6 flex items-end gap-x-2">
-				<p className="text- tracking-wide">Status do exercício:</p>
-				<span className="flex items-center gap-x-1 font-bold">
+			<div className="mb-5 flex items-end gap-x-2">
+				<p className="text-section-base tracking-wide">Status do exercício:</p>
+				<span className="text-section-lg flex items-center gap-x-1 font-bold">
 					{solved ? 'Finalizado' : 'Em progresso...'}
 					<img
 						src={`/assets/images/icons/${solved ? 'success' : 'loading'}.png`}
@@ -114,7 +114,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 					/>
 				</span>
 			</div>
-			<div className="mb-4 flex gap-x-6">
+			<div className="mb-3 flex gap-x-6">
 				<button
 					onClick={() => {
 						lastRunRef.current = { slug: subtopicData.slug, code: userCode };
