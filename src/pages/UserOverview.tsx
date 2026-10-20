@@ -81,11 +81,11 @@ export function UserOverview() {
 				<h1 className="mb-8 text-2xl font-bold">
 					Olá, {authState.data?.name}!
 				</h1>
-				<h2 className="mb-2 text-lg">Dados da conta:</h2>
-				<div className="flex flex-col items-start gap-y-2 rounded-md bg-black/40 p-5 shadow-[0_0_20px_#000000]/50 sm:max-w-75">
+				<h2 className="mb-2 text-lg font-bold">Dados da conta:</h2>
+				<div className="flex flex-col items-start gap-y-2 rounded-md border border-black bg-black/30 p-5">
 					<div className="group relative flex items-center">
 						<p className="flex gap-x-2">
-							ID de usuário:
+							ID do aluno:
 							<span
 								className="lg:hover:text-main-purple lg:cursor-pointer lg:transition-colors"
 								onClick={(e) =>
@@ -108,7 +108,6 @@ export function UserOverview() {
 							}
 						/>
 					</div>
-
 					<p className="flex items-center gap-x-1">
 						Criada em: <span>{accountDate}</span>
 					</p>
@@ -121,8 +120,8 @@ export function UserOverview() {
 				</div>
 			</div>
 			<div>
-				<h2 className="mb-2 text-lg tracking-wide">Progresso da trilha</h2>
-				<div className="flex flex-col items-center justify-center gap-y-6 rounded-md bg-black/40 p-6 shadow-[0_0_20px_#000000]/50 sm:flex-row sm:gap-x-6 sm:gap-y-0">
+				<h2 className="mb-2 text-lg font-bold">Progresso da trilha</h2>
+				<div className="flex flex-col items-center justify-center gap-y-6 rounded-md border border-black bg-black/30 p-5 sm:flex-row sm:gap-x-6">
 					<ProgressBar progressPercentual={progressPercentual} />
 					<div className="flex flex-col gap-y-5">
 						<p className="flex flex-col">
@@ -147,10 +146,10 @@ export function UserOverview() {
 				</div>
 			</div>
 			<div>
-				<h2 className="mb-2 text-lg">Conquistas</h2>
-				<div className="flex items-center gap-x-2 rounded-md bg-black/40 p-8 shadow-[0_0_20px_#000000]/50">
+				<h2 className="mb-2 text-lg font-bold">Conquistas</h2>
+				<div className="flex items-center gap-x-2 rounded-md border border-black bg-black/30 p-5">
 					<img src="/assets/images/icons/loading.png" alt="Carregando" />
-					<p className="text-lg">Em produção...</p>
+					<p className="text-lg">Estamos trabalhando nisso...</p>
 				</div>
 			</div>
 		</div>
