@@ -28,18 +28,27 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
 	// * useEffect responsável por atualizar o estado de navegação caso necessário.
 	useEffect(() => {
+		let requestId = 0;
+
 		const handleNavigationState = async (user: User | null) => {
+			const currentRequestId = ++requestId;
+
 			if (user) {
 				try {
 					const navigationData = await getDoc(userNavigationRef(user.uid));
-					if (!navigationData.exists()) return;
+
+					if (currentRequestId !== requestId) return;
+
 					skipNextSyncRef.current = true;
-					setNavigationState(navigationData.data());
+					setNavigationState(navigationData.data() || null);
 				} catch (error) {
+					if (currentRequestId !== requestId) return;
+
 					const isAuthError =
 						error instanceof FirebaseError &&
 						(error.code === 'permission-denied' ||
 							error.code === 'unauthenticated');
+
 					if (isAuthError) {
 						await signOutAndClear();
 						void navigate('/', { replace: true });
@@ -49,6 +58,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 						});
 						return;
 					}
+
 					logError({
 						error,
 						...sharedToasts.loadDataError,
@@ -78,7 +88,10 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 			(user) => void handleNavigationState(user),
 		);
 
-		return unsubscribe;
+		return () => {
+			requestId++;
+			unsubscribe();
+		};
 	}, [navigate, modules]);
 
 	// * Setando os dados alterados em nosso local storage.
@@ -97,10 +110,10 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 			return;
 		}
 
-		const uid = auth.currentUser?.uid;
-		if (!uid) return;
+		const user = auth.currentUser;
+		if (!user) return;
 
-		void setDoc(userNavigationRef(uid), navigationState).catch((error) =>
+		void setDoc(userNavigationRef(user.uid), navigationState).catch((error) =>
 			logDev(error),
 		);
 	}, [navigationState]);

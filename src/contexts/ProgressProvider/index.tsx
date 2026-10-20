@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { ProgressContext } from './context';
 import { getDoc } from 'firebase/firestore';
 import { auth } from '../../database/configs/firebase';
@@ -24,21 +24,31 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 	const [progressState, setProgressState] =
 		useState<ProgressState>(getProgressStorage);
 	const navigate = useNavigate();
-	const skipNextSyncRef = useRef(false);
 
 	useEffect(() => {
+		let requestId = 0;
+
 		const handleProgressState = async (user: User | null) => {
+			const currentRequestId = ++requestId;
+
 			if (user) {
 				try {
 					const progressData = await getDoc(userProgressRef(user.uid));
-					if (!progressData.exists()) return;
-					skipNextSyncRef.current = true;
-					setProgressState((prev) => ({ ...prev, ...progressData.data() }));
+
+					if (currentRequestId !== requestId) return;
+
+					setProgressState((prev) => ({
+						...prev,
+						...progressData.data(),
+					}));
 				} catch (error) {
+					if (currentRequestId !== requestId) return;
+
 					const isAuthError =
 						error instanceof FirebaseError &&
 						(error.code === 'permission-denied' ||
 							error.code === 'unauthenticated');
+
 					if (isAuthError) {
 						await signOutAndClear();
 						void navigate('/', { replace: true });
@@ -48,6 +58,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 						});
 						return;
 					}
+
 					logError({
 						error,
 						...sharedToasts.loadDataError,
@@ -55,11 +66,14 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 				}
 			} else {
 				const progressStorage = getProgressStorage();
+
 				if (isProgressInitialized(progressStorage)) {
 					setProgressState(progressStorage);
 					return;
 				}
+
 				if (!modules) return;
+
 				const initialProgressData = fetchInitialContent(modules);
 				setProgressState(initialProgressData);
 			}
@@ -70,7 +84,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 			(user) => void handleProgressState(user),
 		);
 
-		return unsubscribe;
+		return () => {
+			requestId++;
+			unsubscribe();
+		};
 	}, [navigate, modules]);
 
 	useEffect(() => {

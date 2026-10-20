@@ -1,5 +1,4 @@
 const data = {
-	uid: null,
 	data: null,
 	loading: true,
 };

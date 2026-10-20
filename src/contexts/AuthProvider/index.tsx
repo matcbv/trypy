@@ -10,37 +10,62 @@ import { useNavigate } from 'react-router-dom';
 import type { AuthState } from '../../types/states';
 import { signOutAndClear } from '../../services/auth/signOutAndClear';
 import { sharedToasts } from '../../constants/errorMessages';
+import { FirebaseError } from 'firebase/app';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const [authState, setAuthState] = useState<AuthState>(initialState);
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		let requestId = 0;
+
 		const handleAuthState = async (user: User | null) => {
-			setAuthState((prev) => ({ ...prev, loading: true }));
+			const currentRequestId = ++requestId;
 
 			if (user) {
+				setAuthState((prev) => ({ ...prev, loading: true }));
+
 				try {
 					const userData = await getDoc(userDataRef(user.uid));
-					if (!userData.exists()) return;
+
+					if (currentRequestId !== requestId) return;
+
 					setAuthState((prev) => ({
 						...prev,
-						uid: user.uid,
-						data: userData.data(),
+						data: userData.data() ?? null,
 					}));
 				} catch (error) {
-					await signOutAndClear();
-					void navigate('/', { replace: true });
+					if (currentRequestId !== requestId) return;
+
+					const isAuthError =
+						error instanceof FirebaseError &&
+						(error.code === 'permission-denied' ||
+							error.code === 'unauthenticated');
+
+					if (isAuthError) {
+						await signOutAndClear();
+						void navigate('/', { replace: true });
+						logError({
+							error,
+							...sharedToasts.sessionError,
+						});
+						return;
+					}
+
 					logError({
 						error,
-						...sharedToasts.sessionError,
+						...sharedToasts.loadDataError,
 					});
 				} finally {
-					setAuthState((prev) => ({ ...prev, loading: false }));
+					if (currentRequestId === requestId) {
+						setAuthState((prev) => ({ ...prev, loading: false }));
+					}
 				}
 			} else {
-				setAuthState(initialState);
-				setAuthState((prev) => ({ ...prev, loading: false }));
+				setAuthState(() => ({
+					...initialState,
+					loading: false,
+				}));
 			}
 		};
 
@@ -49,7 +74,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			(user) => void handleAuthState(user),
 		);
 
-		return unsubscribe;
+		return () => {
+			requestId++;
+			unsubscribe();
+		};
 	}, [navigate]);
 
 	return (

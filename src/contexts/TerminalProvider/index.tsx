@@ -101,10 +101,17 @@ export function TerminalProvider() {
 					const errorLines = error!.trim().split('\n');
 					const displayedLines = errorLines.slice(-2);
 					const line = displayedLines[0]?.match(/line \d+/);
-					const formattedError = displayedLines[1] + ' at ' + line![0];
+
+					const isAssertionError =
+						displayedLines[1]!.includes('AssertionError');
+
+					const formattedError = isAssertionError
+						? displayedLines[1]
+						: displayedLines[1] + ' at ' + line![0];
+
 					setTerminalState((prev) => ({
 						...prev,
-						error: formattedError,
+						error: formattedError!,
 						solved: false,
 					}));
 					break;
