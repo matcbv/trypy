@@ -18,7 +18,7 @@
 	--color-terminal-background: #303446;
 	--color-toast-background: #131117;
 	--color-tip-background: #181724;
-	--color-dashboard-background: #231e57;
+	--color-dashboard-background: #231d63;
 	--color-progress-titles: #29bd5f;
 	--color-codeblock-symbols: #81c8be;
 
@@ -26,24 +26,27 @@
 	--spacing-hero-x: clamp(2.5rem, -1.413rem + 17.3913vw, 12.5rem);
 	--spacing-section-btn-x: clamp(1.5rem, 0.6196rem + 3.913vw, 3.75rem);
 	--spacing-section-btn-y: clamp(0.625rem, 0.3804rem + 1.087vw, 1.25rem);
+	--spacing-session-btn-x: clamp(1.25rem, 3vw, 2.5rem);
+	--spacing-session-btn-y: clamp(0.625rem, 1.5vw, 0.75rem);
 
 	/* Tamanhos */
 	--width-section-img: clamp(17.5rem, 9.6739rem + 34.7826vw, 37.5rem);
 	--width-account-img: clamp(12.5rem, 10.3261rem + 17.3913vw, 18.75rem);
-	--width-about-logo: clamp(11.25rem, 5.8696rem + 23.913vw, 25rem);
-	--width-section-svg: clamp(15rem, 9.6196rem + 23.913vw, 28.75rem);
+	--width-about-logo: clamp(11.25rem, 6.8478rem + 19.565vw, 22.5rem);
+	--width-section-svg: clamp(17rem, 10.7391rem + 27.8261vw, 33rem);
 	--width-blob-1: clamp(25rem, 15.2174rem + 43.4783vw, 50rem);
 	--height-blob-1: clamp(12.5rem, 7.6087rem + 21.7391vw, 25rem);
 	--width-blob-2: clamp(18.75rem, 11.413rem + 32.6087vw, 37.5rem);
 	--height-blob-2: clamp(9.375rem, 5.7065rem + 16.3043vw, 18.75rem);
+	--size-snake: clamp(8rem, 28vmin, 14rem);
 
 	/* Backgrounds */
 	--background-image-trycode: linear-gradient(
 		to right,
-		#fe2c2a,
-		#00b74e,
-		#0687fe,
-		#fee413
+		#ef4136,
+		#22b573,
+		#2e6bf0,
+		#ffc21a
 	);
 
 	/* Fontes */
@@ -73,19 +76,22 @@
 	--text-hero-subtitle: clamp(0.875rem, 0.7283rem + 0.6522vw, 1.25rem);
 	--text-hero-subtitle--line-height: 1.4;
 
-	--text-title-5xl: clamp(1.625rem, 1.1848rem + 1.9565vw, 2.75rem);
-	--text-title-5xl--line-height: 1;
-
-	--text-title-4xl: clamp(1.5rem, 1.2065rem + 1.3043vw, 2.25rem);
+	--text-title-4xl: clamp(1.5rem, 1.2065rem + 1.5652vw, 2.4rem);
 	--text-title-4xl--line-height: 1;
 
-	--text-title-3xl: clamp(1.25rem, 1.0054rem + 1.087vw, 1.875rem);
+	--text-title-3xl: clamp(1.25rem, 1.0054rem + 1.3043vw, 2rem);
 	--text-title-3xl--line-height: 1.2;
 
-	--text-title-xl: clamp(1.125rem, 0.9022rem + 0.4348vw, 1.25rem);
+	--text-title-2xl: clamp(1.1875rem, 1.053rem + 0.7174vw, 1.6rem);
+	--text-title-2xl--line-height: 1.25;
+
+	--text-title-xl: clamp(1.125rem, 0.9022rem + 0.5217vw, 1.275rem);
 	--text-title-xl--line-height: 1.3;
 
-	--text-section-xl: clamp(1rem, 0.9022rem + 0.4348vw, 1.25rem);
+	--text-title-lg: clamp(1rem, 0.9592rem + 0.2174vw, 1.125rem);
+	--text-title-lg--line-height: 1.4;
+
+	--text-section-xl: clamp(1rem, 0.9022rem + 0.5217vw, 1.3rem);
 	--text-section-xl--line-height: 1.5;
 
 	--text-section-lg: clamp(0.9375rem, 0.8641rem + 0.3261vw, 1.125rem);
@@ -93,6 +99,9 @@
 
 	--text-section-base: clamp(0.875rem, 0.8261rem + 0.2174vw, 1rem);
 	--text-section-base--line-height: 1.5;
+
+	--text-section-sm: clamp(0.75rem, 0.7011rem + 0.2174vw, 0.875rem);
+	--text-section-sm--line-height: 1.5;
 
 	--text-section-btn: clamp(0.9375rem, 0.8641rem + 0.3261vw, 1.125rem);
 	--text-section-btn--line-height: 1.6;
@@ -127,6 +136,18 @@
 			transform: scale(100%);
 		}
 	}
+
+	@keyframes appear {
+		from {
+			opacity: 0;
+			transform: translateY(150px);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 }
 
 @layer base {
@@ -135,15 +156,19 @@
 	}
 }
 
-@layer utilities {
-	.bg-forms {
-		background-image: linear-gradient(
-			to bottom right,
-			#12612f,
-			#240051,
-			var(--color-main-bg)
-		);
-	}
+@utility bg-forms {
+	background-image: linear-gradient(
+		to bottom right,
+		#12612f,
+		#240051,
+		var(--color-main-bg)
+	);
+}
+
+@utility appear-animation {
+	animation: appear linear both;
+	animation-timeline: view();
+	animation-range: entry 0% entry 80%;
 }
 
 @layer components {
