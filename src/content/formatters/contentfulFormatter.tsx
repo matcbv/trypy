@@ -7,11 +7,13 @@ import type { EntrySkeletonType } from 'contentful';
 import {
 	BLOCKS,
 	MARKS,
+	INLINES,
 	type AssetLinkBlock,
 	type Document,
 	type EntryLinkBlock,
 	type Paragraph,
 	type Text,
+	type Hyperlink,
 } from '@contentful/rich-text-types';
 
 type ResolvedEntryBlock<T extends EntrySkeletonType> = Omit<
@@ -75,7 +77,6 @@ export function contentfulFormatter(content: Document) {
 				if (isOnlyCode) {
 					return <CodeBlock code={text.value} />;
 				}
-
 				return <p className="text-content-p">{children}</p>;
 			},
 			[BLOCKS.EMBEDDED_ASSET]: (node) => {
@@ -92,10 +93,27 @@ export function contentfulFormatter(content: Document) {
 					/>
 				);
 			},
+			[INLINES.HYPERLINK]: (node, children) => {
+				const hyperlink = node as Hyperlink;
+				return (
+					<a
+						href={hyperlink.data.uri}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{children}
+					</a>
+				);
+			},
 		},
 		renderMark: {
 			[MARKS.BOLD]: (text) => (
 				<span className="text-(--highlight-theme-color)">{text}</span>
+			),
+			[MARKS.UNDERLINE]: (text) => (
+				<u className="decoration-(--highlight-theme-color) underline-offset-4">
+					{text}
+				</u>
 			),
 		},
 	});
