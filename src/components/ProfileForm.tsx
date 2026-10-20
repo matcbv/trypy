@@ -7,9 +7,10 @@ import { updateDoc } from 'firebase/firestore';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { userDataRef } from '../database/refs/userRefs';
 import { validationRegex } from '../constants/validationRegex';
+import { useRequireUser } from '../hooks/useRequireUser';
+import { updateProfile } from 'firebase/auth';
 
 const formMap = {
-	email: 'E-mail',
 	name: 'Nome',
 	lastname: 'Sobrenome',
 	birthDate: 'Data de nascimento',
@@ -19,7 +20,6 @@ export function ProfileForm() {
 	const { authState, setAuthState } = useSafeContext(AuthContext);
 	const [placeholders, setPlaceholders] = useState(formMap);
 	const [currentData, setCurrentData] = useState({
-		email: '',
 		name: '',
 		lastname: '',
 		birthDate: '',
@@ -27,6 +27,7 @@ export function ProfileForm() {
 	const [fieldErrors, setFieldErrors] = useState<Array<keyof typeof formMap>>(
 		[],
 	);
+	const requireUser = useRequireUser();
 
 	useEffect(() => {
 		if (!authState.data) return;
@@ -83,8 +84,9 @@ export function ProfileForm() {
 	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const isDataValid = checkData();
+		const user = await requireUser();
 
+		const isDataValid = checkData();
 		if (!isDataValid) return;
 
 		const formattedData = Object.fromEntries(
@@ -92,6 +94,12 @@ export function ProfileForm() {
 		) as typeof currentData;
 
 		try {
+			await updateDoc(userDataRef(user.uid), formattedData);
+
+			await updateProfile(user, {
+				displayName: `${currentData.name} ${currentData.lastname}`,
+			});
+
 			setAuthState((prev) => {
 				if (!prev.data) return prev;
 				return {
@@ -99,7 +107,7 @@ export function ProfileForm() {
 					data: { ...prev.data, ...formattedData },
 				};
 			});
-			await updateDoc(userDataRef(authState.uid!), formattedData);
+
 			logSuccess('Dados atualizados com sucesso!');
 		} catch (error) {
 			logError({
@@ -116,7 +124,7 @@ export function ProfileForm() {
 		>
 			<PictureInput />
 			<div className="mb-3 w-full">
-				<h2 className="mb-3 text-lg">Dados básicos</h2>
+				<h2 className="mb-3 text-lg font-bold">Dados básicos</h2>
 				<div className="flex flex-col gap-y-3">
 					{(Object.keys(currentData) as Array<keyof typeof currentData>).map(
 						(key) => {
@@ -127,7 +135,7 @@ export function ProfileForm() {
 									value={currentData[key]}
 									placeholder={placeholders[key]}
 									onChange={handleChange}
-									className={`border-main-green/70 focus:border-main-green w-full max-w-75 rounded-md border-2 bg-white/5 px-3 py-2 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10 ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
+									className={`border-main-green/75 focus:border-main-green w-full max-w-75 rounded-md border-2 bg-white/5 px-3 py-2 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10 ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
 									type="text"
 								/>
 							);
