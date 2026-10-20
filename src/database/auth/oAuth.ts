@@ -1,5 +1,5 @@
-import { signInWithPopup } from 'firebase/auth';
-import { auth, db, googleProvider } from '../configs/firebase';
+import { signInWithPopup, type AuthProvider } from 'firebase/auth';
+import { auth, db } from '../configs/firebase';
 import { getDoc, writeBatch } from 'firebase/firestore';
 import { idGenerator } from '../../utils/idGenerator';
 import {
@@ -14,12 +14,16 @@ import { fetchInitialContent } from '../../content/services/fetchInitialContent'
 import type { ModuleData } from '../../types/content';
 import { DisplayableError } from '../../classes/DisplayableError';
 
-interface SignInWithGoogleProps {
+type SignInWithProviderProps = {
 	modules: ModuleData[] | null;
-}
+	provider: AuthProvider;
+};
 
-export const signInWithGoogle = async ({ modules }: SignInWithGoogleProps) => {
-	const credential = await signInWithPopup(auth, googleProvider);
+export const signInWithProvider = async ({
+	modules,
+	provider,
+}: SignInWithProviderProps) => {
+	const credential = await signInWithPopup(auth, provider);
 
 	const { displayName, email, photoURL, uid } = credential.user;
 
@@ -44,7 +48,6 @@ export const signInWithGoogle = async ({ modules }: SignInWithGoogleProps) => {
 		}
 
 		return {
-			uid,
 			userData: userDoc.data(),
 			progressData: progressDoc.data(),
 			navigationData: navigationDoc.data(),
@@ -87,11 +90,8 @@ export const signInWithGoogle = async ({ modules }: SignInWithGoogleProps) => {
 	await batch.commit();
 
 	return {
-		uid,
 		userData,
 		progressData: finalProgress,
 		navigationData: initialNavigationState,
 	};
 };
-
-export const signupWithGitHub = async () => {};
