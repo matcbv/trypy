@@ -1,15 +1,12 @@
-import type { AuthState } from './states';
+import type { User } from 'firebase/auth';
 
 export interface MiddlewareContext {
-	user: AuthState;
+	user: User | null;
 	moduleId: string | null;
 	initialModuleSlug: string | null;
 }
 
-export interface MiddlewareResponse {
-	pending: boolean;
-	passed?: boolean;
-	redirectTo?: string;
-}
+export type MiddlewareResponse =
+	{ passed: true } | { passed: false; redirectTo: string };
 
 export type Middleware = (context: MiddlewareContext) => MiddlewareResponse;

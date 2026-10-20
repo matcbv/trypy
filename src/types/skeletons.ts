@@ -29,7 +29,7 @@ export type SubtopicSkeleton = EntrySkeletonType<
 	{
 		title: EntryFieldTypes.Symbol;
 		content: EntryFieldTypes.RichText;
-		videoDescription?: EntryFieldTypes.Symbol;
+		videoDescription?: EntryFieldTypes.RichText;
 		videoLink?: EntryFieldTypes.Symbol;
 		slug: EntryFieldTypes.Symbol;
 		order: EntryFieldTypes.Integer;

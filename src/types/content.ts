@@ -21,7 +21,7 @@ export interface TopicData {
 export interface SubtopicData {
 	title: string;
 	content: Document;
-	videoDescription?: string;
+	videoDescription?: Document;
 	videoLink?: string;
 	slug: string;
 	order: number;
