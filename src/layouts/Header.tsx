@@ -7,7 +7,6 @@ import { signOutAndClear } from '../services/auth/signOutAndClear';
 import { auth } from '../database/configs/firebase';
 
 const userAccountMap = [
-	{ slug: '', title: 'Dashboard' },
 	{ slug: 'profile', title: 'Editar conta' },
 	{ slug: 'resolutions', title: 'Resoluções' },
 	{ slug: 'certifications', title: 'Certificações' },
@@ -22,6 +21,7 @@ const pagesMap = [
 
 export function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isHeaderAtTop, setIsHeaderAtTop] = useState(true);
 	const headerRef = useRef<HTMLDivElement>(null);
 	const navIconRef = useRef<HTMLImageElement>(null);
 	const navRef = useRef<HTMLElement>(null);
@@ -29,6 +29,8 @@ export function Header() {
 	const underlineRef = useRef<HTMLSpanElement>(null);
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
+
+	const isVerified = !!auth.currentUser?.emailVerified;
 
 	const showUnderline = (e: MouseEvent<HTMLLIElement>) => {
 		const underline = e.currentTarget.querySelector('span');
@@ -73,10 +75,7 @@ export function Header() {
 		const header = headerRef.current;
 		if (!header) return;
 
-		const changeColor = () => {
-			const color = window.scrollY === 0 ? 'transparent' : '#000000f0';
-			header.style.setProperty('--header-bg', color);
-		};
+		const changeColor = () => setIsHeaderAtTop(window.scrollY === 0);
 		window.addEventListener('scroll', changeColor);
 
 		return () => {
@@ -106,10 +105,11 @@ export function Header() {
 		<>
 			<div
 				ref={headerRef}
-				className="font-jetbrains fixed top-0 z-30 w-full"
-				style={{ '--header-bg': 'transparent' } as React.CSSProperties}
+				className={`font-jetbrains fixed top-0 z-30 w-full transition-[background-color] duration-500 ${isHeaderAtTop ? 'bg-transparent' : 'bg-black/70'}`}
 			>
-				<header className="flex h-[70px] items-center justify-between bg-(--header-bg) px-5 transition-[background-color] duration-500 lg:px-15">
+				<header
+					className={`flex h-[70px] items-center ${isHeaderAtTop ? 'backdrop-blur-none' : 'backdrop-blur-xl'} justify-between px-5 lg:px-15`}
+				>
 					<Link to="/">
 						<img
 							src="/assets/images/trypy-logo.png"
@@ -120,18 +120,6 @@ export function Header() {
 					</Link>
 					<nav className="hidden lg:block" ref={navRef}>
 						<ul className="flex items-center gap-x-10">
-							<li
-								className="relative flex flex-col items-center"
-								onMouseEnter={showUnderline}
-								onMouseLeave={hideUnderline}
-							>
-								{authState.data ? (
-									<Link to="/dashboard">Minha conta</Link>
-								) : (
-									<Link to="/session">Iniciar sessão</Link>
-								)}
-								<span className="bg-main-green absolute -bottom-1 h-0.5 w-0 rounded-full transition-[width] duration-300"></span>
-							</li>
 							{pagesMap.map(({ slug, title }) => (
 								<li
 									key={slug}
@@ -143,9 +131,33 @@ export function Header() {
 									<span className="bg-main-green absolute -bottom-1 h-0.5 w-0 rounded-full transition-[width] duration-300"></span>
 								</li>
 							))}
+							<li className="relative flex flex-col items-center">
+								{isVerified ? (
+									<Link to="/dashboard">
+										<img
+											src={
+												authState.data?.picture ||
+												'/assets/images/profile-picture.png'
+											}
+											alt="Foto de perfil"
+											className="size-12 rounded-full object-cover outline"
+										/>
+									</Link>
+								) : (
+									<>
+										<Link to="/session">
+											<img
+												src="/assets/images/icons/signIn.png"
+												alt="Iniciar sessão"
+												className="w-10"
+											/>
+										</Link>
+									</>
+								)}
+							</li>
 						</ul>
 					</nav>
-					<div className="flex gap-x-5 lg:hidden">
+					<div className="flex items-center gap-x-5 lg:hidden">
 						<img
 							ref={navIconRef}
 							src="/assets/images/icons/menu.png"
@@ -155,37 +167,40 @@ export function Header() {
 							role="button"
 							tabIndex={0}
 						/>
-						{authState.data && (
-							<img
-								src="/assets/images/icons/logout.png"
-								alt="Deslogar"
-								className="w-8"
-								onClick={() => void logoutWrapper()}
-								role="button"
-								tabIndex={0}
-							/>
+						{isVerified ? (
+							<Link to="/dashboard">
+								<img
+									src={
+										authState.data?.picture ||
+										'/assets/images/profile-picture.png'
+									}
+									alt="Foto de perfil"
+									className="size-10 rounded-full object-cover outline"
+								/>
+							</Link>
+						) : (
+							<Link to="/session">
+								<img
+									src="/assets/images/icons/signIn.png"
+									alt="Iniciar sessão"
+									className="w-8"
+								/>
+							</Link>
 						)}
 					</div>
 				</header>
 				<nav
-					className={`transition-[background-color, height] bg-(--header-bg) backdrop-blur-xl duration-500 ${isMenuOpen ? 'visible h-fit opacity-100' : 'invisible h-0 opacity-0'}`}
+					className={`transition-[opacity, height] backdrop-blur-xl duration-500 ${isMenuOpen ? 'visible h-fit opacity-100' : 'invisible h-0 opacity-0'}`}
 				>
 					<ul className="flex flex-col text-sm">
-						{authState.data ? (
+						{isVerified &&
 							userAccountMap.map(({ slug, title }) => (
 								<li key={slug} className="border-b border-b-gray-400">
 									<Link className="block p-5" to={`/dashboard/${slug}`}>
 										{title}
 									</Link>
 								</li>
-							))
-						) : (
-							<li className="border-b border-b-gray-400">
-								<Link className="block p-5" to="/session">
-									Iniciar sessão
-								</Link>
-							</li>
-						)}
+							))}
 						{pagesMap.map(({ title, slug }, i) => (
 							<li
 								key={slug}
@@ -196,6 +211,14 @@ export function Header() {
 								</Link>
 							</li>
 						))}
+						{isVerified && (
+							<button
+								className="border-t border-t-gray-400 p-5 text-left"
+								onClick={() => void logoutWrapper()}
+							>
+								Deslogar
+							</button>
+						)}
 					</ul>
 				</nav>
 			</div>
