@@ -30,7 +30,7 @@ export function CodeBlock({ code }: { code: string }) {
 		>
 			<div className="codeScrollbar overflow-x-auto">
 				<div
-					className="text-content-p w-fit min-w-full"
+					className="w-fit min-w-full"
 					dangerouslySetInnerHTML={{ __html: html }}
 				></div>
 			</div>

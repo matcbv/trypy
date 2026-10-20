@@ -78,7 +78,7 @@ export function SearchInput({
 			<input
 				type="search"
 				value={searchValue}
-				className="h-10 w-full rounded-md border-2 border-white/10 bg-white/10 pr-8 pl-2 outline-none placeholder:text-gray-400 lg:cursor-pointer lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/15"
+				className="h-10 w-full rounded-md border-2 border-white/10 bg-white/10 pr-8 pl-2 outline-none placeholder:text-gray-400 focus:shadow-[0_0_15px_#ffffff]/15 lg:cursor-pointer lg:transition-shadow lg:duration-300"
 				onChange={(e) => setSearchValue(e.currentTarget.value)}
 				placeholder="Título ou palavra-chave"
 			/>

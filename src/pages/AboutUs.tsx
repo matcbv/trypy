@@ -2,28 +2,28 @@ import { useState } from 'react';
 
 const socialMediaMap = {
 	Github: {
-		src: '/assets/images/icons/github.png',
+		icon: '/assets/images/icons/github.png',
 		link: {
 			matheus: 'https://github.com/matcbv',
 			daniel: 'https://github.com/Daniel16Bit',
 		},
 	},
 	LinkedIn: {
-		src: '/assets/images/icons/linkedin.png',
+		icon: '/assets/images/icons/linkedin.png',
 		link: {
 			matheus: 'https://www.linkedin.com/in/matheus-cerqueira-baiao-victor',
 			daniel: 'https://www.linkedin.com/in/mdaniel-main',
 		},
 	},
 	Gmail: {
-		src: '/assets/images/icons/gmail.png',
+		icon: '/assets/images/icons/gmail.png',
 		link: {
 			matheus: 'mailto:matheuscbv23@gmail.com?subject=Assunto%20a%20tratar...',
 			daniel: 'mailto:mdaniel.main@gmail.com?subject=Assunto%20a%20tratar...',
 		},
 	},
 	Instagram: {
-		src: '/assets/images/icons/instagram.png',
+		icon: '/assets/images/icons/instagram.png',
 		link: {
 			matheus: 'https://www.instagram.com/matheus.cbv',
 			daniel: 'https://www.instagram.com/daniel8bit/',
@@ -40,7 +40,7 @@ export function AboutUs() {
 				<img
 					src="/assets/images/trycode-logo.png"
 					alt="TryCode"
-					className="w-about-logo"
+					className="w-about-logo self-center"
 				/>
 				<div className="max-w-150">
 					<h1 className="text-title-4xl mb-5 font-bold tracking-wide">
@@ -79,7 +79,7 @@ export function AboutUs() {
 					Conheça nossa equipe
 				</h1>
 				<div className="flex flex-col">
-					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-10 gap-y-5 lg:flex-row lg:gap-y-0">
+					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-10 gap-y-5 lg:flex-row">
 						<div className="flex max-w-[150px] flex-col justify-between gap-y-[10px] self-center lg:gap-y-0 lg:self-stretch">
 							<div>
 								<img
@@ -93,15 +93,22 @@ export function AboutUs() {
 							</div>
 
 							<div className="flex w-full justify-around">
-								{Object.entries(socialMediaMap).map(([key, { src, link }]) => (
-									<a
-										href={link['matheus']}
-										rel="noopener noreferrer"
-										target="_blank"
-									>
-										<img src={src} alt={key} />
-									</a>
-								))}
+								{Object.entries(socialMediaMap).map(([key, { icon, link }]) =>
+									key === 'Gmail' ? (
+										<a key={key} href={link['matheus']}>
+											<img src={icon} alt={key} />
+										</a>
+									) : (
+										<a
+											key={key}
+											href={link['matheus']}
+											rel="noopener noreferrer"
+											target="_blank"
+										>
+											<img src={icon} alt={key} />
+										</a>
+									),
+								)}
 							</div>
 						</div>
 						<div className="flex max-w-150 flex-col justify-between gap-y-5 lg:gap-y-0">
@@ -134,7 +141,7 @@ export function AboutUs() {
 						</div>
 					</div>
 					<span className="from-main-green to-main-purple my-20 block h-[2px] bg-linear-to-r"></span>
-					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-10 gap-y-5 lg:flex-row-reverse lg:gap-y-0">
+					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-10 gap-y-5 lg:flex-row-reverse">
 						<div className="flex max-w-[150px] flex-col justify-between gap-y-[10px] self-center lg:gap-y-0 lg:self-stretch">
 							<div>
 								<img
@@ -148,15 +155,22 @@ export function AboutUs() {
 							</div>
 
 							<div className="flex w-full justify-around">
-								{Object.entries(socialMediaMap).map(([key, { src, link }]) => (
-									<a
-										href={link['daniel']}
-										rel="noopener noreferrer"
-										target="_blank"
-									>
-										<img src={src} alt={key} />
-									</a>
-								))}
+								{Object.entries(socialMediaMap).map(([key, { icon, link }]) =>
+									key === 'Gmail' ? (
+										<a key={key} href={link['daniel']}>
+											<img src={icon} alt={key} />
+										</a>
+									) : (
+										<a
+											key={key}
+											href={link['daniel']}
+											rel="noopener noreferrer"
+											target="_blank"
+										>
+											<img src={icon} alt={key} />
+										</a>
+									),
+								)}
 							</div>
 						</div>
 						<div className="flex max-w-150 flex-col justify-between gap-y-5 lg:gap-y-0">

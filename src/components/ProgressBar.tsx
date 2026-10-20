@@ -3,31 +3,35 @@ export function ProgressBar({
 }: {
 	progressPercentual: number;
 }) {
-	const perimeter = 2 * Math.PI * 80;
+	const radius = 100;
+	const perimeter = 2 * Math.PI * radius;
 
 	return (
-		<svg className="h-50 w-50 shrink-0 rounded-full shadow-[0_0_15px_#ffffff]/10">
+		<svg
+			className="h-56 w-56 shrink-0 rounded-full drop-shadow-[0_0_15px_#ffffff]/15"
+			viewBox="0 0 240 240"
+		>
 			<circle
-				cx={100}
-				cy={100}
-				r={80}
+				cx={120}
+				cy={120}
+				r={100}
 				stroke="#808791"
-				className="fill-none stroke-[40px]"
+				className="fill-none stroke-[55px]"
 			/>
 			<circle
-				cx={100}
-				cy={100}
-				r={80}
+				cx={120}
+				cy={120}
+				r={100}
 				strokeDasharray={perimeter}
 				strokeDashoffset={perimeter - (perimeter * progressPercentual) / 100}
-				className="stroke-main-green origin-center -rotate-90 fill-none stroke-[40px] transition-all duration-500"
+				className="stroke-main-green origin-center -rotate-90 fill-none stroke-[55px] transition-all duration-500"
 			/>
 			<text
-				x={100}
-				y={100}
+				x={120}
+				y={120}
 				textAnchor="middle"
 				dominantBaseline="middle"
-				className="fill-gray-200 text-3xl"
+				className="fill-gray-200 text-4xl"
 			>
 				{progressPercentual + '%'}
 			</text>
