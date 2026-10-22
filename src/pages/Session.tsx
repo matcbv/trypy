@@ -7,12 +7,11 @@ import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { logError, logSuccess, logWarning } from '../utils/logger';
 import { signInWithProvider } from '../database/auth/oAuth';
-import { signOutAndClear } from '../services/auth/signOutAndClear';
 import { validationRegex } from '../constants/validationRegex';
 import { signInWithCredentials } from '../database/auth/auth';
 import { LoadingPage } from './LoadingPage';
 import { githubProvider, googleProvider } from '../database/configs/firebase';
-import type { AuthProvider } from 'firebase/auth';
+import { type AuthProvider } from 'firebase/auth';
 
 export function Session() {
 	const navigate = useNavigate();
@@ -99,7 +98,6 @@ export function Session() {
 			void navigate('/dashboard', { replace: true });
 			logSuccess('Login efetuado com sucesso!');
 		} catch (error) {
-			await signOutAndClear();
 			logError({ error });
 		} finally {
 			setIsSubmitting(false);
