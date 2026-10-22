@@ -16,12 +16,11 @@ import { signInWithProvider } from '../database/auth/oAuth';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { idGenerator } from '../utils/idGenerator';
 import { LoadingPage } from '../pages/LoadingPage';
-import type { AuthProvider } from 'firebase/auth';
+import { type AuthProvider } from 'firebase/auth';
 import { githubProvider } from '../database/configs/firebase';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
 import { googleProvider } from '../database/configs/firebase';
-import { signOutAndClear } from '../services/auth/signOutAndClear';
 
 const formMap = {
 	email: 'E-mail',
@@ -38,7 +37,6 @@ export function Register() {
 	const { setProgressState } = useSafeContext(ProgressContext);
 	const { setNavigationState } = useSafeContext(NavigationContext);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-
 	const [isVisible, setIsVisible] = useState(false);
 	const [hideText, setHideText] = useState(true);
 	const wrapperRef = useRef<HTMLDivElement>(null);
@@ -112,7 +110,7 @@ export function Register() {
 			const res = await signUpWithCredentials({
 				userData: {
 					...formattedData,
-					id: 'TPY-' + idGenerator().generateID(),
+					id: 'TPY-' + idGenerator().generateId(),
 					picture: null,
 					createdAt: new Date(),
 					supporter: false,
@@ -155,34 +153,6 @@ export function Register() {
 			void navigate('/dashboard', { replace: true });
 			logSuccess('Login efetuado com sucesso!');
 		} catch (error) {
-			await signOutAndClear();
-			logError({ error });
-		} finally {
-			setIsSubmitting(false);
-		}
-	};
-
-	const handleGithub = async () => {
-		setIsSubmitting(true);
-
-		try {
-			const res = await signInWithProvider({
-				modules,
-				provider: githubProvider,
-			});
-			const { userData, progressData, navigationData } = res;
-
-			setAuthState((prev) => ({
-				...prev,
-				data: prev.data && { ...prev.data, ...userData },
-			}));
-			setProgressState((prev) => ({ ...prev, ...progressData }));
-			setNavigationState(navigationData);
-
-			void navigate('/dashboard', { replace: true });
-			logSuccess('Login efetuado com sucesso!');
-		} catch (error) {
-			await signOutAndClear();
 			logError({ error });
 		} finally {
 			setIsSubmitting(false);
@@ -254,16 +224,16 @@ export function Register() {
 	};
 
 	return (
-		<div className="flex min-h-screen items-center justify-center">
-			<div className="bg-forms relative mx-[10px] my-30 flex min-h-115 w-full max-w-100 rounded-lg shadow-[0_0_20px_#ffffff]/10 md:max-w-180">
+		<div className="relative flex min-h-screen items-center justify-center">
+			<div className="bg-forms relative mx-[10px] my-30 flex min-h-115 w-full max-w-100 rounded-lg shadow-[0_0_20px_#ffffff]/10 lg:max-w-180">
 				{isSubmitting && <LoadingPage />}
 				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-20'></div>
 				<div className="relative w-full rounded-lg p-10">
 					<form
-						className="flex flex-col items-center gap-x-10 md:flex-row"
+						className="flex flex-col items-center gap-x-10 lg:flex-row"
 						onSubmit={(e) => void handleSubmit(e)}
 					>
-						<div className="mb-4 md:mb-0">
+						<div className="mb-4 lg:mb-0">
 							<h1 className="text-title-3xl mb-5 font-bold tracking-wide">
 								Criar conta
 							</h1>
@@ -286,7 +256,7 @@ export function Register() {
 							</div>
 						</div>
 						<div className="flex flex-col gap-y-5">
-							<p className="font-space-grotesk hidden w-[303px] text-center text-4xl leading-12 tracking-wide text-shadow-[5px_5px_10px_#000000]/80 md:block">
+							<p className="font-space-grotesk hidden w-[303px] text-center text-4xl leading-12 tracking-wide text-shadow-[5px_5px_10px_#000000]/80 lg:block">
 								O{' '}
 								<span className="decoration-main-green underline decoration-2 underline-offset-10">
 									primeiro passo
@@ -296,43 +266,45 @@ export function Register() {
 									importante!
 								</span>
 							</p>
-							<div className="flex flex-row-reverse items-center justify-end gap-5 md:flex-col lg:justify-center">
+							<div className="flex flex-row-reverse items-center justify-end gap-5 lg:flex-col lg:justify-center">
 								<button
 									type="button"
-									className="register-form-btn border-main-purple hidden items-center justify-center gap-x-2 md:flex"
+									className="register-form-btn border-main-purple hidden items-center justify-center gap-x-2 lg:flex"
 									onClick={() => void handleProvider(googleProvider)}
 								>
 									<p className="text-lg">Google</p>
 									<img src="/assets/images/icons/google.png" alt="Google" />
 								</button>
 								<img
-									className="md:hidden"
+									className="lg:hidden"
 									src="/assets/images/icons/google.png"
 									alt="Google"
 									role="button"
 									tabIndex={0}
-									onClick={() => void handleProvider(githubProvider)}
+									onClick={() => void handleProvider(googleProvider)}
 								/>
 								<button
 									type="button"
-									className="register-form-btn border-main-purple hidden items-center justify-center gap-x-2 md:flex"
-									onClick={() => void handleGithub()}
+									className="register-form-btn border-main-purple hidden items-center justify-center gap-x-2 lg:flex"
+									onClick={() => void handleProvider(githubProvider)}
 								>
 									<p className="block text-lg">GitHub</p>
 									<img src="/assets/images/icons/github.png" alt="GitHub" />
 								</button>
 								<img
-									className="md:hidden"
+									className="lg:hidden"
 									src="/assets/images/icons/github.png"
-									alt="Github"
+									alt="GitHub"
 									role="button"
 									tabIndex={0}
+									onClick={() => void handleProvider(githubProvider)}
 								/>
-								<input
+								<button
 									type="submit"
-									value="Continuar"
-									className="register-form-btn border-main-green font-bold"
-								/>
+									className="register-form-btn text-section-btn border-main-green font-bold"
+								>
+									Continuar
+								</button>
 							</div>
 						</div>
 					</form>
