@@ -32,6 +32,7 @@ import { Playground } from '../pages/Playground';
 import { pendingVerificationMiddleware } from '../middlewares/pendingVerificationMiddleware';
 import { VerifyEmail } from '../pages/VerifyEmail';
 import { NewPassword } from '../pages/NewPassword';
+import { AccountAndSecurity } from '../pages/AccountAndSecurity';
 
 export function AppRoutes() {
 	return (
@@ -64,13 +65,17 @@ export function AppRoutes() {
 									>
 										<Route path="/dashboard" element={<Dashboard />}>
 											<Route index element={<UserOverview />} />
-											<Route path="profile" element={<EditProfile />} />
+											<Route path="edit-profile" element={<EditProfile />} />
 											<Route path="support-us" element={<SupportUs />} />
 											<Route
 												path="certifications"
 												element={<Certifications />}
 											/>
 											<Route path="resolutions" element={<Resolutions />} />
+											<Route
+												path="account-and-security"
+												element={<AccountAndSecurity />}
+											/>
 										</Route>
 										<Route element={<TerminalProvider />}>
 											<Route
