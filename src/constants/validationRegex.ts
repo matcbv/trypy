@@ -7,6 +7,10 @@ export const validationRegex = {
 		regex: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/g,
 		text: 'Senha inválida',
 	},
+	confirmPassword: {
+		regex: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/g,
+		text: 'Senha inválida',
+	},
 	name: {
 		regex: /([^\s]+)/g,
 		text: 'Nome é obrigatório',
