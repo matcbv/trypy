@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const socialMediaMap = {
-	Github: {
+	GitHub: {
 		icon: '/assets/images/icons/github.png',
 		link: {
 			matheus: 'https://github.com/matcbv',

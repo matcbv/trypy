@@ -7,7 +7,7 @@ const footerMap = {
 };
 
 const iconsMap = {
-	Github: {
+	GitHub: {
 		src: '/assets/images/icons/github.png',
 		link: 'https://github.com/matcbv/trypy',
 	},
