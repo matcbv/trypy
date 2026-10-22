@@ -148,7 +148,13 @@ export function NewPassword() {
 								</button>
 								<button
 									type="button"
-									onClick={() => void navigate(-1)}
+									onClick={() =>
+										auth.currentUser
+											? void navigate('/dashboard', { replace: true })
+											: void navigate('/dashboard/edit-profile', {
+													replace: true,
+												})
+									}
 									className="form-btn text-section-base"
 								>
 									Cancelar
