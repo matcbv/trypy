@@ -4,10 +4,11 @@ import { signOutAndClear } from '../services/auth/signOutAndClear';
 
 const objectsMap = [
 	{ slug: '', title: 'Visão geral', icon: 'user-overview' },
-	{ slug: 'profile', title: 'Editar conta', icon: 'edit-account' },
+	{ slug: 'edit-profile', title: 'Editar dados', icon: 'edit-profile' },
 	{ slug: 'resolutions', title: 'Resoluções', icon: 'resolution' },
 	{ slug: 'certifications', title: 'Certificações', icon: 'certificate' },
 	{ slug: 'support-us', title: 'Apoie-nos', icon: 'support-us' },
+	{ slug: 'account-and-security', title: 'Conta e segurança', icon: 'account' },
 ];
 
 export function DashboardNavbar() {

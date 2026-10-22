@@ -7,10 +7,11 @@ import { signOutAndClear } from '../services/auth/signOutAndClear';
 import { auth } from '../database/configs/firebase';
 
 const userAccountMap = [
-	{ slug: 'profile', title: 'Editar conta' },
+	{ slug: 'edit-profile', title: 'Editar dados' },
 	{ slug: 'resolutions', title: 'Resoluções' },
 	{ slug: 'certifications', title: 'Certificações' },
 	{ slug: 'support-us', title: 'Apoie-nos' },
+	{ slug: 'account-and-security', title: 'Conta e segurança' },
 ];
 
 const pagesMap = [
