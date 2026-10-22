@@ -99,7 +99,7 @@ export function ResetPassword() {
 										<p>
 											Reenviar e-mail{' '}
 											{timer >= 1 && (
-												<span className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-xs">
+												<span className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-xs">
 													{timer}
 												</span>
 											)}

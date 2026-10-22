@@ -82,7 +82,7 @@ export function UserOverview() {
 					Olá, {authState.data?.name}!
 				</h1>
 				<h2 className="mb-2 text-lg font-bold">Dados da conta:</h2>
-				<div className="flex flex-col items-start gap-y-2 rounded-md border border-black bg-black/30 p-5">
+				<div className="flex flex-col items-start gap-y-2 rounded-md border border-black bg-black/40 p-5">
 					<div className="group relative flex items-center">
 						<p className="flex gap-x-2">
 							ID do aluno:
@@ -121,7 +121,7 @@ export function UserOverview() {
 			</div>
 			<div>
 				<h2 className="mb-2 text-lg font-bold">Progresso da trilha</h2>
-				<div className="flex flex-col items-center justify-center gap-y-6 rounded-md border border-black bg-black/30 p-5 sm:flex-row sm:gap-x-6">
+				<div className="flex flex-col items-center justify-center gap-y-6 rounded-md border border-black bg-black/40 p-5 sm:flex-row sm:gap-x-6">
 					<ProgressBar progressPercentual={progressPercentual} />
 					<div className="flex flex-col gap-y-5">
 						<p className="flex flex-col">
@@ -147,7 +147,7 @@ export function UserOverview() {
 			</div>
 			<div>
 				<h2 className="mb-2 text-lg font-bold">Conquistas</h2>
-				<div className="flex items-center gap-x-2 rounded-md border border-black bg-black/30 p-5">
+				<div className="flex items-center gap-x-2 rounded-md border border-black bg-black/40 p-5">
 					<img src="/assets/images/icons/loading.png" alt="Carregando" />
 					<p className="text-lg">Estamos trabalhando nisso...</p>
 				</div>

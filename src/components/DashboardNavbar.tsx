@@ -31,9 +31,9 @@ export function DashboardNavbar() {
 					<li key={object.title}>
 						<Link
 							to={`/dashboard/${object.slug}`}
-							className="flex w-full justify-center bg-white/10 px-[30px] py-5 hover:bg-[radial-gradient(ellipse,transparent,#ffffff1a)]"
+							className="block bg-white/10 px-6 py-5 hover:bg-[radial-gradient(ellipse,transparent,#ffffff1a)]"
 						>
-							<div className="flex w-full max-w-[130px] gap-x-3">
+							<div className="flex w-full gap-x-2">
 								<img
 									alt="Ícone"
 									src={`/assets/images/icons/${object.icon}.png`}
@@ -47,10 +47,10 @@ export function DashboardNavbar() {
 				<li>
 					<button
 						type="button"
-						className="flex w-full cursor-pointer bg-white/10 px-[30px] py-5 hover:bg-[radial-gradient(ellipse,transparent,#ff00001a)]"
+						className="flex w-full cursor-pointer bg-white/10 px-6 py-5 hover:bg-[radial-gradient(ellipse,transparent,#ff00001a)]"
 						onClick={() => void logoutWrapper()}
 					>
-						<div className="flex w-full max-w-[130px] gap-x-3">
+						<div className="flex w-full max-w-[130px] gap-x-2">
 							<img
 								src="/assets/images/icons/logout.png"
 								alt="Deslogar"
