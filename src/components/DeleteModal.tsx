@@ -55,21 +55,23 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 		void (async () => {
 			try {
 				const user = await requireUser();
+
 				const { signInProvider } = await getIdTokenResult(user);
 
 				switch (signInProvider) {
 					case ProviderId.PASSWORD:
+						setSignInProvider(ProviderId.PASSWORD);
 						setStep('password');
 						break;
 
 					case ProviderId.GOOGLE:
-						setStep('code');
 						setSignInProvider(ProviderId.GOOGLE);
+						setStep('code');
 						break;
 
 					case ProviderId.GITHUB:
-						setStep('code');
 						setSignInProvider(ProviderId.GITHUB);
+						setStep('code');
 						break;
 
 					default:
@@ -136,6 +138,7 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 			}
 
 			setStep('reauthenticate');
+			return;
 		}
 
 		try {
@@ -208,7 +211,6 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 			});
 			return;
 		}
-
 		switch (signInProvider) {
 			case ProviderId.GOOGLE:
 				return (
