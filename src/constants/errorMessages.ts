@@ -4,7 +4,7 @@ export const firebaseErrorMessages = {
 	'auth/email-already-in-use': 'E-mail já em uso.',
 	'auth/invalid-email': 'E-mail inválido.',
 	'auth/account-exists-with-different-credential':
-		'Este e-mail já está associado a outra forma de login. Entre com o método utilizado anteriormente para acessar sua conta.',
+		'Este e-mail já está associado a outro método de login. Entre com ele para continuar.',
 	'auth/user-mismatch': 'Use a mesma conta que você utilizou para entrar.',
 	'auth/popup-blocked': 'Permita pop-ups no navegador para continuar.',
 	'auth/provider-already-linked':
