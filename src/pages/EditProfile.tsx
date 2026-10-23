@@ -10,6 +10,7 @@ import { userDataRef } from '../database/refs/userRefs';
 import { validationRegex } from '../constants/validationRegex';
 import { useRequireUser } from '../hooks/useRequireUser';
 import { updateProfile } from 'firebase/auth';
+import { isValidBirthDate } from '../utils/isValidBirthDate';
 
 const formMap = {
 	name: 'Nome',
@@ -68,17 +69,31 @@ export function EditProfile() {
 
 		(Object.keys(currentData) as Array<keyof typeof currentData>).forEach(
 			(key) => {
-				if (!currentData[key].trim().match(validationRegex[key].regex)) {
-					setFieldErrors((prev) => [...prev, key]);
+				const formattedData = currentData[key].trim();
+
+				let isValid = validationRegex[key].regex.test(formattedData);
+
+				if (key === 'birthDate' && isValid) {
+					isValid = isValidBirthDate(formattedData);
+				}
+
+				if (!isValid) {
+					setFieldErrors((prev) =>
+						prev.includes(key) ? prev : [...prev, key],
+					);
+
 					setCurrentData((prev) => ({ ...prev, [key]: '' }));
+
 					setPlaceholders((prev) => ({
 						...prev,
 						[key]: validationRegex[key].text,
 					}));
+
 					isDataValid = false;
 				}
 			},
 		);
+
 		return isDataValid;
 	};
 

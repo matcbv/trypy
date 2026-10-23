@@ -71,16 +71,22 @@ export function AccountAndSecurity() {
 			(key) => {
 				const formattedData =
 					key === 'password' ? credentials[key] : credentials[key].trim();
-				if (!formattedData.match(validationRegex[key].regex)) {
+
+				const isValid = validationRegex[key].regex.test(formattedData);
+
+				if (!isValid) {
 					setCredentials((prev) => ({ ...prev, [key]: '' }));
+
 					setPlaceholders((prev) => ({
 						...prev,
 						[key]: validationRegex[key].text,
 					}));
+
 					isDataValid = false;
 				}
 			},
 		);
+
 		return isDataValid;
 	};
 

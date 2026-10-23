@@ -21,6 +21,7 @@ import { githubProvider } from '../database/configs/firebase';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
 import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
 import { googleProvider } from '../database/configs/firebase';
+import { isValidBirthDate } from '../utils/isValidBirthDate';
 
 const formMap = {
 	email: 'E-mail',
@@ -79,15 +80,24 @@ export function Register() {
 		(Object.keys(userData) as Array<keyof typeof userData>).forEach((key) => {
 			const formattedData =
 				key === 'password' ? userData[key] : userData[key].trim();
-			if (!formattedData.match(validationRegex[key].regex)) {
+
+			let isValid = validationRegex[key].regex.test(formattedData);
+
+			if (key === 'birthDate' && isValid) {
+				isValid = isValidBirthDate(formattedData);
+			}
+
+			if (!isValid) {
 				setUserData((prev) => ({ ...prev, [key]: '' }));
 				setPlaceholders((prev) => ({
 					...prev,
 					[key]: validationRegex[key].text,
 				}));
+
 				isDataValid = false;
 			}
 		});
+
 		return isDataValid;
 	};
 

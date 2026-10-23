@@ -40,7 +40,7 @@ export function Session() {
 			const formattedData =
 				key === 'password' ? userCredentials[key] : userCredentials[key].trim();
 
-			return formattedData.match(validationRegex[key].regex);
+			return validationRegex[key].regex.test(formattedData);
 		});
 	};
 
