@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type SubmitEvent } from 'react';
+import { useEffect, useMemo, useState, type SubmitEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	EmailAuthProvider,
@@ -16,11 +16,18 @@ import { githubProvider, googleProvider } from '../database/configs/firebase';
 import { validationRegex } from '../constants/validationRegex';
 import { DeleteModal } from '../components/DeleteModal';
 import { SnakeLoader } from '../components/SnakeLoader';
+import { useSafeContext } from '../hooks/useSafeContext';
+import { AuthContext } from '../contexts/AuthProvider/context';
+import { updateDoc } from 'firebase/firestore';
+import { userDataRef } from '../database/refs/userRefs';
+import { SkeletonLoader } from '../components/SkeletonLoader';
 
 export type Providers =
 	| typeof ProviderId.GOOGLE
 	| typeof ProviderId.GITHUB
 	| typeof ProviderId.PASSWORD;
+
+const providerIds = ['google.com', 'github.com', 'password'] as const;
 
 const formMap = {
 	email: 'E-mail',
@@ -29,6 +36,7 @@ const formMap = {
 };
 
 export function AccountAndSecurity() {
+	const { authState, setAuthState } = useSafeContext(AuthContext);
 	const [linkedProviders, setLinkedProviders] = useState<Providers[]>([]);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [isVisible, setIsVisible] = useState({
@@ -52,17 +60,41 @@ export function AccountAndSecurity() {
 		password: '',
 		confirmPassword: '',
 	});
-	const passwordProviderEmail = useRef<null | string>(null);
+	const [isCopied, setIsCopied] = useState(false);
+	const [providerEmails, setProviderEmails] = useState<
+		Record<Providers, null | string>
+	>({
+		'google.com': null,
+		'github.com': null,
+		password: null,
+	});
 	const navigate = useNavigate();
 	const requireUser = useRequireUser();
 
+	const isProvider = (providerId: string): providerId is Providers =>
+		providerIds.includes(providerId as Providers);
+
 	const getProviders = (user: User): Providers[] => {
 		return user.providerData
-			.map((provider) => provider.providerId)
-			.filter((provider): provider is Providers =>
-				['google.com', 'github.com', 'password'].includes(provider),
-			);
+			.map(({ providerId }) => providerId)
+			.filter(isProvider);
 	};
+
+	const copyText = async (text: string) => {
+		await navigator.clipboard.writeText(text);
+		setIsCopied((prev) => !prev);
+		setTimeout(() => {
+			setIsCopied(false);
+		}, 2000);
+	};
+
+	const accountDate = useMemo(() => {
+		if (!authState.data) {
+			return <SkeletonLoader height={24} width={85} />;
+		}
+
+		return authState.data.createdAt.toLocaleDateString('pt-br');
+	}, [authState.data]);
 
 	const checkData = () => {
 		let isDataValid = true;
@@ -95,15 +127,14 @@ export function AccountAndSecurity() {
 			try {
 				const user = await requireUser();
 
-				const providers = getProviders(user);
+				const providers: Providers[] = [];
 
-				if (providers.includes('password')) {
-					const passwordProvider = user.providerData.find(
-						(provider) => provider.providerId === ProviderId.PASSWORD,
-					);
-
-					passwordProviderEmail.current = passwordProvider!.email;
-				}
+				user.providerData.forEach(({ providerId, email }) => {
+					if (isProvider(providerId)) {
+						providers.push(providerId);
+						setProviderEmails((prev) => ({ ...prev, [providerId]: email }));
+					}
+				});
 
 				setLinkedProviders(providers);
 			} catch (error) {
@@ -180,12 +211,35 @@ export function AccountAndSecurity() {
 
 		try {
 			const user = await requireUser();
-
 			const updatedUser = await unlink(user, providerId);
 
-			const providers = getProviders(updatedUser);
+			const primaryEmail = authState.data?.email;
+			const primaryProvider = user.providerData.find(
+				(provider) => provider.email === primaryEmail,
+			);
 
-			setLinkedProviders(providers);
+			if (providerId === primaryProvider?.providerId) {
+				const hasProviderWithPrimaryEmail = updatedUser.providerData.some(
+					(provider) => provider.email === primaryEmail,
+				);
+
+				if (!hasProviderWithPrimaryEmail) {
+					const updatedEmail =
+						updatedUser.providerData.find((provider) => provider.email)
+							?.email ?? null;
+
+					await updateDoc(userDataRef(updatedUser.uid), {
+						email: updatedEmail,
+					});
+
+					setAuthState((prev) => ({
+						...prev,
+						data: prev.data ? { ...prev.data, email: updatedEmail } : null,
+					}));
+				}
+			}
+
+			setLinkedProviders(getProviders(updatedUser));
 			logSuccess('Conta desvinculada com sucesso!');
 		} catch (error) {
 			logError({ error });
@@ -243,11 +297,8 @@ export function AccountAndSecurity() {
 			setLinkedProviders(providers);
 
 			setShowLinkEmailPasswordModal(false);
-			void navigate('/verify-email', {
-				replace: true,
-				state: { mode: 'link-email' },
-			});
-			logInfo('Verifique seu email para concluir o vinculo.');
+			void navigate('/link-email', { replace: true });
+			logInfo('Verifique seu email para concluir a vinculação.');
 		} catch (error) {
 			logError({ error });
 		} finally {
@@ -264,9 +315,48 @@ export function AccountAndSecurity() {
 	return (
 		<div>
 			<div>
-				<h1 className="mb-10 text-2xl font-bold tracking-wide">
+				<h1 className="mb-5 text-2xl font-bold tracking-wide">
 					Conta e segurança
 				</h1>
+				<div className="mb-10 flex flex-col gap-y-3">
+					<h2 className="text-lg font-bold">Dados da conta:</h2>
+					<div className="flex flex-col items-start gap-y-2 rounded-md bg-black/40 p-5 outline outline-black">
+						<div className="group relative flex items-center">
+							<p className="flex gap-x-2">
+								ID do aluno:
+								<span
+									className="lg:hover:text-main-purple lg:cursor-pointer lg:transition-colors"
+									onClick={(e) =>
+										void copyText(e.currentTarget.textContent.replace('#', ''))
+									}
+									onMouseLeave={() => setIsCopied(false)}
+								>
+									<span className="text-main-purple mr-0.5">#</span>
+									{authState.data?.id}
+								</span>
+							</p>
+							<img
+								src={`/assets/images/icons/${isCopied ? 'success' : 'copy'}.png`}
+								alt="Copiar"
+								tabIndex={0}
+								role="button"
+								className="absolute -right-6 w-[18px] origin-left lg:scale-0 lg:cursor-pointer lg:transition-transform lg:group-hover:scale-100"
+								onClick={(e) =>
+									void copyText(e.currentTarget.textContent.replace('#', ''))
+								}
+							/>
+						</div>
+						<p className="flex items-center gap-x-1">
+							Criada em: <span>{accountDate}</span>
+						</p>
+						<p>
+							Apoiador(a):{' '}
+							<span className="ml-1">
+								{authState.data?.supporter ? 'Sim' : 'Não'}
+							</span>
+						</p>
+					</div>
+				</div>
 				<div className="mb-10 flex flex-col gap-y-3">
 					<h2 className="text-lg font-bold">Vincular contas</h2>
 					<p className="text-section-base">
@@ -305,12 +395,12 @@ export function AccountAndSecurity() {
 									<p>Status:</p>
 									<div className="flex items-center gap-x-2">
 										<p className="font-bold">
-											{passwordProviderEmail.current || 'Vinculada'}
+											{providerEmails.password || 'Vinculada'}
 										</p>
 										<img
 											src="/assets/images/icons/success.png"
 											alt="Sucesso"
-											className="w-6"
+											className="w-5"
 										/>
 									</div>
 								</div>
@@ -322,7 +412,7 @@ export function AccountAndSecurity() {
 										<img
 											src="/assets/images/icons/error.png"
 											alt="Erro"
-											className="w-6"
+											className="w-5"
 										/>
 									</div>
 								</div>
@@ -376,11 +466,13 @@ export function AccountAndSecurity() {
 								<div className="flex items-center gap-x-2">
 									<p>Status:</p>
 									<div className="flex items-center gap-x-2">
-										<p className="font-bold">Vinculada</p>
+										<p className="font-bold">
+											{providerEmails['google.com'] || 'Vinculada'}
+										</p>
 										<img
 											src="/assets/images/icons/success.png"
 											alt="Sucesso"
-											className="w-6"
+											className="w-5"
 										/>
 									</div>
 								</div>
@@ -392,7 +484,7 @@ export function AccountAndSecurity() {
 										<img
 											src="/assets/images/icons/error.png"
 											alt="Erro"
-											className="w-6"
+											className="w-5"
 										/>
 									</div>
 								</div>
@@ -446,11 +538,13 @@ export function AccountAndSecurity() {
 								<div className="flex items-center gap-x-2">
 									<p>Status:</p>
 									<div className="flex items-center gap-x-2">
-										<p className="font-bold">Vinculada</p>
+										<p className="font-bold">
+											{providerEmails['github.com'] || 'Vinculada'}
+										</p>
 										<img
 											src="/assets/images/icons/success.png"
 											alt="Sucesso"
-											className="w-6"
+											className="w-5"
 										/>
 									</div>
 								</div>
@@ -462,7 +556,7 @@ export function AccountAndSecurity() {
 										<img
 											src="/assets/images/icons/error.png"
 											alt="Erro"
-											className="w-6"
+											className="w-5"
 										/>
 									</div>
 								</div>
