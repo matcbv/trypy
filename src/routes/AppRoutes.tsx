@@ -33,6 +33,8 @@ import { pendingVerificationMiddleware } from '../middlewares/pendingVerificatio
 import { VerifyEmail } from '../pages/VerifyEmail';
 import { NewPassword } from '../pages/NewPassword';
 import { AccountAndSecurity } from '../pages/AccountAndSecurity';
+import { LinkEmail } from '../pages/LinkEmail';
+import { linkEmailMiddleware } from '../middlewares/linkEmailMiddleware';
 
 export function AppRoutes() {
 	return (
@@ -59,6 +61,13 @@ export function AppRoutes() {
 										}
 									>
 										<Route path="/verify-email" element={<VerifyEmail />} />
+									</Route>
+									<Route
+										element={
+											<ProtectedRoute middlewares={[linkEmailMiddleware]} />
+										}
+									>
+										<Route path="/link-email" element={<LinkEmail />} />
 									</Route>
 									<Route
 										element={<ProtectedRoute middlewares={[authMiddleware]} />}
