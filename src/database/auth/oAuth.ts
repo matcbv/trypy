@@ -73,7 +73,7 @@ export const signInWithProvider = async ({
 
 	const userData = {
 		id: 'TPY-' + idGenerator().generateId(),
-		name: displayName || 'Usuário',
+		name: displayName || 'Aluno',
 		email: email,
 		picture: photoURL,
 		lastname: null,
