@@ -5,16 +5,20 @@ import { auth } from '../database/configs/firebase';
 import { useSafeContext } from '../hooks/useSafeContext';
 import { AuthContext } from '../contexts/AuthProvider/context';
 
-type GuardProps = {
+interface GuardProps {
 	middlewares: Middleware[];
-};
+}
+
+interface LocationState {
+	initialModuleSlug: string;
+}
 
 export function ProtectedRoute({ middlewares }: GuardProps) {
 	const { currentUser } = auth;
 	const { authState } = useSafeContext(AuthContext);
 	const { moduleId } = useParams();
 	const location = useLocation();
-	const state = location.state as { initialModuleSlug: string };
+	const state = location.state as LocationState;
 
 	if (authState.loading) return <LoadingPage />;
 
