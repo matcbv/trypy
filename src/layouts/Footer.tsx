@@ -50,7 +50,7 @@ export function Footer() {
 									<img
 										src={src}
 										alt={key}
-										className="transition-transform duration-300 hover:scale-110"
+										className="w-9 transition-transform duration-300 hover:scale-110"
 									/>
 								</a>
 							</li>

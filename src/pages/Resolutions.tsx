@@ -7,7 +7,7 @@ export function Resolutions() {
 
 	return (
 		<div>
-			<h1 className="mb-10 text-2xl font-bold tracking-wide">
+			<h1 className="mb-5 text-2xl font-bold tracking-wide">
 				Exercícios resolvidos
 			</h1>
 			{authState.data && Object.keys(authState.data.resolutions).length > 0 ? (

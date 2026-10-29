@@ -11,7 +11,7 @@ export function HeroBanner() {
 		const timerList = ext.map((letter, i) => {
 			const timerId = setTimeout(
 				() => (heading.innerText += letter),
-				500 * (i + 1),
+				300 * (i + 1),
 			);
 			return timerId;
 		});
@@ -20,9 +20,9 @@ export function HeroBanner() {
 			heading.innerText += '_';
 			setTimeout(() => {
 				heading.innerText = heading.innerText.replace('_', '');
-			}, 1000);
+			}, 600);
 			return;
-		}, 2000);
+		}, 1200);
 
 		return () => {
 			for (const timer of timerList) {
@@ -33,7 +33,7 @@ export function HeroBanner() {
 	}, []);
 
 	return (
-		<div className="px-hero-x relative flex w-full items-center justify-between overflow-hidden py-45">
+		<div className="px-hero relative flex w-full items-center justify-between overflow-hidden py-45">
 			<div
 				className="absolute inset-0 z-10 hidden lg:block"
 				onMouseMove={(e) =>
@@ -52,7 +52,7 @@ export function HeroBanner() {
 					A melhor maneira de aprender é praticando!
 				</p>
 				<Link
-					className="border-main-green text-hero-subtitle px-section-btn-x py-section-btn-y lg:hover:bg-main-green z-20 rounded-md border-2 bg-white/5 duration-300 lg:transition-all lg:hover:border-black lg:hover:text-black"
+					className="border-main-green text-hero-subtitle px-section-btn py-section-btn lg:hover:bg-main-green z-20 rounded-md border-2 bg-white/5 duration-300 lg:transition-all lg:hover:border-black lg:hover:text-black"
 					to="/learning-path"
 				>
 					Vamos lá!

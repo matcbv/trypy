@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import { HeroBanner } from '../components/HeroBanner';
 import { Link } from 'react-router-dom';
 import { SvgPath } from '../components/SvgPath';
@@ -71,7 +71,6 @@ export function Home() {
 	const [doneProgressSubtopics, setDoneProgressSubtopics] = useState<number[]>(
 		[],
 	);
-	const videoRef = useRef<HTMLVideoElement>(null);
 
 	const percentual =
 		(doneProgressSubtopics.length * 100) /
@@ -108,10 +107,7 @@ export function Home() {
 		setIsProgressSectionDone(true);
 	};
 
-	const handleFullscreen = async () => {
-		const video = videoRef.current;
-		if (!video) return;
-
+	const handleFullscreen = async (video: HTMLVideoElement) => {
 		try {
 			if (video.requestFullscreen) {
 				await video.requestFullscreen();
@@ -151,18 +147,19 @@ export function Home() {
 						{videoCardsContent.map(({ title, text, path, theme }, i) => (
 							<div
 								key={i}
-								className={`flex flex-col ${i === 1 ? 'lg:flex-row' : 'flex-col lg:flex-row-reverse'} gap-5 rounded-md bg-white/5 p-5 backdrop-blur-xl`}
+								className={`flex flex-col ${i === 1 ? 'lg:flex-row' : 'flex-col lg:flex-row-reverse'} provider-card gap-5 rounded-md p-5 backdrop-blur-xl`}
+								style={
+									{
+										'--theme': `var(${theme})`,
+										'--gradient-direction': i === 1 ? 'to left' : 'to right',
+									} as React.CSSProperties
+								}
 							>
 								<div className="flex-1">
-									<h2 className="text-title-xl mb-3 font-bold">{title}</h2>
+									<h2 className={`text-title-xl mb-3 font-bold`}>{title}</h2>
 									<p className="text-section-lg">{text}</p>
 								</div>
-								<div
-									style={{
-										boxShadow: `0 0 150px color-mix(in srgb, var(${theme}) 30%, transparent)`,
-									}}
-									className="relative flex-1 overflow-hidden rounded-md"
-								>
+								<div className="group relative flex-1 overflow-hidden rounded-md">
 									<video
 										src={path}
 										loop
@@ -171,15 +168,18 @@ export function Home() {
 										playsInline
 										disablePictureInPicture
 										controlsList="nodownload"
-										ref={videoRef}
 									></video>
 									<img
 										src="/assets/images/icons/fullscreen.png"
 										alt="Tela cheia"
-										className="absolute right-2 bottom-2 lg:hidden"
+										className="absolute right-2 bottom-2 transition-opacity duration-300 group-hover:opacity-100 lg:cursor-pointer lg:opacity-40"
 										tabIndex={0}
 										role="button"
-										onClick={() => void handleFullscreen()}
+										onClick={(e) => {
+											const video = e.currentTarget
+												.previousSibling as HTMLVideoElement;
+											void handleFullscreen(video);
+										}}
 									/>
 								</div>
 							</div>
@@ -207,7 +207,7 @@ export function Home() {
 							concluída aproxima você do seu objetivo.
 						</p>
 					</div>
-					<div className="flex max-w-300 flex-col gap-y-10 rounded-md bg-black/10 p-5 outline outline-black backdrop-blur-xl lg:flex-row lg:gap-x-5 lg:p-10">
+					<div className="bg-module-background/60 flex max-w-300 flex-col gap-y-10 rounded-md p-5 outline outline-black backdrop-blur-xl lg:flex-row lg:gap-x-5 lg:p-10">
 						<div className="flex flex-1 flex-col items-center gap-y-6 sm:flex-row sm:gap-x-6">
 							<ProgressBar progressPercentual={roundedPercentual} />
 							<div className="flex flex-col gap-y-5">
@@ -302,11 +302,15 @@ export function Home() {
 								de aprendizado.
 							</p>
 						</div>
-						<div className="flex flex-col gap-y-5 rounded-md bg-black/15 p-5 backdrop-blur-xl">
+						<div className="flex flex-col gap-y-5 rounded-md bg-black/30 p-5 backdrop-blur-xl">
 							{supportChannelsContent.map(({ title, text, icon }, i) => (
 								<div key={i}>
 									<div className="mb-2 flex items-center gap-x-2">
-										<img src={`/assets/images/icons/${icon}`} alt={title} />
+										<img
+											src={`/assets/images/icons/${icon}`}
+											alt={title}
+											className="w-8"
+										/>
 										<h2 className="text-section-lg">{title}</h2>
 									</div>
 									<p className="text-section-base">{text}</p>
@@ -315,7 +319,7 @@ export function Home() {
 						</div>
 						<Link
 							to="/support"
-							className="lg:hover:bg-main-cyan/70 px-section-btn-x py-section-btn-y text-section-btn border-main-cyan self-start rounded-md border bg-white/5 transition-all duration-300 lg:bg-transparent lg:hover:border-black lg:hover:shadow-[0_0_20px_#FFFFFF]/25"
+							className="lg:hover:bg-main-cyan/60 px-section-btn py-section-btn text-section-btn border-main-cyan self-start rounded-md border bg-white/5 transition-all duration-300 lg:bg-transparent lg:hover:border-black lg:hover:shadow-[0_0_15px_var(--color-main-cyan)]/30"
 						>
 							Ver canais de suporte
 						</Link>
@@ -343,7 +347,7 @@ export function Home() {
 							value={studentName}
 							onChange={handleChange}
 							placeholder="Digite seu nome..."
-							className="border-main-green text-section-xl placeholder:text-section-xl py-section-btn-y w-full max-w-2/3 rounded-md border bg-white/5 px-5 transition-shadow duration-300 focus:shadow-[0_0_20px_var(--color-glow-green)]/20 focus:outline-none"
+							className="border-main-green text-section-xl placeholder:text-section-xl py-section-btn w-full max-w-2/3 rounded-md border bg-white/5 px-5 transition-shadow duration-300 focus:shadow-[0_0_20px_var(--color-glow-green)]/20 focus:outline-none"
 						/>
 					</div>
 					<div className="w-section-img relative rounded-md">
@@ -359,22 +363,22 @@ export function Home() {
 					</div>
 				</div>
 			</section>
-			<section className="animate-appear appear-animation relative flex items-center justify-center p-20 px-5 backdrop-blur-sm lg:px-10">
+			<section className="animate-appear appear-animation relative flex items-center justify-center px-5 py-10 backdrop-blur-sm lg:py-20">
 				<div
 					aria-hidden="true"
 					className="pointer-events-none absolute inset-0 bg-[radial-gradient(rgb(133_88_214/0.35)_1px,transparent_1px)] mask-[radial-gradient(ellipse_at_center,black_30%,transparent_75%)] bg-size-[24px_24px]"
 				/>
 				<div className="flex flex-col items-center gap-y-5 lg:items-start lg:gap-y-10">
-					<div className="flex flex-col items-center gap-y-5 drop-shadow-[0_0_10px_var(--color-main-purple)]/50 lg:items-start">
+					<div className="flex flex-col items-center gap-y-5 text-shadow-[0_0_20px_var(--color-main-purple)]/50 lg:items-start">
 						<h1 className="text-title-4xl">Pronto para começar?</h1>
-						<p className="text-section-base text-center lg:text-start">
+						<p className="text-section-lg text-center lg:text-start">
 							Sua jornada rumo ao domínio do Python começa aqui.
 						</p>
 					</div>
 					<div className="flex flex-col gap-y-2">
 						<Link
 							to="/learning-path"
-							className="lg:hover:bg-main-purple/60 px-section-btn-x py-section-btn-y text-section-btn border-main-purple cursor-pointer self-start rounded-md border bg-white/5 transition-all duration-300 lg:hover:border-black lg:hover:shadow-[0_0_20px_#FFFFFF]/25"
+							className="lg:hover:bg-main-purple/60 px-section-btn py-section-btn text-section-btn border-main-purple cursor-pointer self-start rounded-md border bg-white/5 transition-all duration-300 lg:hover:border-black lg:hover:shadow-[0_0_15px_var(--color-main-purple)]/30"
 						>
 							Começar a aprender
 						</Link>

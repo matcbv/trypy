@@ -80,7 +80,7 @@ export function AboutUs() {
 				</h1>
 				<div className="flex flex-col">
 					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-10 gap-y-5 lg:flex-row">
-						<div className="flex max-w-[150px] flex-col justify-between gap-y-[10px] self-center lg:gap-y-0 lg:self-stretch">
+						<div className="flex max-w-[150px] flex-col gap-y-3 self-center">
 							<div>
 								<img
 									src="/assets/images/matheus.png"
@@ -91,12 +91,11 @@ export function AboutUs() {
 									Criador e Professor da plataforma TryPy
 								</h3>
 							</div>
-
 							<div className="flex w-full justify-around">
 								{Object.entries(socialMediaMap).map(([key, { icon, link }]) =>
 									key === 'Gmail' ? (
 										<a key={key} href={link['matheus']}>
-											<img src={icon} alt={key} />
+											<img src={icon} alt={key} className="w-9" />
 										</a>
 									) : (
 										<a
@@ -105,13 +104,13 @@ export function AboutUs() {
 											rel="noopener noreferrer"
 											target="_blank"
 										>
-											<img src={icon} alt={key} />
+											<img src={icon} alt={key} className="w-9" />
 										</a>
 									),
 								)}
 							</div>
 						</div>
-						<div className="flex max-w-150 flex-col justify-between gap-y-5 lg:gap-y-0">
+						<div className="flex max-w-150 flex-col justify-between gap-y-5">
 							<div>
 								<h2 className="text-main-green text-title-3xl mb-4 font-bold">
 									Matheus Cerqueira
@@ -142,7 +141,7 @@ export function AboutUs() {
 					</div>
 					<span className="from-main-green to-main-purple my-20 block h-[2px] bg-linear-to-r"></span>
 					<div className="flex min-h-[250px] flex-col-reverse justify-center gap-x-10 gap-y-5 lg:flex-row-reverse">
-						<div className="flex max-w-[150px] flex-col justify-between gap-y-[10px] self-center lg:gap-y-0 lg:self-stretch">
+						<div className="flex max-w-[150px] flex-col gap-y-3 self-center">
 							<div>
 								<img
 									src="/assets/images/daniel.png"
@@ -158,7 +157,7 @@ export function AboutUs() {
 								{Object.entries(socialMediaMap).map(([key, { icon, link }]) =>
 									key === 'Gmail' ? (
 										<a key={key} href={link['daniel']}>
-											<img src={icon} alt={key} />
+											<img src={icon} alt={key} className="w-9" />
 										</a>
 									) : (
 										<a
@@ -167,22 +166,24 @@ export function AboutUs() {
 											rel="noopener noreferrer"
 											target="_blank"
 										>
-											<img src={icon} alt={key} />
+											<img src={icon} alt={key} className="w-9" />
 										</a>
 									),
 								)}
 							</div>
 						</div>
-						<div className="flex max-w-150 flex-col justify-between gap-y-5 lg:gap-y-0">
+						<div className="flex max-w-150 flex-col justify-between gap-y-5">
 							<div>
 								<h2 className="text-main-purple text-title-3xl mb-4 font-bold">
 									Daniel Ferrari
 								</h2>
 								<p className="text-section-lg leading-7">
-									Lorem ipsum dolor sit amet consectetur adipisicing elit.
-									Obcaecati eius ipsum adipisci rem distinctio perferendis
-									quaerat a, nesciunt aperiam quas delectus facere voluptatum
-									rerum magnam maiores odit iure hic corporis.
+									Sou o Daniel, formado em Engenharia de Software e técnico em
+									Informática, com experiência prática em Suporte e Infra. Meu
+									foco é segurança ofensiva, e no TryPy cuido principalmente da
+									segurança da plataforma, além da criação de cursos extras.
+									Acredito que programar bem começa por entender como os
+									sistemas funcionam por dentro.
 								</p>
 							</div>
 							<a

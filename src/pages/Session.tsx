@@ -108,7 +108,7 @@ export function Session() {
 		<div className="flex min-h-screen items-center justify-center">
 			<div className="bg-forms relative mx-[10px] my-30 flex min-h-125 w-full max-w-125 rounded-lg shadow-[0_0_20px_#ffffff]/10">
 				{isSubmitting && <LoadingPage />}
-				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-20'></div>
+				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-10'></div>
 				<div className="relative flex w-full flex-col items-start justify-center p-10">
 					<h1 className="text-title-3xl mb-10 font-bold tracking-wide">
 						Iniciar sessão
@@ -149,12 +149,12 @@ export function Session() {
 						<div>
 							<div className="flex items-center gap-x-5">
 								<input
-									className="from-main-green/40 to-main-purple/40 border-main-green px-session-btn-x py-session-btn-y text-section-base rounded-md border bg-linear-to-br font-bold lg:cursor-pointer lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/15"
+									className="from-main-green/40 to-main-purple/40 border-main-green px-session-btn py-session-btn text-section-base rounded-md border bg-linear-to-br font-bold lg:cursor-pointer lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/15"
 									type="submit"
 									value="Acessar conta"
 								/>
 								<img
-									className="lg:cursor-pointer lg:transition-transform lg:duration-300 lg:hover:scale-110"
+									className="w-10 lg:cursor-pointer lg:transition-transform lg:duration-300 lg:hover:scale-110"
 									src="/assets/images/icons/google.png"
 									alt="Google"
 									onClick={() => void handleProvider(googleProvider)}
@@ -162,7 +162,7 @@ export function Session() {
 									tabIndex={0}
 								/>
 								<img
-									className="lg:cursor-pointer lg:transition-transform lg:duration-300 lg:hover:scale-110"
+									className="w-10 lg:cursor-pointer lg:transition-transform lg:duration-300 lg:hover:scale-110"
 									src="/assets/images/icons/github.png"
 									alt="GitHub"
 									onClick={() => void handleProvider(githubProvider)}
@@ -184,7 +184,7 @@ export function Session() {
 						</h2>
 						<Link
 							to={'/register'}
-							className="from-main-green/40 to-main-purple/40 border-main-purple px-session-btn-x py-session-btn-y text-section-base rounded-md border bg-linear-to-br lg:cursor-pointer lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/15"
+							className="from-main-green/40 to-main-purple/40 border-main-purple px-session-btn py-session-btn text-section-base rounded-md border bg-linear-to-br lg:cursor-pointer lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/15"
 						>
 							Cadastre-se
 						</Link>

@@ -36,9 +36,9 @@ export function Support() {
 								<label htmlFor="subject" className="text-sm">
 									Assunto:
 								</label>
-								<select name="subject" id="subject" className="support-fields">
-									{optionsMap.map((option) => (
-										<option value={option} className="bg-black text-sm">
+								<select name="subject" id="subject" className="support-field">
+									{optionsMap.map((option, i) => (
+										<option key={i} value={option} className="bg-black text-sm">
 											{option}
 										</option>
 									))}
@@ -53,7 +53,7 @@ export function Support() {
 									name="id"
 									id="id"
 									placeholder="TPY-XXXXXX"
-									className="support-fields"
+									className="support-field"
 								/>
 							</div>
 							<div className="flex flex-col gap-y-1">
@@ -64,7 +64,7 @@ export function Support() {
 									type="text"
 									name="email"
 									id="email"
-									className="support-fields"
+									className="support-field"
 								/>
 							</div>
 						</div>
@@ -81,18 +81,22 @@ export function Support() {
 								name="description"
 								id="description"
 								rows={5}
-								className="support-fields h-full resize-none"
+								className="support-field h-full resize-none"
 							></textarea>
 						</div>
 					</form>
 				</div>
-				<div className="flex flex-col gap-y-5 rounded-md bg-black/15 p-5 outline outline-black backdrop-blur-xl lg:p-10">
-					<h2 className="text-main-purple text-2xl">Canais de suporte</h2>
+				<div className="flex flex-col gap-y-5 rounded-md bg-black/30 p-5 outline outline-black backdrop-blur-xl lg:p-10">
+					<h2 className="text-2xl">Canais de suporte</h2>
 					<div className="flex flex-col gap-y-5">
 						<div className="flex flex-col items-start gap-y-10">
 							<div className="flex flex-col items-start">
 								<div className="mb-2 flex items-center gap-x-2">
-									<img src="/assets/images/icons/youtube.png" alt="YouTube" />
+									<img
+										src="/assets/images/icons/youtube.png"
+										alt="YouTube"
+										className="w-9"
+									/>
 									<h3 className="text-lg">YouTube</h3>
 								</div>
 								<p className="text-section-base mb-3">
@@ -110,7 +114,11 @@ export function Support() {
 							</div>
 							<div className="flex flex-col items-start">
 								<div className="mb-2 flex items-center gap-x-2">
-									<img src="/assets/images/icons/discord.png" alt="Discord" />
+									<img
+										src="/assets/images/icons/discord.png"
+										alt="Discord"
+										className="w-9"
+									/>
 									<h3 className="text-lg">Discord</h3>
 								</div>
 								<p className="text-section-base mb-3">
@@ -129,14 +137,18 @@ export function Support() {
 							</div>
 							<div className="flex flex-col items-start">
 								<div className="mb-2 flex items-center gap-x-2">
-									<img src="/assets/images/icons/gmail.png" alt="Gmail" />
+									<img
+										src="/assets/images/icons/gmail.png"
+										alt="Gmail"
+										className="w-9"
+									/>
 									<h3 className="text-lg">Gmail</h3>
 								</div>
 								<p className="text-section-base mb-3">
 									Para dúvidas ou problemas relacionados à plataforma, à sua
 									conta ou à sua assinatura, entre em contato conosco pelo
 									e-mail:{' '}
-									<div className="relative inline">
+									<span className="relative inline">
 										<button
 											className="cursor-pointer text-red-200"
 											onClick={() => void copyText()}
@@ -159,7 +171,7 @@ export function Support() {
 												onClick={() => void copyText()}
 											/>
 										)}
-									</div>
+									</span>
 								</p>
 								<a
 									href="mailto:support@trypy.dev?subject=Assunto%20a%20tratar..."

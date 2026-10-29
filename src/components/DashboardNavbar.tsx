@@ -31,33 +31,29 @@ export function DashboardNavbar() {
 					<li key={object.title}>
 						<Link
 							to={`/dashboard/${object.slug}`}
-							className="block bg-white/10 px-6 py-5 hover:bg-[radial-gradient(ellipse,transparent,#ffffff1a)]"
+							className="flex w-full gap-x-2 bg-white/10 px-6 py-5 hover:bg-[radial-gradient(ellipse,transparent,#ffffff1a)]"
 						>
-							<div className="flex w-full gap-x-2">
-								<img
-									alt="Ícone"
-									src={`/assets/images/icons/${object.icon}.png`}
-									className="hidden lg:inline"
-								/>
-								{object.title}
-							</div>
+							<img
+								alt="Ícone"
+								src={`/assets/images/icons/${object.icon}.png`}
+								className="hidden lg:inline"
+							/>
+							{object.title}
 						</Link>
 					</li>
 				))}
 				<li>
 					<button
 						type="button"
-						className="flex w-full cursor-pointer bg-white/10 px-6 py-5 hover:bg-[radial-gradient(ellipse,transparent,#ff00001a)]"
+						className="flex w-full cursor-pointer gap-x-2 bg-white/10 px-6 py-5 hover:bg-[radial-gradient(ellipse,transparent,#ff00001a)]"
 						onClick={() => void logoutWrapper()}
 					>
-						<div className="flex w-full max-w-[130px] gap-x-2">
-							<img
-								src="/assets/images/icons/logout.png"
-								alt="Deslogar"
-								className="hidden w-6 lg:inline"
-							/>
-							Deslogar
-						</div>
+						<img
+							src="/assets/images/icons/logout.png"
+							alt="Deslogar"
+							className="hidden w-6 lg:inline"
+						/>
+						Deslogar
 					</button>
 				</li>
 			</ul>

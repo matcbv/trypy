@@ -66,7 +66,7 @@ export function NewPassword() {
 		<div className="flex min-h-screen items-center justify-center">
 			<div className="bg-forms relative mx-[10px] my-30 flex min-h-100 w-full max-w-125 rounded-lg shadow-[0_0_20px_#ffffff]/10">
 				{isSubmitting && <LoadingPage />}
-				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-20'></div>
+				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-10'></div>
 				<div className="relative flex w-full flex-col justify-center p-10">
 					<h1 className="text-title-2xl mb-3 font-bold tracking-wider">
 						Criar nova senha

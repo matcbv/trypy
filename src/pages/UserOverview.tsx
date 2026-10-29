@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { AuthContext } from '../contexts/AuthProvider/context';
 import { ProgressBar } from '../components/ProgressBar';
@@ -10,15 +10,6 @@ export function UserOverview() {
 	const { authState } = useSafeContext(AuthContext);
 	const { modules } = useSafeContext(ContentfulContentContext);
 	const { progressState } = useSafeContext(ProgressContext);
-	const [isCopied, setIsCopied] = useState(false);
-
-	const accountDate = useMemo(() => {
-		if (!authState.data) {
-			return <SkeletonLoader height={24} width={85} />;
-		}
-
-		return authState.data.createdAt.toLocaleDateString('pt-br');
-	}, [authState.data]);
 
 	const currentProgress = useMemo(() => {
 		if (!modules) return null;
@@ -67,61 +58,17 @@ export function UserOverview() {
 		return roundedPercentual;
 	}, [modules, progressState.doneSubtopics.length]);
 
-	const copyText = async (text: string) => {
-		await navigator.clipboard.writeText(text);
-		setIsCopied((prev) => !prev);
-		setTimeout(() => {
-			setIsCopied(false);
-		}, 2000);
-	};
-
 	return (
 		<div className="flex flex-col gap-y-10">
 			<div>
-				<h1 className="mb-8 text-2xl font-bold">
+				<h1 className="mb-2 text-2xl font-bold">
 					Olá, {authState.data?.name}!
 				</h1>
-				<h2 className="mb-2 text-lg font-bold">Dados da conta:</h2>
-				<div className="flex flex-col items-start gap-y-2 rounded-md border border-black bg-black/40 p-5">
-					<div className="group relative flex items-center">
-						<p className="flex gap-x-2">
-							ID do aluno:
-							<span
-								className="lg:hover:text-main-purple lg:cursor-pointer lg:transition-colors"
-								onClick={(e) =>
-									void copyText(e.currentTarget.textContent.replace('#', ''))
-								}
-								onMouseLeave={() => setIsCopied(false)}
-							>
-								<span className="text-main-purple mr-0.5">#</span>
-								{authState.data?.id}
-							</span>
-						</p>
-						<img
-							src={`/assets/images/icons/${isCopied ? 'success' : 'copy'}.png`}
-							alt="Copiar"
-							tabIndex={0}
-							role="button"
-							className="absolute -right-6 w-[18px] origin-left lg:scale-0 lg:cursor-pointer lg:transition-transform lg:group-hover:scale-100"
-							onClick={(e) =>
-								void copyText(e.currentTarget.textContent.replace('#', ''))
-							}
-						/>
-					</div>
-					<p className="flex items-center gap-x-1">
-						Criada em: <span>{accountDate}</span>
-					</p>
-					<p>
-						Apoiador(a):{' '}
-						<span className="ml-1">
-							{authState.data?.supporter ? 'Sim' : 'Não'}
-						</span>
-					</p>
-				</div>
+				<p>Continue sua jornada de aprendizado em Python.</p>
 			</div>
 			<div>
 				<h2 className="mb-2 text-lg font-bold">Progresso da trilha</h2>
-				<div className="flex flex-col items-center justify-center gap-y-6 rounded-md border border-black bg-black/40 p-5 sm:flex-row sm:gap-x-6">
+				<div className="flex flex-col items-center justify-center gap-y-6 rounded-md bg-black/40 p-5 outline outline-black sm:flex-row sm:gap-x-6">
 					<ProgressBar progressPercentual={progressPercentual} />
 					<div className="flex flex-col gap-y-5">
 						<p className="flex flex-col">
@@ -143,13 +90,6 @@ export function UserOverview() {
 							</span>
 						</p>
 					</div>
-				</div>
-			</div>
-			<div>
-				<h2 className="mb-2 text-lg font-bold">Conquistas</h2>
-				<div className="flex items-center gap-x-2 rounded-md border border-black bg-black/40 p-5">
-					<img src="/assets/images/icons/loading.png" alt="Carregando" />
-					<p className="text-lg">Estamos trabalhando nisso...</p>
 				</div>
 			</div>
 		</div>

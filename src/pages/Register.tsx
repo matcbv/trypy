@@ -237,7 +237,7 @@ export function Register() {
 		<div className="relative flex min-h-screen items-center justify-center">
 			<div className="bg-forms relative mx-[10px] my-30 flex min-h-115 w-full max-w-100 rounded-lg shadow-[0_0_20px_#ffffff]/10 lg:max-w-180">
 				{isSubmitting && <LoadingPage />}
-				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-20'></div>
+				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-10'></div>
 				<div className="relative w-full rounded-lg p-10">
 					<form
 						className="flex flex-col items-center gap-x-10 lg:flex-row"
@@ -283,10 +283,14 @@ export function Register() {
 									onClick={() => void handleProvider(googleProvider)}
 								>
 									<p className="text-lg">Google</p>
-									<img src="/assets/images/icons/google.png" alt="Google" />
+									<img
+										src="/assets/images/icons/google.png"
+										alt="Google"
+										className="w-9"
+									/>
 								</button>
 								<img
-									className="lg:hidden"
+									className="w-10 lg:hidden"
 									src="/assets/images/icons/google.png"
 									alt="Google"
 									role="button"
@@ -299,10 +303,14 @@ export function Register() {
 									onClick={() => void handleProvider(githubProvider)}
 								>
 									<p className="block text-lg">GitHub</p>
-									<img src="/assets/images/icons/github.png" alt="GitHub" />
+									<img
+										src="/assets/images/icons/github.png"
+										alt="GitHub"
+										className="w-9"
+									/>
 								</button>
 								<img
-									className="lg:hidden"
+									className="w-10 lg:hidden"
 									src="/assets/images/icons/github.png"
 									alt="GitHub"
 									role="button"

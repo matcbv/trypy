@@ -136,7 +136,7 @@ export function EditProfile() {
 	return (
 		<div>
 			<div>
-				<h1 className="mb-10 text-2xl font-bold tracking-wide">Meus dados</h1>
+				<h1 className="mb-5 text-2xl font-bold tracking-wide">Meus dados</h1>
 				<div className="flex flex-col gap-y-10">
 					<form
 						className="flex flex-col items-start"
@@ -150,7 +150,7 @@ export function EditProfile() {
 									Object.keys(currentData) as Array<keyof typeof currentData>
 								).map((key) => {
 									return (
-										<div className="flex flex-col">
+										<div className="flex flex-col" key={key}>
 											<label htmlFor={key} className="mb-px text-sm">
 												{placeholders[key]}
 											</label>
