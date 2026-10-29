@@ -99,21 +99,26 @@ export function TerminalProvider() {
 				case 'error': {
 					// * Formatando o erro exibido na saída:
 					const errorLines = error!.trim().split('\n');
-					const displayedLines = errorLines.slice(-2);
-					const line = displayedLines[0]?.match(/line \d+/);
+					const errorMessage = errorLines.at(-1);
 
-					const isAssertionError =
-						displayedLines[1]!.includes('AssertionError');
+					const line = error!.match(/File "<exec>", line (\d+)/)?.[1];
+
+					if (!errorMessage) break;
+
+					const isAssertionError = errorMessage.includes('AssertionError');
 
 					const formattedError = isAssertionError
-						? displayedLines[1]
-						: displayedLines[1] + ' at ' + line![0];
+						? errorMessage
+						: line
+							? `${errorMessage} at line ${line}`
+							: errorMessage;
 
 					setTerminalState((prev) => ({
 						...prev,
-						error: formattedError!,
+						error: formattedError,
 						solved: false,
 					}));
+
 					break;
 				}
 			}
