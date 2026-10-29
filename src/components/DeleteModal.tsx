@@ -27,10 +27,10 @@ import { useRequireUser } from '../hooks/useRequireUser';
 import axios from 'axios';
 import { signOutAndClear } from '../services/auth/signOutAndClear';
 import { useNavigate } from 'react-router-dom';
-import type { ApiError } from '../types/api';
 import { githubProvider, googleProvider } from '../database/configs/firebase';
 import { idGenerator } from '../utils/idGenerator';
 import type { Providers } from '../pages/AccountAndSecurity';
+import { logApiError } from '../utils/api';
 
 type Steps = null | 'password' | 'code' | 'reauthenticate';
 
@@ -103,25 +103,7 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 			void navigate('/', { replace: true });
 			logSuccess('Conta deletada com sucesso!');
 		} catch (error) {
-			if (axios.isAxiosError<ApiError>(error)) {
-				if (error.response?.status === 401) {
-					logError({
-						error: new DisplayableError(
-							'Não foi possível confirmar sua sessão. Tente novamente.',
-						),
-					});
-					return;
-				}
-
-				if (error.response) {
-					logError({
-						error,
-						text: error.response.data?.error || defaultErrorMessage,
-					});
-					return;
-				}
-			}
-			logError({ error });
+			logApiError(error);
 		}
 	};
 

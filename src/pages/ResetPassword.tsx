@@ -1,7 +1,8 @@
 import { useEffect, useState, type SubmitEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logError, logSuccess, logWarning } from '../utils/logger';
+import { logSuccess, logWarning } from '../utils/logger';
 import axios from 'axios';
+import { logApiError } from '../utils/api';
 
 export function ResetPassword() {
 	const [email, setEmail] = useState<string | null>(null);
@@ -54,7 +55,7 @@ export function ResetPassword() {
 			setTimer(60);
 			logSuccess('E-mail enviado com sucesso.');
 		} catch (error) {
-			logError({ error });
+			logApiError(error);
 		} finally {
 			setIsEmailSending(false);
 		}

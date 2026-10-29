@@ -7,11 +7,7 @@ import { useEffect, useState } from 'react';
 import { auth } from '../database/configs/firebase';
 import { DisplayableError } from '../classes/DisplayableError';
 import { signOutAndClear } from '../services/auth/signOutAndClear';
-import type { ApiError } from '../types/api';
-
-interface VerifyEmailState {
-	mode: 'link-email';
-}
+import { logApiError } from '../utils/api';
 
 export function VerifyEmail() {
 	const [isEmailSent, setIsEmailSent] = useState(false);
@@ -95,17 +91,7 @@ export function VerifyEmail() {
 			setTimer(60);
 			logSuccess('E-mail enviado com sucesso.');
 		} catch (error) {
-			if (axios.isAxiosError<ApiError>(error)) {
-				if (error.response) {
-					logError({
-						error,
-						text: error.response.data?.error || defaultErrorMessage,
-					});
-					return;
-				}
-			}
-
-			logError({ error });
+			logApiError(error);
 		} finally {
 			setIsEmailSending(false);
 		}
@@ -140,25 +126,7 @@ export function VerifyEmail() {
 			logSuccess('Criação da conta cancelada com sucesso!');
 			void navigate('/register', { replace: true });
 		} catch (error) {
-			if (axios.isAxiosError<ApiError>(error)) {
-				if (error.response?.status === 401) {
-					logError({
-						error: new DisplayableError(
-							'Não foi possível confirmar sua sessão. Tente novamente.',
-						),
-					});
-					return;
-				}
-
-				if (error.response) {
-					logError({
-						error,
-						text: error.response.data?.error || defaultErrorMessage,
-					});
-					return;
-				}
-			}
-			logError({ error });
+			logApiError(error);
 		} finally {
 			setIsCanceling(false);
 		}
