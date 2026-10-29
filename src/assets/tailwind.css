@@ -22,13 +22,6 @@
 	--color-progress-titles: #29bd5f;
 	--color-codeblock-symbols: #81c8be;
 
-	/* Espaçamentos */
-	--spacing-hero-x: clamp(2.5rem, -1.413rem + 17.3913vw, 12.5rem);
-	--spacing-section-btn-x: clamp(1.5rem, 0.6196rem + 3.913vw, 3.75rem);
-	--spacing-section-btn-y: clamp(0.625rem, 0.3804rem + 1.087vw, 1.25rem);
-	--spacing-session-btn-x: clamp(1.25rem, 3vw, 2.5rem);
-	--spacing-session-btn-y: clamp(0.625rem, 1.5vw, 0.75rem);
-
 	/* Tamanhos */
 	--width-section-img: clamp(17.5rem, 9.6739rem + 34.7826vw, 37.5rem);
 	--width-account-img: clamp(12.5rem, 10.3261rem + 17.3913vw, 18.75rem);
@@ -168,12 +161,32 @@
 @utility appear-animation {
 	animation: appear linear both;
 	animation-timeline: view();
-	animation-range: entry 0% entry 80%;
+	animation-range: entry 0% entry 60%;
+}
+
+@utility px-section-btn {
+	padding-inline: clamp(1.5rem, 0.6196rem + 3.913vw, 3.75rem);
+}
+
+@utility py-section-btn {
+	padding-block: clamp(0.75rem, 0.3804rem + 1.087vw, 1.25rem);
+}
+
+@utility px-session-btn {
+	padding-inline: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+@utility py-session-btn {
+	padding-block: clamp(0.625rem, 1.5vw, 0.75rem);
+}
+
+@utility px-hero {
+	padding-inline: clamp(2.5rem, -1.413rem + 17.3913vw, 12.5rem);
 }
 
 @layer components {
 	.register-form-btn {
-		@apply from-main-green/40 to-main-purple/40 h-[50px] w-50 rounded-md border bg-linear-to-br lg:cursor-pointer lg:transition-shadow lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/15;
+		@apply from-main-green/40 to-main-purple/40 lg:hover:bg-module-background/60 flex h-[55px] w-50 max-w-300 flex-col gap-y-10 rounded-md border bg-linear-to-br p-5 outline outline-black backdrop-blur-xl lg:cursor-pointer lg:flex-row lg:gap-x-5 lg:p-10 lg:transition-shadow lg:duration-300;
 	}
 
 	.form-btn {
@@ -184,11 +197,25 @@
 		@apply flex w-30 items-center justify-center gap-x-2 rounded-md border-2 border-(--theme-color) bg-(--theme-color)/10 py-2 text-sm lg:w-[150px] lg:cursor-pointer lg:transition-[width,box-shadow] lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/5;
 	}
 
-	.support-fields {
+	.support-field {
 		@apply rounded-md bg-black/50 p-2 transition-shadow focus:border-none focus:shadow-[0_0_15px_#ffffff]/5 focus:outline-none;
 	}
 
-	.guide-cards {
-		@apply flex min-h-[230px] max-w-[330px] flex-col gap-y-5 rounded-md bg-black/40 p-6 shadow-[0_0_30px_black]/40 lg:transition-[scale] lg:duration-300 lg:hover:scale-105;
+	.provider-card {
+		background: linear-gradient(
+			to top,
+			color-mix(in srgb, var(--theme) 15%, transparent),
+			#ffffff0d
+		);
+	}
+
+	@media (min-width: 1024px) {
+		.provider-card {
+			background: linear-gradient(
+				var(--gradient-direction),
+				color-mix(in srgb, var(--theme) 15%, transparent),
+				#ffffff0d
+			);
+		}
 	}
 }
