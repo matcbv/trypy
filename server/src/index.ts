@@ -10,7 +10,7 @@ const PORT = 8080;
 app.use(
 	cors({
 		origin: 'https://192.168.0.183:5173',
-		methods: ['GET', 'POST', 'DELETE'],
+		methods: ['GET', 'POST', 'PATCH', 'DELETE'],
 		allowedHeaders: ['Content-Type', 'Authorization'],
 	}),
 );
