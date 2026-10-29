@@ -12,7 +12,9 @@ export async function authenticate(
 		: undefined;
 
 	if (!token) {
-		res.status(401).json({ error: 'Token não informado.' });
+		res.status(401).json({
+			error: 'Não foi possível confirmar sua sessão. Tente novamente.',
+		});
 		return;
 	}
 
@@ -21,6 +23,8 @@ export async function authenticate(
 		res.locals.uid = decodedToken.uid;
 		next();
 	} catch {
-		res.status(401).json({ error: 'Token inválido ou expirado.' });
+		res.status(401).json({
+			error: 'Não foi possível confirmar sua sessão. Tente novamente.',
+		});
 	}
 }
