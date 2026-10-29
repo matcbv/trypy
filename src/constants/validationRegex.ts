@@ -1,6 +1,6 @@
 export const validationRegex = {
 	email: {
-		regex: /^(?=.{1,254}$)[^\s@]{1,64}@[^\s@]{1,189}(?:\.[^\s@]{2,24})+$/,
+		regex: /^(?=.{1,254}$)[^\s@]{1,64}@(?:[^\s@.]{1,63}\.)+[^\s@.]{2,24}$/,
 		text: 'E-mail inválido',
 	},
 	password: {
