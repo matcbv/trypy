@@ -2,7 +2,7 @@
 
 export interface UserData {
 	id: string;
-	email: string;
+	email: string | null;
 	name: string;
 	lastname: string | null;
 	birthDate: string | null;

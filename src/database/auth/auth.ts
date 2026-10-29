@@ -34,7 +34,7 @@ export const signUpWithCredentials = async ({
 	const { password, ...persistedData } = userData;
 	const credential = await createUserWithEmailAndPassword(
 		auth,
-		persistedData.email,
+		persistedData.email!,
 		password,
 	);
 
