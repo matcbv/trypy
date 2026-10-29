@@ -27,9 +27,7 @@ export function ResetPassword() {
 			});
 		}, 1000);
 
-		return () => {
-			clearInterval(timerId);
-		};
+		return () => clearInterval(timerId);
 	}, [isEmailSending]);
 
 	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -64,7 +62,7 @@ export function ResetPassword() {
 	return (
 		<div className="flex min-h-screen items-center justify-center">
 			<div className="bg-forms relative mx-[10px] my-30 flex min-h-100 max-w-125 rounded-lg shadow-[0_0_20px_#ffffff]/10">
-				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-20'></div>
+				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-10'></div>
 				<div className="relative flex flex-col justify-center p-10">
 					<h1 className="text-title-2xl mb-3 font-bold tracking-wider">
 						Redefinir senha
