@@ -5,17 +5,11 @@ import {
 	type SubmitEvent,
 } from 'react';
 import { SnakeLoader } from './SnakeLoader';
-import {
-	defaultErrorMessage,
-	logError,
-	logSuccess,
-	logWarning,
-} from '../utils/logger';
+import { logError, logSuccess, logWarning } from '../utils/logger';
 import { DisplayableError } from '../classes/DisplayableError';
 import {
 	EmailAuthProvider,
 	getIdToken,
-	getIdTokenResult,
 	GithubAuthProvider,
 	GoogleAuthProvider,
 	ProviderId,
@@ -39,7 +33,9 @@ interface DeleteModalProps {
 }
 
 export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
-	const [signInProvider, setSignInProvider] = useState<null | Providers>(null);
+	const [primaryProvider, setPrimaryProvider] = useState<null | Providers>(
+		null,
+	);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [step, setStep] = useState<Steps>(null);
 	const [deleteCodeInputValue, setDeleteCodeInputValue] = useState<string>('');
@@ -56,21 +52,21 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 			try {
 				const user = await requireUser();
 
-				const { signInProvider } = await getIdTokenResult(user);
+				const primaryProvider = user.providerData[0]?.providerId;
 
-				switch (signInProvider) {
+				switch (primaryProvider) {
 					case ProviderId.PASSWORD:
-						setSignInProvider(ProviderId.PASSWORD);
+						setPrimaryProvider(ProviderId.PASSWORD);
 						setStep('password');
 						break;
 
 					case ProviderId.GOOGLE:
-						setSignInProvider(ProviderId.GOOGLE);
+						setPrimaryProvider(ProviderId.GOOGLE);
 						setStep('code');
 						break;
 
 					case ProviderId.GITHUB:
-						setSignInProvider(ProviderId.GITHUB);
+						setPrimaryProvider(ProviderId.GITHUB);
 						setStep('code');
 						break;
 
@@ -182,7 +178,7 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 	};
 
 	const reauthenticateModal = () => {
-		if (!signInProvider) {
+		if (!primaryProvider) {
 			setShowDeleteModal(false);
 			setStep('code');
 			logError({
@@ -193,7 +189,7 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 			});
 			return;
 		}
-		switch (signInProvider) {
+		switch (primaryProvider) {
 			case ProviderId.GOOGLE:
 				return (
 					<div>
