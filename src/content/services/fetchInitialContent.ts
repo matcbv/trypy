@@ -14,5 +14,6 @@ export function fetchInitialContent(modules: ModuleData[]): ProgressState {
 		doneModules: [],
 		doneTopics: [],
 		doneSubtopics: [],
+		lastActivityAt: null,
 	};
 }

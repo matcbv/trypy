@@ -12,6 +12,7 @@ export interface ProgressState {
 	doneModules: string[];
 	doneTopics: string[];
 	doneSubtopics: string[];
+	lastActivityAt: Date | null;
 }
 
 interface NavigationItem {

@@ -7,6 +7,7 @@ const initialState = {
 	doneModules: [],
 	doneTopics: [],
 	doneSubtopics: [],
+	lastActivityAt: null,
 } as ProgressState;
 
 export default initialState;
