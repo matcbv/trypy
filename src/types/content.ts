@@ -1,7 +1,8 @@
 import type { Document } from '@contentful/rich-text-types';
 import type { Themes } from '../constants/themeStyle';
 
-export type SubtopicTypes = 'lesson' | 'exercise' | 'resolution' | 'conclusion';
+export type SubtopicTypes =
+	'lesson' | 'videolesson' | 'exercise' | 'resolution' | 'conclusion';
 
 export interface ModuleData {
 	title: string;
