@@ -1,40 +1,29 @@
-export function ProgressBar({
-	progressPercentual,
-}: {
+type ProgressBarProps = {
 	progressPercentual: number;
-}) {
-	const radius = 100;
-	const perimeter = 2 * Math.PI * radius;
+};
+
+export function ProgressBar({ progressPercentual }: ProgressBarProps) {
+	const progress = Math.min(100, Math.max(0, progressPercentual));
 
 	return (
-		<svg
-			className="h-56 w-56 shrink-0 rounded-full drop-shadow-[0_0_15px_#ffffff]/15"
-			viewBox="0 0 240 240"
-		>
-			<circle
-				cx={120}
-				cy={120}
-				r={100}
-				stroke="#808791"
-				className="fill-none stroke-[55px]"
-			/>
-			<circle
-				cx={120}
-				cy={120}
-				r={100}
-				strokeDasharray={perimeter}
-				strokeDashoffset={perimeter - (perimeter * progressPercentual) / 100}
-				className="stroke-main-green origin-center -rotate-90 fill-none stroke-[55px] transition-all duration-500"
-			/>
-			<text
-				x={120}
-				y={120}
-				textAnchor="middle"
-				dominantBaseline="middle"
-				className="fill-gray-200 text-4xl"
+		<div className="w-full">
+			<div className="flex items-end justify-between px-1">
+				<p className="text-section-lg font-bold">Seu progresso</p>
+				<span className="text-title-2xl font-bold">{progressPercentual}%</span>
+			</div>
+			<div
+				role="progressbar"
+				aria-label="Progresso da trilha"
+				aria-valuemin={0}
+				aria-valuemax={100}
+				aria-valuenow={progress}
+				className="h-5 w-full overflow-hidden rounded-full bg-[#808791] drop-shadow-[0_0_15px_#ffffff]/15"
 			>
-				{progressPercentual + '%'}
-			</text>
-		</svg>
+				<div
+					className="bg-main-green h-full rounded-full transition-[width] duration-500 ease-in-out"
+					style={{ width: `${progress}%` }}
+				/>
+			</div>
+		</div>
 	);
 }
