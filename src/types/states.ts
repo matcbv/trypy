@@ -19,7 +19,7 @@ interface NavigationItem {
 	currentSubtopic: string;
 }
 
-export type NavigationState = Record<number, NavigationItem>;
+export type NavigationState = Record<string, NavigationItem>;
 
 export interface TerminalState {
 	status: 'idle' | 'loading' | 'ready' | 'running' | 'success' | 'error';

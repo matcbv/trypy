@@ -54,7 +54,7 @@ export const signUpWithCredentials = async ({
 		}
 		const navigationStorage = getNavigationStorage();
 		const initialNavigationState = navigationStorage || {
-			1: {
+			[finalProgress.inProgressModule]: {
 				currentTopic: finalProgress.inProgressTopic,
 				currentSubtopic: finalProgress.inProgressSubtopic,
 			},

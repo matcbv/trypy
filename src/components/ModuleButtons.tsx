@@ -88,7 +88,7 @@ export function ModuleButtons({
 		// * Setando o próximo subtópico no estado de navegação do usuário:
 		setNavigationState((prev) => ({
 			...prev,
-			[moduleData.order]: {
+			[moduleData.slug]: {
 				currentTopic: nextTopic.slug,
 				currentSubtopic: nextSubtopic.slug,
 			},
@@ -123,6 +123,8 @@ export function ModuleButtons({
 		if (!progressState.doneSubtopics.includes(nextSubtopic.slug)) {
 			firestoreUpdate.inProgressSubtopic = localUpdate.inProgressSubtopic =
 				nextSubtopic.slug;
+
+			firestoreUpdate.lastActivityAt = localUpdate.lastActivityAt = new Date();
 		}
 
 		const user = auth.currentUser;
@@ -159,7 +161,7 @@ export function ModuleButtons({
 		if (previousSubtopic) {
 			setNavigationState((prev) => ({
 				...prev,
-				[moduleData.order]: {
+				[moduleData.slug]: {
 					...prev![moduleData.order]!,
 					currentSubtopic: previousSubtopic.slug,
 				},
@@ -182,7 +184,7 @@ export function ModuleButtons({
 
 		setNavigationState((prev) => ({
 			...prev,
-			[moduleData.order]: {
+			[moduleData.slug]: {
 				currentTopic: previousTopic!.slug,
 				currentSubtopic: lastTopicSubtopic!.slug,
 			},
@@ -214,7 +216,7 @@ export function ModuleButtons({
 		};
 
 		const navigationUpdate = {
-			[nextModule.order]: {
+			[nextModule.slug]: {
 				currentTopic: nextTopic.slug,
 				currentSubtopic: nextSubtopic.slug,
 			},

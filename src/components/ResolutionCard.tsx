@@ -41,7 +41,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 
 		setNavigationState((prev) => ({
 			...prev,
-			[module!.order]: {
+			[module!.slug]: {
 				currentTopic: topic!.slug,
 				currentSubtopic: slug,
 			},

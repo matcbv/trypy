@@ -91,7 +91,7 @@ export function ModuleSideBar({
 
 		setNavigationState((prev) => ({
 			...prev,
-			[currentModule.order]: {
+			[currentModule.slug]: {
 				currentTopic: topicSlug,
 				currentSubtopic: subtopicSlug,
 			},
@@ -182,7 +182,10 @@ export function ModuleSideBar({
 			progressState.inProgressTopic === topic.slug ||
 			firstTopicSlug === topic.slug
 		) {
-			return { src: '/assets/images/icons/progress.png', alt: 'Em progresso' };
+			return {
+				src: '/assets/images/icons/in-progress.png',
+				alt: 'Em progresso',
+			};
 		}
 
 		return { src: '/assets/images/icons/locked.png', alt: 'Bloqueado' };

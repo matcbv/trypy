@@ -36,7 +36,7 @@ export function Module() {
 		return (
 			currentModule.topics.find(
 				(topic) =>
-					topic.slug === navigationState[currentModule.order]?.currentTopic,
+					topic.slug === navigationState[currentModule.slug]?.currentTopic,
 			) ?? null
 		);
 	}, [currentModule, navigationState]);
@@ -47,7 +47,7 @@ export function Module() {
 			currentTopic.subtopics.find(
 				(subtopic) =>
 					subtopic.slug ===
-					navigationState[currentModule.order]?.currentSubtopic,
+					navigationState[currentModule.slug]?.currentSubtopic,
 			) ?? null
 		);
 	}, [currentModule, currentTopic, navigationState]);
@@ -100,7 +100,7 @@ export function Module() {
 		switch (currentSubtopic?.subtopicType) {
 			case 'exercise':
 				return <Terminal subtopicData={currentSubtopic} />;
-			case 'lesson':
+			case 'videolesson':
 				return (
 					currentSubtopic.videoLink && (
 						<div>

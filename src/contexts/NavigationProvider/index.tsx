@@ -74,7 +74,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 				if (!modules) return;
 				const initialProgressData = fetchInitialContent(modules);
 				const initialNavigationState: NavigationState = {
-					1: {
+					[initialProgressData.inProgressModule]: {
 						currentTopic: initialProgressData.inProgressTopic,
 						currentSubtopic: initialProgressData.inProgressSubtopic,
 					},
