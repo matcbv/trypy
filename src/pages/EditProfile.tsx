@@ -29,6 +29,7 @@ export function EditProfile() {
 	const [fieldErrors, setFieldErrors] = useState<Array<keyof typeof formMap>>(
 		[],
 	);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const requireUser = useRequireUser();
 
 	useEffect(() => {
@@ -100,10 +101,14 @@ export function EditProfile() {
 	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
+		if (isSubmitting) return;
+
 		const user = await requireUser();
 
 		const isDataValid = checkData();
 		if (!isDataValid) return;
+
+		setIsSubmitting(true);
 
 		const formattedData = Object.fromEntries(
 			Object.entries(currentData).map(([key, value]) => [key, value.trim()]),
@@ -130,6 +135,8 @@ export function EditProfile() {
 				error,
 				text: 'Falha ao atualizar os dados. Tente novamente.',
 			});
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
@@ -137,12 +144,12 @@ export function EditProfile() {
 		<div>
 			<div>
 				<h1 className="mb-5 text-2xl font-bold tracking-wide">Meus dados</h1>
-				<div className="flex flex-col gap-y-10">
+				<div className="flex flex-col">
+					<PictureInput />
 					<form
-						className="flex flex-col items-start"
+						className="mb-10 flex flex-col items-start"
 						onSubmit={(e) => void handleSubmit(e)}
 					>
-						<PictureInput />
 						<div className="mb-3 w-full">
 							<h2 className="mb-3 text-lg font-bold">Dados básicos</h2>
 							<div className="flex flex-col gap-y-2">
@@ -160,7 +167,7 @@ export function EditProfile() {
 												value={currentData[key]}
 												onChange={handleChange}
 												placeholder={key === 'birthDate' ? 'dd/mm/aaaa' : ''}
-												className={`border-main-green/80 focus:border-main-green w-full max-w-75 rounded-md border-2 bg-white/5 px-3 py-2 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10 ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
+												className={`border-main-green focus:border-glow-green/70 w-full max-w-75 rounded-md border-2 bg-white/5 px-3 py-2 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10 ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
 												type="text"
 											/>
 										</div>
@@ -168,7 +175,21 @@ export function EditProfile() {
 								})}
 							</div>
 						</div>
-						<button className="form-btn text-sm">Salvar</button>
+						<button
+							type="submit"
+							className="form-btn text-sm"
+							disabled={isSubmitting}
+						>
+							{isSubmitting ? (
+								<img
+									src="/assets/images/loading.png"
+									alt="Enviando"
+									className="w-5"
+								/>
+							) : (
+								'Salvar'
+							)}
+						</button>
 					</form>
 					<div className="flex flex-col items-start gap-y-3">
 						<h2 className="text-lg font-bold">Esqueceu sua senha?</h2>
