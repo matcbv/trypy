@@ -205,9 +205,9 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 								e seus dados serão apagados permanentemente.
 							</p>
 						</div>
-						<div className="flex gap-x-3">
+						<div className="flex max-w-75 flex-col gap-3 lg:max-w-none lg:flex-row">
 							<button
-								className="form-btn flex items-center gap-x-2 text-sm font-bold"
+								className="form-btn flex items-center justify-center gap-x-2 text-sm font-bold"
 								onClick={() => void reauthenticateWithProvider(googleProvider)}
 							>
 								<img
@@ -241,9 +241,9 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 								e seus dados serão apagados permanentemente.
 							</p>
 						</div>
-						<div className="flex gap-x-3">
+						<div className="flex max-w-75 flex-col gap-3 lg:max-w-none lg:flex-row">
 							<button
-								className="form-btn flex items-center gap-x-2 text-sm font-bold"
+								className="form-btn flex items-center justify-center gap-x-2 text-sm font-bold"
 								onClick={() => void reauthenticateWithProvider(githubProvider)}
 							>
 								<img
@@ -267,7 +267,7 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 
 	return (
 		<div className="fixed inset-0 z-10 flex h-dvh items-center justify-center bg-black/40 backdrop-blur-lg">
-			<div className="bg-dashboard-background relative mx-[10px] w-[min(600px,100%)] rounded-md border border-black p-7 shadow-[0_0_50px_#000000]/50 lg:w-[min(800px,100%)] lg:p-10">
+			<div className="bg-dashboard-background relative mx-[10px] w-[min(600px,100%)] rounded-md p-7 shadow-[0_0_50px_#000000]/50 outline outline-black lg:w-[min(800px,100%)] lg:p-10">
 				{isDeleting && (
 					<div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-black/20 backdrop-blur-xl">
 						<SnakeLoader />

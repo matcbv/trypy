@@ -17,7 +17,7 @@ const userAccountMap = [
 const pagesMap = [
 	{ slug: 'learning-path', title: 'Trilha de aprendizagem' },
 	{ slug: 'playground', title: 'Playground' },
-	{ slug: 'extra-content', title: 'Conteúdo extra' },
+	{ slug: 'courses', title: 'Cursos' },
 ];
 
 export function Header() {
