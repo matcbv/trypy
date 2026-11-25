@@ -3,10 +3,10 @@
 @theme {
 	/* Cores */
 	--color-main-bg: #080014;
-	--color-main-green: #00a63e;
-	--color-glow-green: #00ff5f;
+	--color-main-green: #00b347;
+	--color-glow-green: #00e653;
 	--color-main-purple: #8558d6;
-	--color-main-cyan: #34a8ad;
+	--color-main-cyan: #49c8d2;
 	--color-main-red: #f24854;
 	--color-highlight-green: #b5fbbe;
 	--color-highlight-purple: #c5a7ff;
@@ -19,7 +19,6 @@
 	--color-toast-background: #131117;
 	--color-tip-background: #181724;
 	--color-dashboard-background: #231d63;
-	--color-progress-titles: #29bd5f;
 	--color-codeblock-symbols: #81c8be;
 
 	/* Tamanhos */
@@ -105,28 +104,35 @@
 	/* Animações */
 	--animate-swing: swing 3s ease-in-out infinite;
 	--animate-grow: grow 5s ease-in-out 10s infinite;
+	--animate-translate-x: translate-x 2s ease-in-out infinite;
 
 	@keyframes swing {
-		0% {
+		0%,
+		100% {
 			transform: rotate(-0.5deg);
 		}
 		50% {
 			transform: rotate(0.5deg);
 		}
-		100% {
-			transform: rotate(-0.5deg);
-		}
 	}
 
 	@keyframes grow {
-		0% {
+		0%,
+		100% {
 			transform: scale(100%);
 		}
 		50% {
 			transform: scale(90%);
 		}
+	}
+
+	@keyframes translate-x {
+		0%,
 		100% {
-			transform: scale(100%);
+			transform: translateX(-4px);
+		}
+		50% {
+			transform: translateX(4px);
 		}
 	}
 
@@ -161,7 +167,7 @@
 @utility appear-animation {
 	animation: appear linear both;
 	animation-timeline: view();
-	animation-range: entry 0% entry 60%;
+	animation-range: entry 0% entry 40%;
 }
 
 @utility px-section-btn {
@@ -186,7 +192,7 @@
 
 @layer components {
 	.register-form-btn {
-		@apply from-main-green/40 to-main-purple/40 lg:hover:bg-module-background/60 flex h-[55px] w-50 max-w-300 flex-col gap-y-10 rounded-md border bg-linear-to-br p-5 outline outline-black backdrop-blur-xl lg:cursor-pointer lg:flex-row lg:gap-x-5 lg:p-10 lg:transition-shadow lg:duration-300;
+		@apply from-main-green/40 to-main-purple/40 lg:hover:bg-module-background/60 flex h-[55px] w-50 max-w-300 flex-col items-center justify-center gap-y-10 rounded-md border bg-linear-to-br p-5 outline outline-black lg:cursor-pointer lg:flex-row lg:gap-x-5 lg:transition-shadow lg:duration-300;
 	}
 
 	.form-btn {
@@ -197,14 +203,10 @@
 		@apply flex w-30 items-center justify-center gap-x-2 rounded-md border-2 border-(--theme-color) bg-(--theme-color)/10 py-2 text-sm lg:w-[150px] lg:cursor-pointer lg:transition-[width,box-shadow] lg:duration-300 lg:hover:shadow-[0_0_15px_#ffffff]/5;
 	}
 
-	.support-field {
-		@apply rounded-md bg-black/50 p-2 transition-shadow focus:border-none focus:shadow-[0_0_15px_#ffffff]/5 focus:outline-none;
-	}
-
 	.provider-card {
 		background: linear-gradient(
-			to top,
-			color-mix(in srgb, var(--theme) 15%, transparent),
+			to bottom,
+			color-mix(in srgb, var(--theme) 20%, transparent),
 			#ffffff0d
 		);
 	}
@@ -213,7 +215,7 @@
 		.provider-card {
 			background: linear-gradient(
 				var(--gradient-direction),
-				color-mix(in srgb, var(--theme) 15%, transparent),
+				color-mix(in srgb, var(--theme) 20%, transparent),
 				#ffffff0d
 			);
 		}
