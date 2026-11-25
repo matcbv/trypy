@@ -46,6 +46,9 @@ export function ModuleButtons({
 			.filter((subtopic) => subtopic.subtopicType !== 'conclusion')
 			.some((subtopic) => !progressState.doneSubtopics.includes(subtopic.slug));
 
+	const isFirstSubtopic =
+		subtopicData.slug === moduleData.topics[0]?.subtopics[0]?.slug;
+
 	const handleNext = async () => {
 		if (isNextButtonLocked) {
 			logInfo(
@@ -148,8 +151,6 @@ export function ModuleButtons({
 	};
 
 	const handlePrevious = () => {
-		const isFirstSubtopic =
-			subtopicData.slug === moduleData.topics[0]?.subtopics[0]?.slug;
 		if (isFirstSubtopic) return;
 
 		window.scrollTo(0, 0);
@@ -162,7 +163,7 @@ export function ModuleButtons({
 			setNavigationState((prev) => ({
 				...prev,
 				[moduleData.slug]: {
-					...prev![moduleData.order]!,
+					...prev![moduleData.slug]!,
 					currentSubtopic: previousSubtopic.slug,
 				},
 			}));
@@ -250,13 +251,13 @@ export function ModuleButtons({
 		<div className="flex justify-end gap-x-6">
 			<button
 				type="button"
-				className="module-btn group"
+				className={`module-btn group ${isFirstSubtopic ? 'cursor-default opacity-50 shadow-none' : 'opacity-100'}`}
 				onClick={handlePrevious}
 			>
 				<img
 					src={`/assets/images/icons/left-arrow.png`}
 					alt="Voltar"
-					className="lg:transition-transform lg:duration-300 lg:group-hover:-translate-x-2"
+					className={`lg:transition-transform lg:duration-300 ${isFirstSubtopic ? 'lg:group-hover:translate-none' : 'lg:group-hover:-translate-x-2'}`}
 				/>
 				Voltar
 			</button>
