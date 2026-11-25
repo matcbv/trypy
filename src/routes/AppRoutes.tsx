@@ -35,6 +35,8 @@ import { NewPassword } from '../pages/NewPassword';
 import { AccountAndSecurity } from '../pages/AccountAndSecurity';
 import { LinkEmail } from '../pages/LinkEmail';
 import { linkEmailMiddleware } from '../middlewares/linkEmailMiddleware';
+import { Faq } from '../pages/Faq';
+import { Courses } from '../pages/Courses';
 
 export function AppRoutes() {
 	return (
@@ -46,7 +48,9 @@ export function AppRoutes() {
 						<NavigationProvider>
 							<Routes>
 								<Route element={<BaseLayout />}>
-									<Route path="/" element={<Home />} />
+									<Route element={<TerminalProvider />}>
+										<Route path="/" element={<Home />} />
+									</Route>
 									<Route
 										element={<ProtectedRoute middlewares={[guestMiddleware]} />}
 									>
@@ -93,13 +97,15 @@ export function AppRoutes() {
 											/>
 										</Route>
 									</Route>
-									<Route path="/learning-path" element={<LearningPath />} />
 									<Route element={<TerminalProvider />}>
 										<Route path="/playground" element={<Playground />} />
 									</Route>
+									<Route path="/learning-path" element={<LearningPath />} />
+									<Route path="/courses" element={<Courses />} />
 									<Route path="/reset-password" element={<ResetPassword />} />
 									<Route path="/new-password" element={<NewPassword />} />
 									<Route path="/support" element={<Support />} />
+									<Route path="/help" element={<Faq />} />
 									<Route path="/about-us" element={<AboutUs />} />
 									<Route path="/be-a-partner" element={<BeAPartner />} />
 								</Route>
