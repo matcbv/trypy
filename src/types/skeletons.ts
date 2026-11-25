@@ -63,3 +63,26 @@ export type TipSkeleton = EntrySkeletonType<
 	},
 	'tipPy'
 >;
+
+export type FaqCategorySkeleton = EntrySkeletonType<
+	{
+		name: EntryFieldTypes.Symbol;
+		description: EntryFieldTypes.Symbol;
+		questions: EntryFieldTypes.Array<
+			EntryFieldTypes.EntryLink<FaqQuestionSkeleton>
+		>;
+		icon: EntryFieldTypes.AssetLink;
+		slug: EntryFieldTypes.Symbol;
+		order: EntryFieldTypes.Integer;
+	},
+	'faqCategory'
+>;
+
+export type FaqQuestionSkeleton = EntrySkeletonType<
+	{
+		question: EntryFieldTypes.Symbol;
+		answer: EntryFieldTypes.RichText;
+		order: EntryFieldTypes.Integer;
+	},
+	'faqQuestion'
+>;

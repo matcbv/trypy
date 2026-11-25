@@ -1,5 +1,6 @@
 import type { Document } from '@contentful/rich-text-types';
 import type { Themes } from '../constants/themeStyle';
+import type { ResolvedAsset } from './richText';
 
 export type SubtopicTypes =
 	'lesson' | 'videolesson' | 'exercise' | 'resolution' | 'conclusion';
@@ -46,5 +47,20 @@ export interface TipData {
 	title: string;
 	content: Document;
 	slug: string;
+	order: number;
+}
+
+export interface FaqCategory {
+	name: string;
+	description: string;
+	questions: FaqQuestion[];
+	icon: ResolvedAsset;
+	slug: string;
+	order: number;
+}
+
+export interface FaqQuestion {
+	question: string;
+	answer: Document;
 	order: number;
 }

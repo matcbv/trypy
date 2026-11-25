@@ -5,7 +5,7 @@ import type {
 	ProgressState,
 	TerminalState,
 } from './states';
-import type { ModuleCardData, ModuleData } from './content';
+import type { FaqCategory, ModuleCardData, ModuleData } from './content';
 import type { ErrorContentType } from '../contexts/ContentfulContentProvider';
 
 export interface AuthContextType {
@@ -16,13 +16,16 @@ export interface AuthContextType {
 export interface ContentfulContentContextType {
 	modules: ModuleData[] | null;
 	moduleCards: ModuleCardData[] | null;
+	faqCategories: FaqCategory[] | null;
 	isLoading: {
 		modules: boolean;
 		moduleCards: boolean;
+		faqCategories: boolean;
 	};
 	errorData: ErrorContentType;
 	refreshModules: () => Promise<void>;
 	refreshModuleCards: () => Promise<void>;
+	refreshFaqCategories: () => Promise<void>;
 }
 
 export interface ProgressContextType {
