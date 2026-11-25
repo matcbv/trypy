@@ -1,8 +1,9 @@
 import { useEffect, useState, type SubmitEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { logSuccess, logWarning } from '../utils/logger';
 import axios from 'axios';
 import { logApiError } from '../utils/api';
+import { auth } from '../database/configs/firebase';
 
 export function ResetPassword() {
 	const [email, setEmail] = useState<string | null>(null);
@@ -45,7 +46,7 @@ export function ResetPassword() {
 		try {
 			await axios.post(
 				`${import.meta.env.VITE_API_URL}/api/email/reset-password`,
-				{ email },
+				{ email, name: auth.currentUser?.displayName ?? null },
 			);
 
 			setIsEmailSent(true);
