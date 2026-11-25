@@ -3,12 +3,16 @@ import { logError, logSuccess } from '../utils/logger';
 import { signOutAndClear } from '../services/auth/signOutAndClear';
 
 const objectsMap = [
-	{ slug: '', title: 'Visão geral', icon: 'user-overview' },
-	{ slug: 'edit-profile', title: 'Editar dados', icon: 'edit-profile' },
-	{ slug: 'resolutions', title: 'Resoluções', icon: 'resolution' },
-	{ slug: 'certifications', title: 'Certificações', icon: 'certificate' },
-	{ slug: 'support-us', title: 'Apoie-nos', icon: 'support-us' },
-	{ slug: 'account-and-security', title: 'Conta e segurança', icon: 'account' },
+	{ slug: '', title: 'Visão geral', icon: 'user-overview.png' },
+	{ slug: 'edit-profile', title: 'Editar dados', icon: 'edit-profile.png' },
+	{ slug: 'resolutions', title: 'Resoluções', icon: 'resolution.png' },
+	{ slug: 'certifications', title: 'Certificações', icon: 'certificate.png' },
+	{ slug: 'support-us', title: 'Apoie-nos', icon: 'support-us.png' },
+	{
+		slug: 'account-and-security',
+		title: 'Conta e segurança',
+		icon: 'settings.png',
+	},
 ];
 
 export function DashboardNavbar() {
@@ -35,7 +39,7 @@ export function DashboardNavbar() {
 						>
 							<img
 								alt="Ícone"
-								src={`/assets/images/icons/${object.icon}.png`}
+								src={`/assets/images/icons/${object.icon}`}
 								className="hidden lg:inline"
 							/>
 							{object.title}
