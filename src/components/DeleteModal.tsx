@@ -22,7 +22,7 @@ import axios from 'axios';
 import { signOutAndClear } from '../services/auth/signOutAndClear';
 import { useNavigate } from 'react-router-dom';
 import { githubProvider, googleProvider } from '../database/configs/firebase';
-import { idGenerator } from '../utils/idGenerator';
+import { codeGenerator } from '../utils/codeGenerator';
 import type { Providers } from '../pages/AccountAndSecurity';
 import { logApiError } from '../utils/api';
 
@@ -42,7 +42,7 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 	const [userPassword, setUserPassword] = useState('');
 	const [isVisible, setIsVisible] = useState(false);
 	const [deleteCode, setDeleteCode] = useState(() =>
-		idGenerator().generateId(),
+		codeGenerator().generateCode(),
 	);
 	const requireUser = useRequireUser();
 	const navigate = useNavigate();
@@ -353,7 +353,7 @@ export function DeleteModal({ setShowDeleteModal }: DeleteModalProps) {
 											setShowDeleteModal(false);
 											setUserPassword('');
 											setDeleteCodeInputValue('');
-											setDeleteCode(idGenerator().generateId());
+											setDeleteCode(codeGenerator().generateCode());
 										}}
 									>
 										Voltar

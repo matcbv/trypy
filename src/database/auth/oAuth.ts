@@ -1,7 +1,7 @@
 import { signInWithPopup, type AuthProvider } from 'firebase/auth';
 import { auth, db } from '../configs/firebase';
 import { getDoc, writeBatch } from 'firebase/firestore';
-import { idGenerator } from '../../utils/idGenerator';
+import { codeGenerator } from '../../utils/codeGenerator';
 import {
 	userDataRef,
 	userNavigationRef,
@@ -72,7 +72,7 @@ export const signInWithProvider = async ({
 	};
 
 	const userData = {
-		id: 'TPY-' + idGenerator().generateId(),
+		id: 'TPY-' + codeGenerator().generateCode(),
 		name: displayName || 'Aluno',
 		email: email,
 		picture: photoURL,

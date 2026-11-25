@@ -1,7 +1,7 @@
-export function idGenerator(): { generateId: () => string } {
+export function codeGenerator(): { generateCode: () => string } {
 	const chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789';
 
-	function generateId(): string {
+	function generateCode(): string {
 		let id = '';
 
 		while (id.length < 6) {
@@ -12,5 +12,5 @@ export function idGenerator(): { generateId: () => string } {
 		return id;
 	}
 
-	return { generateId };
+	return { generateCode };
 }

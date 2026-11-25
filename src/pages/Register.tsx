@@ -14,7 +14,7 @@ import { ProgressContext } from '../contexts/ProgressProvider/context';
 import { logError, logSuccess } from '../utils/logger';
 import { signInWithProvider } from '../database/auth/oAuth';
 import { useSafeContext } from '../hooks/useSafeContext';
-import { idGenerator } from '../utils/idGenerator';
+import { codeGenerator } from '../utils/codeGenerator';
 import { LoadingPage } from '../pages/LoadingPage';
 import { type AuthProvider } from 'firebase/auth';
 import { githubProvider } from '../database/configs/firebase';
@@ -120,7 +120,7 @@ export function Register() {
 			const res = await signUpWithCredentials({
 				userData: {
 					...formattedData,
-					id: 'TPY-' + idGenerator().generateId(),
+					id: 'TPY-' + codeGenerator().generateCode(),
 					picture: null,
 					createdAt: new Date(),
 					supporter: false,
