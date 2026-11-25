@@ -28,7 +28,7 @@ export function CodeBlock({ code }: { code: string }) {
 			ref={codeBlockWrapperRef}
 			className="group relative overflow-hidden rounded-lg shadow-[0_0_10px_var(--color-main-purple)]/15"
 		>
-			<div className="codeScrollbar overflow-x-auto">
+			<div className="customScrollbar overflow-x-auto">
 				<div
 					className="w-fit min-w-full"
 					dangerouslySetInnerHTML={{ __html: html }}

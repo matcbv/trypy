@@ -197,7 +197,7 @@ export function Register() {
 							/>
 						</div>
 						<div
-							className={`grid overflow-hidden transition-all duration-300 ${
+							className={`transition-[grid-template-rows, margin-top] grid overflow-hidden duration-300 ${
 								hideText ? 'mt-0 grid-rows-[0fr]' : 'mt-2 grid-rows-[1fr]'
 							}`}
 						>
@@ -235,7 +235,7 @@ export function Register() {
 
 	return (
 		<div className="relative flex min-h-screen items-center justify-center">
-			<div className="bg-forms relative mx-[10px] my-30 flex min-h-115 w-full max-w-100 rounded-lg shadow-[0_0_20px_#ffffff]/10 lg:max-w-180">
+			<div className="bg-forms relative mx-[10px] my-30 flex w-full max-w-100 rounded-lg shadow-[0_0_20px_#ffffff]/10 lg:max-w-180">
 				{isSubmitting && <LoadingPage />}
 				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-10'></div>
 				<div className="relative w-full rounded-lg p-10">

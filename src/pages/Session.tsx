@@ -106,7 +106,7 @@ export function Session() {
 
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<div className="bg-forms relative mx-[10px] my-30 flex min-h-125 w-full max-w-125 rounded-lg shadow-[0_0_20px_#ffffff]/10">
+			<div className="bg-forms relative mx-[10px] my-30 flex w-full max-w-125 rounded-lg shadow-[0_0_20px_#ffffff]/10 lg:min-h-125">
 				{isSubmitting && <LoadingPage />}
 				<div className='absolute inset-0 rounded-lg bg-[url("/assets/images/cartographer-background.png")] opacity-10'></div>
 				<div className="relative flex w-full flex-col items-start justify-center p-10">
@@ -174,9 +174,9 @@ export function Session() {
 					</form>
 					<Link
 						to={'/reset-password'}
-						className="lg:hover:text-main-green mb-10 lg:transition-colors"
+						className="lg:hover:text-main-green mb-10 duration-300 lg:transition-colors"
 					>
-						Redefinir senha
+						Esqueci minha senha
 					</Link>
 					<div className="flex flex-col items-start gap-y-[10px]">
 						<h2 className="text-lg font-bold tracking-wider">

@@ -85,7 +85,7 @@ export function AboutUs() {
 								<img
 									src="/assets/images/matheus.png"
 									alt="Matheus"
-									className="mb-2 rounded-full shadow-[0_0_20px_var(--color-glow-green)]/30"
+									className="mb-2 rounded-full shadow-[0_0_20px_var(--color-glow-green)]/40"
 								/>
 								<h3 className="text-center text-sm font-bold">
 									Criador e Professor da plataforma TryPy
@@ -112,7 +112,7 @@ export function AboutUs() {
 						</div>
 						<div className="flex max-w-150 flex-col justify-between gap-y-5">
 							<div>
-								<h2 className="text-main-green text-title-3xl mb-4 font-bold">
+								<h2 className="text-main-green text-title-2xl mb-4 font-bold">
 									Matheus Cerqueira
 								</h2>
 								<p className="text-section-lg">
@@ -174,7 +174,7 @@ export function AboutUs() {
 						</div>
 						<div className="flex max-w-150 flex-col justify-between gap-y-5">
 							<div>
-								<h2 className="text-main-purple text-title-3xl mb-4 font-bold">
+								<h2 className="text-main-purple text-title-2xl mb-4 font-bold">
 									Daniel Ferrari
 								</h2>
 								<p className="text-section-lg leading-7">

@@ -167,7 +167,7 @@ export function EditProfile() {
 												value={currentData[key]}
 												onChange={handleChange}
 												placeholder={key === 'birthDate' ? 'dd/mm/aaaa' : ''}
-												className={`border-main-green focus:border-glow-green/70 w-full max-w-75 rounded-md border-2 bg-white/5 px-3 py-2 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10 ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
+												className={`border-main-green focus:border-glow-green w-full max-w-75 rounded-md border-2 bg-white/5 px-3 py-2 text-sm transition-all duration-300 outline-none focus:shadow-[0_0_10px_#ffffff]/10 ${fieldErrors.includes(key) ? 'placeholder-red-400' : 'placeholder-gray-400'}`}
 												type="text"
 											/>
 										</div>

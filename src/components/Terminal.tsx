@@ -1,7 +1,7 @@
 import { useSafeContext } from '../hooks/useSafeContext';
 import { TerminalContext } from '../contexts/TerminalProvider/context';
 import { useEffect, useRef, useState } from 'react';
-import CodeMirror from '@uiw/react-codemirror';
+import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
 import { catppuccinFrappe } from '@catppuccin/codemirror';
 import { LoadingPage } from '../pages/LoadingPage';
@@ -114,7 +114,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 					/>
 				</span>
 			</div>
-			<div className="mb-3 flex gap-x-6">
+			<div className="mb-3 flex gap-x-5">
 				<button
 					onClick={() => {
 						lastRunRef.current = { slug: subtopicData.slug, code: userCode };
@@ -124,26 +124,24 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 							expectedOutput: subtopicData.expectedOutput || null,
 						});
 					}}
-					className="lg:hover:bg-glow-green/20 flex gap-x-1 rounded-md border border-white/50 bg-white/10 px-4 py-2 lg:cursor-pointer lg:transition-colors lg:duration-300"
+					className="lg:hover:bg-glow-green/20 border-main-green/80 flex items-center gap-x-1 rounded-md border bg-white/10 px-4 py-2 lg:cursor-pointer lg:transition-colors lg:duration-300"
 				>
 					Executar
 					<img
 						src="/assets/images/icons/run.png"
-						role="button"
-						tabIndex={0}
+						className="w-5"
 						alt="Executar código"
 					/>
 				</button>
 				<button
 					onClick={stopCodeExecution}
-					className="lg:hover:bg-main-red/20 flex gap-x-1 rounded-md border border-white/50 bg-white/10 px-4 py-2 lg:cursor-pointer lg:transition-colors lg:duration-300"
+					className="lg:hover:bg-main-red/20 border-main-red/50 flex items-center gap-x-1 rounded-md border bg-white/10 px-4 py-2 lg:cursor-pointer lg:transition-colors lg:duration-300"
 				>
 					Interromper
 					<img
 						src="/assets/images/icons/stop.png"
-						role="button"
-						tabIndex={0}
-						alt="Executar código"
+						className="w-5"
+						alt="Interromper código"
 					/>
 				</button>
 			</div>
@@ -154,10 +152,10 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 					) : (
 						<CodeMirror
 							value={userCode}
-							extensions={[python()]}
+							extensions={[python(), EditorView.lineWrapping]}
 							theme={catppuccinFrappe}
 							height="400px"
-							className="overflow-hidden rounded-t-md [&_.cm-scroller]:scrollbar-none"
+							className="overflow-hidden rounded-t-md text-sm [&_.cm-scroller]:scrollbar-none"
 							onChange={(value) => setUserCode(value)}
 						></CodeMirror>
 					)}
@@ -167,7 +165,7 @@ export function Terminal({ subtopicData }: { subtopicData: SubtopicData }) {
 						Saída:
 						{statusIcon()}
 					</div>
-					<div className="codeScrollbar h-50 overflow-auto px-5 py-2">
+					<div className="customScrollbar h-50 overflow-auto px-5 py-2">
 						<code className="text-sm whitespace-pre-wrap">
 							{terminalState.error || terminalState.output}
 						</code>

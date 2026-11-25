@@ -94,11 +94,17 @@ export function ResetPassword() {
 									className="form-btn text-section-base relative overflow-hidden font-bold"
 									disabled={isEmailSending || !canSendEmail}
 								>
-									{isEmailSent ? (
+									{isEmailSending ? (
+										<img
+											src="/assets/images/loading.png"
+											alt="Enviando"
+											className="w-6"
+										/>
+									) : isEmailSent ? (
 										<p>
 											Reenviar e-mail{' '}
 											{timer >= 1 && (
-												<span className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-xs">
+												<span className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-xs">
 													{timer}
 												</span>
 											)}
@@ -119,12 +125,23 @@ export function ResetPassword() {
 					</form>
 					<div>
 						<h2 className="text-title-lg mb-2">Não se lembra do e-mail?</h2>
-						<button
-							type="button"
-							className="lg:hover:text-main-purple text-sm lg:cursor-pointer lg:transition-colors"
+						<Link
+							to="/support"
+							className="lg:hover:text-main-purple group flex items-center gap-x-1 text-sm lg:cursor-pointer lg:transition-colors"
 						>
 							Entre em contato conosco
-						</button>
+							<svg
+								aria-hidden
+								viewBox="0 0 24 24"
+								className="group-hover:text-main-purple size-4 fill-none stroke-current stroke-2 duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+							>
+								<path
+									d="M5.5 18.5 18.5 5.5M9.5 5.5h9v9"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								/>
+							</svg>
+						</Link>
 					</div>
 				</div>
 			</div>

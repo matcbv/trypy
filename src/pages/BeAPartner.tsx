@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const doubtInputsContent = {
@@ -67,23 +67,6 @@ export function BeAPartner() {
 		return () => clearInterval(underlineLoop);
 	}, []);
 
-	const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-		if (window.innerWidth < 1024) return;
-
-		const rect = e.currentTarget.getBoundingClientRect();
-
-		const x = e.clientX - rect.x;
-		const y = e.clientY - rect.y;
-
-		const centerX = rect.width / 2;
-		const centerY = rect.height / 2;
-
-		const rotateY = ((x - centerX) / centerX) * 10;
-		const rotateX = ((centerY - y) / centerY) * 10;
-
-		e.currentTarget.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-	};
-
 	return (
 		<div className="w-full">
 			<div className="mt-30 flex flex-col gap-y-20">
@@ -147,57 +130,12 @@ export function BeAPartner() {
 							cada uma delas:
 						</p>
 					</div>
-					<div className="grid max-w-210 grid-cols-1 gap-10 self-center lg:grid-cols-2 lg:self-start">
-						<div
-							className="bg-module-background flex max-w-100 flex-col items-start gap-y-5 rounded-md p-5 shadow-[0_0_30px_black]/40 outline outline-black lg:transition-[scale] lg:duration-300 lg:hover:scale-105"
-							onMouseMove={handleMouseMove}
-							onMouseLeave={(e) => (e.currentTarget.style.transform = '')}
-						>
-							<img
-								src="/assets/images/megaphone.png"
-								alt="Megafone"
-								className="self-center drop-shadow-[0_0_50px_var(--color-main-purple)]/80"
-							/>
-							<div>
-								<h2 className="text-section-lg mb-3 font-bold">
-									Campanhas exclusivas
-								</h2>
-								<p className="text-section-base">
-									Vídeos dedicados no canal, sorteios e ofertas exclusivas para
-									a comunidade, tudo com a sua marca.
-								</p>
-							</div>
-						</div>
-						<div
-							className="bg-module-background flex max-w-100 flex-col items-start gap-y-5 rounded-md p-5 shadow-[0_0_30px_black]/40 outline outline-black lg:transition-[scale] lg:duration-300 lg:hover:scale-105"
-							onMouseMove={handleMouseMove}
-							onMouseLeave={(e) => (e.currentTarget.style.transform = '')}
-						>
-							<img
-								src="/assets/images/hiring.png"
-								alt="Divulgação"
-								className="self-center drop-shadow-[0_0_50px_var(--color-main-cyan)]/60"
-							/>
-							<div>
-								<h2 className="text-section-lg mb-3 font-bold">
-									Divulgação de vagas
-								</h2>
-								<p className="text-section-base">
-									Anuncie oportunidades de estágio e emprego para quem está
-									aprendendo programação ou buscando crescer na área de
-									tecnologia.
-								</p>
-							</div>
-						</div>
-						<div
-							className="bg-module-background flex max-w-100 flex-col items-start gap-5 rounded-md p-7 shadow-[0_0_30px_black]/40 outline outline-black lg:col-span-2 lg:max-w-none lg:flex-row lg:transition-[scale] lg:duration-300 lg:hover:scale-105"
-							onMouseMove={handleMouseMove}
-							onMouseLeave={(e) => (e.currentTarget.style.transform = '')}
-						>
+					<div className="flex max-w-140 flex-col gap-7 self-center lg:max-w-none lg:flex-row">
+						<div className="bg-module-background flex flex-1 flex-col gap-y-5 rounded-md p-5 outline outline-black lg:transition-[scale] lg:duration-300 lg:hover:scale-105">
 							<img
 								src="/assets/images/business-group.png"
 								alt="Parceira"
-								className="self-center drop-shadow-[0_0_50px_var(--color-main-green)]/60 lg:self-start"
+								className="self-center drop-shadow-[0_0_50px_var(--color-main-green)]/60"
 							/>
 							<div>
 								<h2 className="text-section-lg mb-3 font-bold">
@@ -208,6 +146,42 @@ export function BeAPartner() {
 									educação, como eventos, desafios de programação e projetos que
 									visam estimular a criatividade e aproximar pessoas do universo
 									da programação.
+								</p>
+							</div>
+						</div>
+						<div className="bg-module-background flex flex-1 flex-col gap-y-5 rounded-md p-5 outline outline-black lg:transition-[scale] lg:duration-300 lg:hover:scale-105">
+							<img
+								src="/assets/images/megaphone.png"
+								alt="Megafone"
+								className="self-center drop-shadow-[0_0_50px_var(--color-main-purple)]/80"
+							/>
+							<div>
+								<h2 className="text-section-lg mb-3 font-bold">
+									Campanhas exclusivas
+								</h2>
+								<p className="text-section-base">
+									Dê mais visibilidade à sua marca por meio de ações especiais
+									com a comunidade TryPy. Vídeos dedicados em nosso canal,
+									sorteios e ofertas exclusivas são algumas das possibilidades
+									para aproximar sua marca do nosso público.
+								</p>
+							</div>
+						</div>
+						<div className="bg-module-background flex flex-1 flex-col gap-y-5 rounded-md p-5 outline outline-black lg:transition-[scale] lg:duration-300 lg:hover:scale-105">
+							<img
+								src="/assets/images/hiring.png"
+								alt="Divulgação"
+								className="self-center drop-shadow-[0_0_50px_var(--color-main-cyan)]/60"
+							/>
+							<div>
+								<h2 className="text-section-lg mb-3 font-bold">
+									Divulgação de vagas
+								</h2>
+								<p className="text-section-base">
+									Encontre novos talentos e aproxime sua empresa de quem está
+									construindo uma carreira em tecnologia. Divulgue oportunidades
+									de estágio e emprego para estudantes e profissionais que
+									desejam desenvolver suas habilidades e ingressar no mercado.
 								</p>
 							</div>
 						</div>
@@ -243,7 +217,7 @@ export function BeAPartner() {
 							empresa:
 						</p>
 						<div className="rounded-md border border-black bg-[url('/assets/images/batthern-background.png')] shadow-[0_0_30px_#000000]/50">
-							<div className="bg-module-background/80 flex h-fit flex-col gap-y-5 p-5 transition-[min-height] duration-300 lg:p-7">
+							<div className="bg-module-background/85 flex h-fit flex-col gap-y-5 p-5 transition-[min-height] duration-300 lg:p-7">
 								<ul className="flex flex-col gap-y-5">
 									{(
 										Object.keys(doubtInputsContent) as Array<
@@ -267,7 +241,7 @@ export function BeAPartner() {
 													}}
 												/>
 												<label
-													className="text-section-base font-jetbrains lg:cursor-pointer"
+													className="text-section-lg lg:cursor-pointer"
 													htmlFor={key}
 												>
 													{doubtInputsContent[key].value}
@@ -302,7 +276,6 @@ export function BeAPartner() {
 														</div>
 													))}
 											</div>
-
 											<button
 												type="button"
 												className="text-sm text-gray-300 underline underline-offset-3 lg:cursor-pointer"
@@ -344,9 +317,9 @@ export function BeAPartner() {
 						</p>
 					</div>
 				</section>
-				<section className="animate-appear appear-animation to-main-green/15 flex justify-center bg-linear-to-b from-transparent px-5 py-15">
+				<section className="animate-appear appear-animation to-main-green/15 flex justify-center bg-linear-to-b from-transparent px-5 py-10 lg:py-15">
 					<div className="flex flex-col items-start">
-						<div className="mb-5 text-shadow-[0_0_20px_var(--color-main-green)]/50 lg:mb-10">
+						<div className="mb-5 text-shadow-[0_0_20px_var(--color-main-green)]/50">
 							<h2 className="text-main-green text-title-3xl mb-3">
 								Vamos tornar sonhos em realidade?
 							</h2>

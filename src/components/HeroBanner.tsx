@@ -33,7 +33,7 @@ export function HeroBanner() {
 	}, []);
 
 	return (
-		<div className="px-hero relative flex w-full items-center justify-between overflow-hidden py-45">
+		<div className="px-hero relative flex h-[66.67vh] min-h-fit w-full items-center justify-between overflow-hidden">
 			<div
 				className="absolute inset-0 z-10 hidden lg:block"
 				onMouseMove={(e) =>
@@ -46,7 +46,7 @@ export function HeroBanner() {
 					backgroundImage: `radial-gradient(circle 1200px at ${pointerPosition.x}px ${pointerPosition.y}px, color-mix(in srgb, var(--color-main-purple) 7%, transparent) 0%, transparent 70%)`,
 				}}
 			></div>
-			<div className="flex flex-col items-start gap-y-7">
+			<div className="my-[70px] flex flex-col items-start gap-y-7">
 				<h1 className="font-jetbrains text-main-green text-hero-title">try</h1>
 				<p className="font-jetbrains text-hero-subtitle">
 					A melhor maneira de aprender é praticando!
@@ -55,7 +55,7 @@ export function HeroBanner() {
 					className="border-main-green text-hero-subtitle px-section-btn py-section-btn lg:hover:bg-main-green z-20 rounded-md border-2 bg-white/5 duration-300 lg:transition-all lg:hover:border-black lg:hover:text-black"
 					to="/learning-path"
 				>
-					Vamos lá!
+					Começar a trilha
 				</Link>
 			</div>
 		</div>

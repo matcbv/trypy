@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 const footerMap = {
 	support: 'Suporte',
+	help: 'FAQ',
 	'be-a-partner': 'Seja um parceiro',
 	'about-us': 'Sobre nós',
 };
@@ -29,7 +30,7 @@ export function Footer() {
 	return (
 		<footer className="relative flex flex-col gap-y-10 bg-black p-5 pt-15">
 			<div className="flex flex-col items-center gap-y-10">
-				<ul className="flex flex-wrap justify-center gap-x-7 gap-y-2 sm:gap-x-10">
+				<ul className="flex flex-wrap justify-center gap-x-7 gap-y-3 sm:gap-x-10">
 					{Object.entries(footerMap).map(([key, value]) => (
 						<li key={key}>
 							<Link

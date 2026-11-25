@@ -55,14 +55,15 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 			key={slug}
 			className="bg-terminal-background overflow-hidden rounded-md"
 		>
-			<div className="border-b-main-purple flex items-center justify-between gap-x-5 border-b p-[10px]">
-				<h1 className="font-jetbrains text-xs">{title}</h1>
-				<span className="flex shrink-0 gap-x-3">
+			<div className="border-b-main-purple flex items-center justify-between gap-x-3 border-b p-[10px]">
+				<p className="font-jetbrains text-xs">{title}</p>
+				<span className="flex shrink-0 gap-x-2">
 					<img
 						src="/assets/images/icons/redirect.png"
 						alt="Visitar exercício"
 						tabIndex={0}
 						role="button"
+						draggable={false}
 						className="lg:cursor-pointer"
 						onClick={() => void navigateToExercise(slug)}
 					/>
@@ -72,6 +73,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 							alt="Esconder código"
 							tabIndex={0}
 							role="button"
+							draggable={false}
 							className="lg:cursor-pointer"
 							onClick={() => setIsVisible(false)}
 						/>
@@ -81,6 +83,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 							alt="Ver código"
 							tabIndex={0}
 							role="button"
+							draggable={false}
 							className="lg:cursor-pointer"
 							onClick={() => setIsVisible(true)}
 						/>
@@ -89,6 +92,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 						<img
 							src="/assets/images/icons/success.png"
 							alt="Copiado"
+							draggable={false}
 							className="w-6"
 						/>
 					) : (
@@ -97,6 +101,7 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 							alt="Copiar"
 							tabIndex={0}
 							role="button"
+							draggable={false}
 							className="lg:cursor-pointer"
 							onClick={() => void copyText(code)}
 						/>
@@ -104,11 +109,11 @@ export function ResolutionCard({ slug, title, code }: ResolutionCardProps) {
 				</span>
 			</div>
 			<div
-				className={`transition-[height, opacity] codeScrollbar overflow-y-auto duration-300 ${isVisible ? 'h-50 opacity-100' : 'h-5 opacity-0'}`}
+				className={`transition-[height, opacity] customScrollbar overflow-y-auto duration-300 ${isVisible ? 'h-50 opacity-100' : 'h-5 opacity-0'}`}
 			>
 				{isVisible && (
 					<div
-						className="codeScrollbar h-full overflow-x-auto"
+						className="customScrollbar h-full overflow-x-auto"
 						dangerouslySetInnerHTML={{ __html: html }}
 					></div>
 				)}

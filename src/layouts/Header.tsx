@@ -106,7 +106,7 @@ export function Header() {
 		<>
 			<div
 				ref={headerRef}
-				className={`font-jetbrains fixed top-0 z-30 w-full backdrop-blur-lg transition-[background-color] duration-500 ${isHeaderAtTop ? 'bg-transparent' : 'bg-black/70'}`}
+				className={`font-jetbrains fixed top-0 z-30 w-full backdrop-blur-lg transition-[background-color] duration-500 ${isMenuOpen || !isHeaderAtTop ? 'backdrop-blur-xl' : 'backdrop-blur-none'} ${isHeaderAtTop ? 'bg-transparent' : 'bg-black/70'}`}
 			>
 				<header
 					className={`flex h-[70px] items-center justify-between px-5 lg:px-15`}

@@ -7,7 +7,7 @@ import { SkeletonLoader } from '../components/SkeletonLoader';
 import { ContentfulContentContext } from '../contexts/ContentfulContentProvider/context';
 import type { SubtopicTypes } from '../types/content';
 import { NavigationContext } from '../contexts/NavigationProvider/context';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
@@ -161,19 +161,19 @@ export function UserOverview() {
 					<div className="flex flex-col gap-y-5">
 						<p className="flex flex-col">
 							Módulo atual:{' '}
-							<span className="text-progress-titles font-bold">
+							<span className="text-glow-green/90 font-bold">
 								{titles.module || <SkeletonLoader height={24} width={250} />}
 							</span>
 						</p>
 						<p className="flex flex-col">
 							Tópico atual:{' '}
-							<span className="text-progress-titles font-bold">
+							<span className="text-glow-green/90 font-bold">
 								{titles.topic || <SkeletonLoader height={24} width={250} />}
 							</span>
 						</p>
 						<p className="flex flex-col">
 							Subtópico atual:{' '}
-							<span className="text-progress-titles font-bold">
+							<span className="text-glow-green/90 font-bold">
 								{titles.subtopic || <SkeletonLoader height={24} width={250} />}
 							</span>
 						</p>
@@ -181,7 +181,7 @@ export function UserOverview() {
 					<button
 						type="button"
 						onClick={navigateToCurrentSubtopic}
-						className="form-btn text-section-base font-bold"
+						className="form-btn text-section-base font-bold lg:transition-colors lg:duration-300 lg:hover:bg-white/15"
 					>
 						Continuar de onde parei
 					</button>
@@ -197,14 +197,19 @@ export function UserOverview() {
 							<SkeletonLoader width={50} height={30} />
 						)}
 					</span>
-					<p>Exercícios concluídos</p>
+					<Link
+						to="/dashboard/resolutions"
+						className="lg:hover:text-main-purple transition-colors duration-300"
+					>
+						Exercícios concluídos
+					</Link>
 				</div>
 				<div className="flex flex-1 flex-col items-start gap-y-3 rounded-md bg-black/40 p-5 font-bold outline outline-black">
 					<img src="/assets/images/icons/videolesson.png" alt="Videoaula" />
 					<span className="text-title-2xl text-main-cyan">
 						{doneVideolessons.length}/{videolessons?.length ?? 0}
 					</span>
-					<p>Videoaulas assistidas</p>
+					<h2>Videoaulas assistidas</h2>
 				</div>
 			</div>
 			<div className="relative rounded-md bg-black/40 p-5 outline outline-black">
@@ -213,7 +218,7 @@ export function UserOverview() {
 						<img src="/assets/images/icons/clock.png" alt="Relógio" />
 						Última atividade
 					</h2>
-					<p className="text-section-lg flex gap-x-2">
+					<p className="text-section-base flex gap-x-2">
 						<span className="text-main-purple font-bold">{'>>>'}</span>
 						{lastDoneSubtopic ?? <SkeletonLoader width={200} height={20} />}
 					</p>
