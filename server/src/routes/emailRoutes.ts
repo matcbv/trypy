@@ -1,25 +1,40 @@
 import { Request, Response, Router } from 'express';
 import { authenticate } from '../middlewares/authenticate.js';
-import { adminAuth } from '../firebaseAdmin.js';
+import { adminAuth, adminDb } from '../firebaseAdmin.js';
 import { resend } from '../services/email/resender.js';
 import { render } from '@react-email/render';
-import VerificationEmail from '../templates/verificationEmail.js';
-import ResetPasswordEmail from '../templates/resetPasswordEmail.js';
+import VerificationEmail from '../templates/VerificationEmail.js';
+import ResetPasswordEmail from '../templates/ResetPasswordEmail.js';
 import { createElement } from 'react';
 import { FirebaseAuthError } from 'firebase-admin/auth';
 import { logResendError } from '../utils/logResendError.js';
 import { EMAIL_REGEX } from '../constants/validationRegex.js';
+import SupportEmail from '../templates/SupportEmail.js';
+import UserSupportEmail from '../templates/UserSupportEmail.js';
+import { supportProtocolGenerator } from '../utils/generateSupportProtocol.js';
+import { emailRateLimit } from '../middlewares/emailRateLimit.js';
 
 type VerifyEmailBody = {
+	name: string | null;
 	email: string;
 };
+
+interface EmailBodyProps {
+	emailSubject: string;
+	emailBody: {
+		studentId: string | null;
+		fullName: string | null;
+		description: string;
+		contactEmail: string;
+	};
+}
 
 const router = Router();
 
 router.post(
 	'/verification',
 	authenticate,
-	// verificationLimiter, // rate limit por uid, depois do authenticate
+	emailRateLimit({ timer: 60 * 1000, rateLimitAction: 'verification' }),
 	async (_req, res) => {
 		try {
 			const uid = res.locals.uid as string;
@@ -62,7 +77,7 @@ router.post(
 			if (resendError) {
 				logResendError('verification', resendError);
 
-				res.status(500).json({
+				res.status(502).json({
 					error: 'Não foi possível enviar o e-mail de verificação.',
 				});
 				return;
@@ -81,12 +96,13 @@ router.post(
 
 router.post(
 	'/reset-password',
+	emailRateLimit({ timer: 60 * 1000, rateLimitAction: 'reset-password' }),
 	async (
 		req: Request<Record<string, never>, unknown, VerifyEmailBody>,
 		res: Response,
 	) => {
 		try {
-			const { email } = req.body;
+			const { email, name } = req.body;
 
 			if (typeof email !== 'string' || !EMAIL_REGEX.test(email)) {
 				res.sendStatus(400);
@@ -110,6 +126,7 @@ router.post(
 
 			const html = await render(
 				createElement(ResetPasswordEmail, {
+					name,
 					customResetPasswordUrl: customResetPasswordUrl.toString(),
 				}),
 			);
@@ -133,6 +150,88 @@ router.post(
 		}
 
 		res.sendStatus(204);
+	},
+);
+
+router.post(
+	'/support',
+	emailRateLimit({ timer: 10 * 60 * 1000, rateLimitAction: 'support' }),
+	async (
+		req: Request<Record<string, never>, unknown, EmailBodyProps>,
+		res: Response,
+	) => {
+		const { emailSubject, emailBody } = req.body;
+
+		const date = new Date();
+		const openedAt =
+			date.toLocaleDateString() + ' às ' + date.toLocaleTimeString();
+		const protocol = supportProtocolGenerator().generateSupportProtocol();
+
+		try {
+			await adminDb.doc(`/tickets/${protocol}`).create({
+				subject: emailSubject,
+				fullName: emailBody.fullName,
+				studentId: emailBody.studentId,
+				description: emailBody.description,
+				contactEmail: emailBody.contactEmail,
+				status: 'open',
+				openedAt,
+			});
+
+			const supportHtml = await render(
+				SupportEmail({
+					subject: emailSubject,
+					fullName: emailBody.fullName,
+					studentId: emailBody.studentId,
+					description: emailBody.description,
+					contactEmail: emailBody.contactEmail,
+					protocol,
+					openedAt,
+				}),
+			);
+			const userSupportHtml = await render(
+				UserSupportEmail({
+					subject: emailSubject,
+					fullName: emailBody.fullName,
+					studentId: emailBody.studentId,
+					description: emailBody.description,
+					protocol,
+					openedAt,
+				}),
+			);
+
+			const { error: resendError } = await resend.batch.send([
+				{
+					from: 'TryPy <noreply@trypy.dev>',
+					to: emailBody.contactEmail,
+					subject: 'Recebemos sua solicitação',
+					html: userSupportHtml,
+				},
+				{
+					from: 'TryPy <noreply@trypy.dev>',
+					to: 'support@trypy.dev',
+					subject: `Suporte — ${emailSubject}`,
+					html: supportHtml,
+				},
+			]);
+
+			if (resendError) {
+				logResendError('support', resendError);
+
+				res.status(500).json({
+					error: 'Não foi possível enviar sua solicitação.',
+				});
+				return;
+			}
+
+			res.sendStatus(204);
+		} catch (error) {
+			console.error('[support] falha ao gerar o link', error);
+
+			res.status(500).json({
+				error: 'Não foi possível enviar sua solicitação.',
+			});
+		}
 	},
 );
 
