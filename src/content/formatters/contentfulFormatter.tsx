@@ -100,6 +100,7 @@ export function contentfulFormatter(content: Document) {
 						href={hyperlink.data.uri}
 						target="_blank"
 						rel="noopener noreferrer"
+						className="underline decoration-(--highlight-theme-color) underline-offset-4"
 					>
 						{children}
 					</a>
@@ -109,11 +110,6 @@ export function contentfulFormatter(content: Document) {
 		renderMark: {
 			[MARKS.BOLD]: (text) => (
 				<span className="text-(--highlight-theme-color)">{text}</span>
-			),
-			[MARKS.UNDERLINE]: (text) => (
-				<u className="decoration-(--highlight-theme-color) underline-offset-4">
-					{text}
-				</u>
 			),
 		},
 	});
