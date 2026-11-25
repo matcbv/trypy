@@ -5,7 +5,7 @@ import type * as SkeletonTypes from '../../types/skeletons';
 interface ContentfulQuery<K> {
 	// * O tipo genérico recebido será a chave utilizada em SkeletonMap.
 	contentType: K;
-	include: number;
+	include?: number;
 	order?: number;
 	slug?: string;
 }
@@ -17,12 +17,13 @@ interface SkeletonsMap {
 	subtopic: SkeletonTypes.SubtopicSkeleton;
 	moduleCard: SkeletonTypes.ModuleCardSkeleton;
 	tipPy: SkeletonTypes.TipSkeleton;
+	faqCategory: SkeletonTypes.FaqCategorySkeleton;
 }
 
 // * Função responsável por requisitar conteúdo da API do Contentful. Iremos utilizar um tipo genérico que estende das chaves do nosso mapa de tipos.
 export async function fetchContent<K extends keyof SkeletonsMap>({
 	contentType,
-	include,
+	include = 0,
 	order,
 	slug,
 }: ContentfulQuery<K>) {
