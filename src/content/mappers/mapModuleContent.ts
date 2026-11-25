@@ -4,7 +4,7 @@ import type { ModuleSkeleton } from '../../types/skeletons';
 import type { Themes } from '../../constants/themeStyle';
 
 // * Função responsável por converter o tipo das entries do Contentful para o tipo a ser trabalhado no projeto.
-export function mapContent(
+export function mapModuleContent(
 	rawContent: ResolvedEntry<ModuleSkeleton>[],
 ): ModuleData[] {
 	const modules = rawContent.map((module) => {
@@ -17,7 +17,7 @@ export function mapContent(
 				title: topic!.fields.title,
 				slug: topic!.fields.slug,
 				order: topic!.fields.order,
-				subtopics: subtopics,
+				subtopics,
 			};
 		});
 
@@ -26,7 +26,7 @@ export function mapContent(
 			title: module.fields.title,
 			order: module.fields.order,
 			theme: module.fields.theme as Themes,
-			topics: topics,
+			topics,
 		};
 	});
 
