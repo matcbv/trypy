@@ -38,6 +38,18 @@ const formMap = {
 export function AccountAndSecurity() {
 	const { authState, setAuthState } = useSafeContext(AuthContext);
 	const [linkedProviders, setLinkedProviders] = useState<Providers[]>([]);
+	const [providerEmails, setProviderEmails] = useState<
+		Record<Providers, null | string>
+	>({
+		'google.com': null,
+		'github.com': null,
+		password: null,
+	});
+	const [providerActions, setProviderActions] = useState({
+		'google.com': { linking: false, unlinking: false },
+		'github.com': { linking: false, unlinking: false },
+		password: { linking: false, unlinking: false },
+	});
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [isVisible, setIsVisible] = useState({
 		password: false,
@@ -45,11 +57,6 @@ export function AccountAndSecurity() {
 	});
 	const [showLinkEmailPasswordModal, setShowLinkEmailPasswordModal] =
 		useState(false);
-	const [providerActions, setProviderActions] = useState({
-		'google.com': { linking: false, unlinking: false },
-		'github.com': { linking: false, unlinking: false },
-		password: { linking: false, unlinking: false },
-	});
 	const [credentials, setCredentials] = useState({
 		email: '',
 		password: '',
@@ -61,13 +68,6 @@ export function AccountAndSecurity() {
 		confirmPassword: '',
 	});
 	const [isCopied, setIsCopied] = useState(false);
-	const [providerEmails, setProviderEmails] = useState<
-		Record<Providers, null | string>
-	>({
-		'google.com': null,
-		'github.com': null,
-		password: null,
-	});
 	const navigate = useNavigate();
 	const requireUser = useRequireUser();
 
@@ -168,9 +168,16 @@ export function AccountAndSecurity() {
 
 			const { user: updatedUser } = await linkWithPopup(user, provider);
 
-			const providers = getProviders(updatedUser);
+			const updatedProviders = getProviders(updatedUser);
+			setLinkedProviders(updatedProviders);
 
-			setLinkedProviders(providers);
+			const linkedProvider = updatedUser.providerData.find(
+				({ providerId: linkedProviderId }) => linkedProviderId === providerId,
+			);
+			setProviderEmails((prev) => ({
+				...prev,
+				[providerId]: linkedProvider?.email ?? null,
+			}));
 			logSuccess('Conta vinculada com sucesso!');
 		} catch (error) {
 			logError({ error });
